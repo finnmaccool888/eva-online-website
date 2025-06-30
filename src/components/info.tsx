@@ -26,7 +26,7 @@ export default function Info() {
       <div className="relative items-start w-full justify-start gap-4 p-4 lg:p-6">
         <Corners />
         <p className="text-sm lg:text-base">
-          Tag
+          Tag or Quote Tweet{" "}
           <a
             href="https://twitter.com/evaonlinexyz"
             target="_blank"
