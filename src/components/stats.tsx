@@ -110,6 +110,20 @@ export default function Stats() {
           Applies to posts made since first tweet at @evaonlinexyz. Maximum multiplier is 100x.
         </p>
       </div>
+      <div className="flex flex-col gap-3">
+        <h2 className="text-base font-bold">Bonus Songjam Multiplier</h2>
+        <p className="text-xs text-gray-700 leading-relaxed">
+          Receive an extra boost of 20% on your Eva points for each Tweet that tags{' '}
+          <a
+            href="https://x.com/intent/follow?screen_name=SongjamSpace"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[#FF007A] font-bold hover:underline transition-colors"
+          >
+            @SongjamSpace
+          </a>
+        </p>
+      </div>
     </div>
   );
 }
