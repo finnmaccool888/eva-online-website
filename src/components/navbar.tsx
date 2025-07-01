@@ -57,6 +57,14 @@ export default function Navbar({ inverse }: { inverse?: boolean }) {
             GITBOOK
           </Button>
         </Link>
+        <Link href="/assets">
+          <Button
+            variant="ghost"
+            className={inverse ? "text-[#48333D] hover:text-[#48333D]/60" : ""}
+          >
+            ASSETS
+          </Button>
+        </Link>
         <Link
           href="https://x.com/evaonlinexyz"
           target="_blank"
