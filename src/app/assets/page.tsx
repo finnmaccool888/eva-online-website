@@ -70,6 +70,79 @@ const assets = [
     name: "Logo Text White (PNG)",
     path: "/images/eva assets/logo/png/logo-text-white.png",
   },
+  // EVA Image Bank
+  {
+    name: "seggystimeEva.png",
+    path: "/images/eva assets/eva image bank/seggystimeEva.png",
+  },
+  {
+    name: "evareach.png",
+    path: "/images/eva assets/eva image bank/evareach.png",
+  },
+  {
+    name: "evameditate.png",
+    path: "/images/eva assets/eva image bank/evameditate.png",
+  },
+  {
+    name: "evaarmscrossed.png",
+    path: "/images/eva assets/eva image bank/evaarmscrossed.png",
+  },
+  {
+    name: "evaPoint.png",
+    path: "/images/eva assets/eva image bank/evaPoint.png",
+  },
+  {
+    name: "building.png",
+    path: "/images/eva assets/eva image bank/building.png",
+  },
+  {
+    name: "ComfyUI_00042.png",
+    path: "/images/eva assets/eva image bank/VWfFqOIwFk_BDEB8zDDtw_ComfyUI_temp_mgdbq_00042_.png",
+  },
+  {
+    name: "Upscaled_BG.png",
+    path: "/images/eva assets/eva image bank/Upscaled_BG.png",
+  },
+  {
+    name: "Upscale_back.png",
+    path: "/images/eva assets/eva image bank/Upscale_back.png",
+  },
+  {
+    name: "Evasquat.png",
+    path: "/images/eva assets/eva image bank/Evasquat.png",
+  },
+  {
+    name: "Eva_upscaled.png",
+    path: "/images/eva assets/eva image bank/Eva_upscaled.png",
+  },
+  {
+    name: "Eva_stance.png",
+    path: "/images/eva assets/eva image bank/Eva_stance.png",
+  },
+  {
+    name: "Eva_fly.png",
+    path: "/images/eva assets/eva image bank/Eva_fly.png",
+  },
+  {
+    name: "Eva_3_4_Upscale.png",
+    path: "/images/eva assets/eva image bank/Eva_3_4_Upscale.png",
+  },
+  {
+    name: "EvaPucnh.png",
+    path: "/images/eva assets/eva image bank/EvaPucnh.png",
+  },
+  {
+    name: "Eva-3_4_v2.png",
+    path: "/images/eva assets/eva image bank/Eva-3_4_v2.png",
+  },
+  {
+    name: "ComfyUI_00005.png",
+    path: "/images/eva assets/eva image bank/2j1hYRi3LmzdiRYr7PGTg_ComfyUI_temp_hcyuv_00005_.png",
+  },
+  {
+    name: "ComfyUI_00019.png",
+    path: "/images/eva assets/eva image bank/0Y2UQPAXwBnusgkSnp1Gb_ComfyUI_temp_kugrq_00019_.png",
+  },
 ];
 
 export default function AssetsPage() {
