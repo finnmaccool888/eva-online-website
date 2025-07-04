@@ -92,8 +92,8 @@ export default function TableDemo() {
           <TableRow className="text-[#48333D] font-bold">
             <TableHead className="w-[100px] text-[#48333D]">Rank</TableHead>
             <TableHead className="text-[#48333D]">Yapper</TableHead>
-            <TableHead className="text-[#48333D]">Score Bar</TableHead>
-            <TableHead className="text-[#48333D]">Total Points</TableHead>
+            <TableHead className="w-40" />
+            <TableHead className="text-[#48333D] text-right w-40">Total Points</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -115,10 +115,25 @@ export default function TableDemo() {
                 </TableCell>
                 <TableCell className="align-middle text-center w-40">
                   <div className="flex justify-center items-center w-full h-full">
-                    <ScoreBar value={entry.totalPoints} max={Math.max(...data.map(e => e.totalPoints))} entry={entry} />
+                    <button
+                      className="group relative flex items-center justify-center px-4 py-2 rounded-full bg-gradient-to-r from-[#FF007A]/5 to-[#48333D]/5 border border-white/10 shadow-none opacity-50 hover:opacity-100 hover:bg-gradient-to-r hover:from-[#FF007A]/60 hover:to-[#48333D]/60 hover:shadow-[0_0_16px_2px_rgba(255,0,122,0.25)] transition-all duration-300 font-semibold text-[#FF007A]/60 hover:text-[#FF007A] text-sm tracking-wide overflow-hidden"
+                      style={{ minWidth: 120 }}
+                      onClick={() => {
+                        const allNames = data.map(e => encodeURIComponent(e.name || e.username)).join(',');
+       //                 const url = `/leaderboard/score-popup?name=${encodeURIComponent(entry.name || entry.username)}&points=${encodeURIComponent(entry.totalPoints)}&max=${encodeURIComponent(Math.max(...data.map(e => e.totalPoints)))}&allNames=${allNames}`;
+                        const url = 'https://songjam.space/dashboard'
+                        window.open(url, 'ScorePopup', 'width=400,height=300,noopener,noreferrer');
+                      }}
+                    >
+                      <span className="relative z-10 group-hover:scale-105 transition-transform duration-200 flex items-center gap-2">
+                        <svg className="w-3 h-3 opacity-40 group-hover:opacity-100 transition-opacity duration-200" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        <span className="">Send Songjam</span>
+                      </span>
+                      <span className="absolute inset-0 rounded-full bg-white/0 group-hover:bg-[#FF007A]/10 transition-colors duration-300 blur-sm" />
+                    </button>
                   </div>
                 </TableCell>
-                <TableCell className="align-middle text-center">{formatNumber(entry.totalPoints)}</TableCell>
+                <TableCell className="align-middle text-right w-40">{formatNumber(entry.totalPoints)}</TableCell>
               </TableRow>
             ))
           ) : (
