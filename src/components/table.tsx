@@ -22,6 +22,7 @@ export default function TableDemo() {
             <TableRow className="text-[#48333D] font-bold">
               <TableHead className="w-[100px] text-[#48333D]">Rank</TableHead>
               <TableHead className="text-[#48333D]">Yapper</TableHead>
+              <TableHead className="w-40" />
               <TableHead className="text-[#48333D]">Total Points</TableHead>
             </TableRow>
           </TableHeader>
@@ -33,6 +34,9 @@ export default function TableDemo() {
                 </TableCell>
                 <TableCell>
                   <div className="h-4 bg-gray-200 rounded animate-pulse w-32"></div>
+                </TableCell>
+                <TableCell>
+                  <div className="h-4 bg-gray-200 rounded animate-pulse w-16"></div>
                 </TableCell>
                 <TableCell>
                   <div className="h-4 bg-gray-200 rounded animate-pulse w-16"></div>
@@ -56,25 +60,65 @@ export default function TableDemo() {
           <TableRow className="text-[#48333D] font-bold">
             <TableHead className="w-[100px] text-[#48333D]">Rank</TableHead>
             <TableHead className="text-[#48333D]">Yapper</TableHead>
-            <TableHead className="text-[#48333D]">Total Points</TableHead>
+            <TableHead className="w-40" />
+            <TableHead className="text-[#48333D] text-right w-40">
+              Total Points
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {data && data.length > 0 ? (
             data.map((entry, idx) => (
-              <TableRow key={entry.userId}>
-                <TableCell className="font-medium">{idx + 1}</TableCell>
-                <TableCell className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-                  <span className="font-medium">
-                    {entry.name || entry.username}
-                  </span>
-                  {entry.username && (
-                    <span className="text-sm text-[#979797]">
-                      @{entry.username}
-                    </span>
-                  )}
+              <TableRow key={entry.userId} className="items-center">
+                <TableCell className="font-medium align-middle text-center">
+                  {idx + 1}
                 </TableCell>
-                <TableCell>{formatNumber(entry.totalPoints)}</TableCell>
+                <TableCell className="align-middle text-center max-w-[180px]">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 overflow-x-auto max-w-[170px] scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
+                    <span className="font-medium whitespace-nowrap">
+                      {entry.name || entry.username}
+                    </span>
+                    {entry.username && (
+                      <span className="text-sm text-[#979797] whitespace-nowrap">
+                        @{entry.username}
+                      </span>
+                    )}
+                  </div>
+                </TableCell>
+                <TableCell className="align-middle text-center w-40">
+                  <div className="flex justify-center items-center w-full h-full">
+                    <button
+                      className="group relative flex items-center justify-center px-3 py-1.5 rounded-full bg-gradient-to-r from-red-500/10 to-red-600/10 border border-red-500/20 shadow-none opacity-70 hover:opacity-100 hover:bg-gradient-to-r hover:from-red-500/20 hover:to-red-600/20 hover:shadow-[0_0_12px_2px_rgba(239,68,68,0.25)] transition-all duration-300 font-medium text-red-500/80 hover:text-red-500 text-sm tracking-wide overflow-hidden"
+                      style={{ minWidth: 80 }}
+                      onClick={() => {
+                        const url = `https://songjam.space/flags?userId=${entry.userId}`;
+                        window.open(
+                          url,
+                          "ScorePopup",
+                          "width=400,height=700,noopener,noreferrer"
+                        );
+                      }}
+                    >
+                      <span className="relative z-10 group-hover:scale-105 transition-transform duration-200 flex items-center gap-1.5">
+                        <svg
+                          className="w-3.5 h-3.5 opacity-60 group-hover:opacity-100 transition-opacity duration-200"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
+                          <line x1="4" y1="22" x2="4" y2="15" />
+                        </svg>
+                        <span>Flag</span>
+                      </span>
+                      <span className="absolute inset-0 rounded-full bg-white/0 group-hover:bg-red-500/10 transition-colors duration-300 blur-sm" />
+                    </button>
+                  </div>
+                </TableCell>
+                <TableCell className="align-middle text-right w-40">
+                  {formatNumber(entry.totalPoints)}
+                </TableCell>
               </TableRow>
             ))
           ) : (
