@@ -10,38 +10,6 @@ import {
 } from "@/components/ui/table";
 import { useLeaderboard } from "@/lib/hooks/useLeaderboard";
 import { formatNumber } from "@/lib/utils";
-import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "./ui/dialog";
-import { useState } from "react";
-
-function ScoreBar({ value, max, entry }: { value: number; max: number; entry: any }) {
-  const percent = max > 0 ? Math.max(0, Math.min(1, value / max)) : 0;
-  const [hovered, setHovered] = useState(false);
-  const handleClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    const url = `/leaderboard/score-popup?name=${encodeURIComponent(entry.name || entry.username)}&points=${encodeURIComponent(entry.totalPoints)}&max=${encodeURIComponent(max)}`;
-    window.open(url, 'ScorePopup', 'width=400,height=300,noopener,noreferrer');
-  };
-  return (
-    <div
-      className="relative flex items-center justify-center w-full h-4 cursor-pointer group"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      onClick={handleClick}
-      tabIndex={0}
-      role="button"
-      aria-label="Show score details"
-    >
-      <div
-        className="absolute left-1/2 -translate-x-1/2 top-0 h-full w-32 rounded-full bg-gradient-to-r from-green-400 to-red-400 opacity-30"
-      />
-      <div
-        className={`h-full rounded-full bg-gradient-to-r from-green-400 to-red-400 transition-all duration-300 ${hovered ? 'scale-y-125 shadow-lg opacity-80' : 'opacity-60'}`}
-        style={{ width: `${percent * 100}%`, minWidth: 4, maxWidth: 128 }}
-      />
-      <div className="absolute left-1/2 -translate-x-1/2 top-0 h-full w-32 rounded-full border border-white/30 pointer-events-none" />
-    </div>
-  );
-}
 
 export default function TableDemo() {
   const { data, isLoading, isError, error } = useLeaderboard();
@@ -93,14 +61,18 @@ export default function TableDemo() {
             <TableHead className="w-[100px] text-[#48333D]">Rank</TableHead>
             <TableHead className="text-[#48333D]">Yapper</TableHead>
             <TableHead className="w-40" />
-            <TableHead className="text-[#48333D] text-right w-40">Total Points</TableHead>
+            <TableHead className="text-[#48333D] text-right w-40">
+              Total Points
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {data && data.length > 0 ? (
             data.map((entry, idx) => (
               <TableRow key={entry.userId} className="items-center">
-                <TableCell className="font-medium align-middle text-center">{idx + 1}</TableCell>
+                <TableCell className="font-medium align-middle text-center">
+                  {idx + 1}
+                </TableCell>
                 <TableCell className="align-middle text-center max-w-[180px]">
                   <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 overflow-x-auto max-w-[170px] scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
                     <span className="font-medium whitespace-nowrap">
@@ -116,24 +88,37 @@ export default function TableDemo() {
                 <TableCell className="align-middle text-center w-40">
                   <div className="flex justify-center items-center w-full h-full">
                     <button
-                      className="group relative flex items-center justify-center px-4 py-2 rounded-full bg-gradient-to-r from-[#FF007A]/5 to-[#48333D]/5 border border-white/10 shadow-none opacity-50 hover:opacity-100 hover:bg-gradient-to-r hover:from-[#FF007A]/60 hover:to-[#48333D]/60 hover:shadow-[0_0_16px_2px_rgba(255,0,122,0.25)] transition-all duration-300 font-semibold text-[#FF007A]/60 hover:text-[#FF007A] text-sm tracking-wide overflow-hidden"
-                      style={{ minWidth: 120 }}
+                      className="group relative flex items-center justify-center px-3 py-1.5 rounded-full bg-gradient-to-r from-red-500/10 to-red-600/10 border border-red-500/20 shadow-none opacity-70 hover:opacity-100 hover:bg-gradient-to-r hover:from-red-500/20 hover:to-red-600/20 hover:shadow-[0_0_12px_2px_rgba(239,68,68,0.25)] transition-all duration-300 font-medium text-red-500/80 hover:text-red-500 text-sm tracking-wide overflow-hidden"
+                      style={{ minWidth: 80 }}
                       onClick={() => {
-                        const allNames = data.map(e => encodeURIComponent(e.name || e.username)).join(',');
-       //                 const url = `/leaderboard/score-popup?name=${encodeURIComponent(entry.name || entry.username)}&points=${encodeURIComponent(entry.totalPoints)}&max=${encodeURIComponent(Math.max(...data.map(e => e.totalPoints)))}&allNames=${allNames}`;
-                        const url = 'https://songjam.space/dashboard'
-                        window.open(url, 'ScorePopup', 'width=400,height=300,noopener,noreferrer');
+                        const url = `https://songjam.space/flags?userId=${entry.userId}`;
+                        window.open(
+                          url,
+                          "ScorePopup",
+                          "width=400,height=700,noopener,noreferrer"
+                        );
                       }}
                     >
-                      <span className="relative z-10 group-hover:scale-105 transition-transform duration-200 flex items-center gap-2">
-                        <svg className="w-3 h-3 opacity-40 group-hover:opacity-100 transition-opacity duration-200" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                        <span className="">Send Songjam</span>
+                      <span className="relative z-10 group-hover:scale-105 transition-transform duration-200 flex items-center gap-1.5">
+                        <svg
+                          className="w-3.5 h-3.5 opacity-60 group-hover:opacity-100 transition-opacity duration-200"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
+                          <line x1="4" y1="22" x2="4" y2="15" />
+                        </svg>
+                        <span>Flag</span>
                       </span>
-                      <span className="absolute inset-0 rounded-full bg-white/0 group-hover:bg-[#FF007A]/10 transition-colors duration-300 blur-sm" />
+                      <span className="absolute inset-0 rounded-full bg-white/0 group-hover:bg-red-500/10 transition-colors duration-300 blur-sm" />
                     </button>
                   </div>
                 </TableCell>
-                <TableCell className="align-middle text-right w-40">{formatNumber(entry.totalPoints)}</TableCell>
+                <TableCell className="align-middle text-right w-40">
+                  {formatNumber(entry.totalPoints)}
+                </TableCell>
               </TableRow>
             ))
           ) : (
