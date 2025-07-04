@@ -103,7 +103,7 @@ export default function Stats() {
         <h2 className="text-base font-bold">Early Multiplier</h2>
         <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 sm:p-3 md:p-4 border border-white/20 w-full max-w-xs sm:max-w-sm md:max-w-md mx-auto overflow-x-auto">
           <div className="scale-65 transform origin-top-left m-1 min-w-[200px]">
-            <BlockMath math="\\text{earlyMultiplier} = 1 + 99 \times \frac{\\max(0, T_{genesis} - T_{post})}{780447}" />
+            <BlockMath math="\\{earlyMultiplier} = 1 + 99 \times \frac{\\max(0, T_{genesis} - T_{post})}{780447}" />
           </div>
         </div>
         <p className="text-xs text-gray-700 leading-relaxed">
