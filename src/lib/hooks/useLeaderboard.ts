@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from "@tanstack/react-query";
 
 export interface LeaderboardEntry {
   username: string;
@@ -8,6 +8,7 @@ export interface LeaderboardEntry {
   totalPoints: number;
   preGenesisPoints: number;
   postGenesisPoints: number;
+  flagCount?: number;
 }
 
 export interface LeaderboardResponse {
@@ -17,7 +18,9 @@ export interface LeaderboardResponse {
 }
 
 async function fetchLeaderboard(): Promise<LeaderboardEntry[]> {
-  const response = await fetch('https://api.songjam.space/evaonlinexyz/leaderboard');
+  const response = await fetch(
+    "https://api.songjam.space/evaonlinexyz/leaderboard"
+  );
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
@@ -25,14 +28,14 @@ async function fetchLeaderboard(): Promise<LeaderboardEntry[]> {
   if (result.success) {
     return result.result;
   } else {
-    throw new Error('Failed to fetch leaderboard data');
+    throw new Error("Failed to fetch leaderboard data");
   }
 }
 
 export function useLeaderboard() {
   return useQuery<LeaderboardEntry[], Error>({
-    queryKey: ['leaderboard'],
+    queryKey: ["leaderboard"],
     queryFn: fetchLeaderboard,
     staleTime: 60 * 1000, // 1 minute
   });
-} 
+}
