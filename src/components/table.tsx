@@ -92,7 +92,7 @@ export default function TableDemo() {
                   <div className="flex justify-center items-center w-full h-full">
                     <div className="relative">
                       <button
-                        className="group relative flex items-center justify-center px-3 py-1.5 rounded-full bg-gradient-to-r from-red-500/10 to-red-600/10 border border-red-500/20 shadow-none opacity-70 hover:opacity-100 hover:bg-gradient-to-r hover:from-red-500/20 hover:to-red-600/20 hover:shadow-[0_0_12px_2px_rgba(239,68,68,0.25)] transition-all duration-300 font-medium text-red-500/80 hover:text-red-500 text-sm tracking-wide overflow-hidden"
+                        className="group relative flex items-center justify-center px-3 py-1.5 rounded-full bg-gradient-to-r from-red-500/10 to-red-600/10 border border-red-500/20 shadow-none opacity-70 hover:opacity-100 hover:bg-gradient-to-r hover:from-red-500/20 hover:to-red-600/20 hover:shadow-[0_0_12px_2px_rgba(239,68,68,0.25)] transition-all duration-300 font-medium text-red-500/80 hover:text-red-500 text-sm tracking-wide"
                         style={{ minWidth: 80 }}
                         onClick={() => {
                           const url = `https://songjam.space/flags?userId=${entry.userId}`;
@@ -117,12 +117,12 @@ export default function TableDemo() {
                           <span>Flag</span>
                         </span>
                         <span className="absolute inset-0 rounded-full bg-white/0 group-hover:bg-red-500/10 transition-colors duration-300 blur-sm" />
+                        {!!entry.flagCount && entry.flagCount > 0 && (
+                          <div className="absolute -top-2 -right-2 flex items-center justify-center min-w-[20px] h-5 px-1 rounded-full bg-red-500/60 text-white text-[10px] font-bold border-2 border-white/60 shadow-sm opacity-70 group-hover:opacity-100 group-hover:bg-red-500 group-hover:border-white group-hover:shadow-[0_0_8px_2px_rgba(239,68,68,0.4)] transition-all duration-300 z-10">
+                            {entry.flagCount}
+                          </div>
+                        )}
                       </button>
-                      {!!entry.flagCount && entry.flagCount > 0 && (
-                        <div className="absolute -top-2 -right-2 flex items-center justify-center min-w-[20px] h-5 px-1 rounded-full bg-red-500/60 text-white text-[10px] font-bold border-2 border-white/60 shadow-sm opacity-70 group-hover:opacity-100 group-hover:bg-red-500 group-hover:border-white transition-all duration-300">
-                          {entry.flagCount}
-                        </div>
-                      )}
                     </div>
                   </div>
                 </TableCell>
