@@ -60,8 +60,8 @@ export default function TableDemo() {
           <TableRow className="text-[#48333D] font-bold">
             <TableHead className="w-[100px] text-[#48333D]">Rank</TableHead>
             <TableHead className="text-[#48333D]">Yapper</TableHead>
-            <TableHead className="w-40" />
-            <TableHead className="text-[#48333D] text-right w-40">
+            <TableHead className="w-20" />
+            <TableHead className="text-[#48333D] text-right w-20">
               Total Points
             </TableHead>
           </TableRow>
@@ -73,9 +73,12 @@ export default function TableDemo() {
                 <TableCell className="font-medium align-middle text-center">
                   {idx + 1}
                 </TableCell>
-                <TableCell className="align-middle text-center max-w-[180px]">
-                  <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 overflow-x-auto max-w-[170px] scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
-                    <span className="font-medium whitespace-nowrap">
+                <TableCell className="align-middle text-center max-w-[220px]">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-1 max-w-[220px]">
+                    <span
+                      className="font-medium whitespace-nowrap truncate"
+                      title={entry.name || entry.username}
+                    >
                       {entry.name || entry.username}
                     </span>
                     {entry.username && (
@@ -85,7 +88,7 @@ export default function TableDemo() {
                     )}
                   </div>
                 </TableCell>
-                <TableCell className="align-middle text-center w-40">
+                <TableCell className="align-middle text-center w-20">
                   <div className="flex justify-center items-center w-full h-full">
                     <button
                       className="group relative flex items-center justify-center px-3 py-1.5 rounded-full bg-gradient-to-r from-red-500/10 to-red-600/10 border border-red-500/20 shadow-none opacity-70 hover:opacity-100 hover:bg-gradient-to-r hover:from-red-500/20 hover:to-red-600/20 hover:shadow-[0_0_12px_2px_rgba(239,68,68,0.25)] transition-all duration-300 font-medium text-red-500/80 hover:text-red-500 text-sm tracking-wide overflow-hidden"
@@ -116,7 +119,7 @@ export default function TableDemo() {
                     </button>
                   </div>
                 </TableCell>
-                <TableCell className="align-middle text-right w-40">
+                <TableCell className="align-middle text-right w-20">
                   {formatNumber(entry.totalPoints)}
                 </TableCell>
               </TableRow>
