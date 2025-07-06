@@ -2,8 +2,8 @@
 
 import { useLeaderboard } from "@/lib/hooks/useLeaderboard";
 import { formatNumber } from "@/lib/utils";
-import 'katex/dist/katex.min.css';
-import { BlockMath } from 'react-katex';
+import "katex/dist/katex.min.css";
+import { BlockMath } from "react-katex";
 
 export default function Stats() {
   const { data: leaderboard, isLoading, error } = useLeaderboard();
@@ -78,7 +78,8 @@ export default function Stats() {
           </div>
         </div>
         <p className="text-xs text-gray-700 leading-relaxed">
-          Your base score is a sum of Engagement Points from interactions (Likes, Replies, Bookmarks, Retweets, Quote Tweets).
+          Your base score is a sum of Engagement Points from interactions
+          (Likes, Replies, Bookmarks, Retweets, Quote Tweets).
         </p>
       </div>
       <div className="flex flex-col gap-3">
@@ -89,7 +90,8 @@ export default function Stats() {
           </div>
         </div>
         <p className="text-xs text-gray-700 leading-relaxed">
-          Your engagement score gets boosted based on the performance of your tweets. Here are the thresholds:
+          Your engagement score gets boosted based on the performance of your
+          tweets. Here are the thresholds:
         </p>
         <div className="text-xs text-gray-700 leading-relaxed space-y-1">
           <p>• Likes: 2.0x (100+), 1.5x (50+)</p>
@@ -100,20 +102,27 @@ export default function Stats() {
         </div>
       </div>
       <div className="flex flex-col gap-3">
-        <h2 className="text-base font-bold">Early Multiplier</h2>
+        <div className="flex items-center gap-2">
+          <h2 className="text-base font-bold">Early Multiplier</h2>
+          <span className="px-2 py-1 text-xs font-medium bg-red-100 text-red-800 rounded-full border border-red-200">
+            Expired
+          </span>
+        </div>
         <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 sm:p-3 md:p-4 border border-white/20 w-full max-w-xs sm:max-w-sm md:max-w-md mx-auto overflow-x-auto">
           <div className="scale-65 transform origin-top-left m-1 min-w-[200px]">
             <BlockMath math="\\{earlyMultiplier} = 1 + 99 \times \frac{\\max(0, T_{genesis} - T_{post})}{780447}" />
           </div>
         </div>
         <p className="text-xs text-gray-700 leading-relaxed">
-          Applies to posts made since first tweet at @evaonlinexyz. Maximum multiplier is 100x.
+          Applies to posts made since first tweet at @evaonlinexyz. Maximum
+          multiplier is 100x.
         </p>
       </div>
       <div className="flex flex-col gap-3">
         <h2 className="text-base font-bold">Bonus Songjam Multiplier</h2>
         <p className="text-xs text-gray-700 leading-relaxed">
-          Receive an extra boost of 20% on your Eva points for each Tweet that tags{' '}
+          Receive an extra boost of 20% on your Eva points for each Tweet that
+          tags{" "}
           <a
             href="https://x.com/intent/follow?screen_name=SongjamSpace"
             target="_blank"
