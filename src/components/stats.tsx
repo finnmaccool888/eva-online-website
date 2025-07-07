@@ -134,58 +134,94 @@ export default function Stats() {
         </p>
       </div>
       <div className="flex flex-col gap-3">
-        <h2 className="text-base font-bold">Songjam Agentic Review System Prompt</h2>
+        <h2 className="text-base font-bold">
+          Songjam Agentic Review System Prompt
+        </h2>
         <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 border border-white/20">
           <p className="text-xs text-gray-700 leading-relaxed mb-3">
-            Given the following tweets and replies from a yapper, evaluate their behavior and intent. Focus on detecting low-effort engagement farming versus genuine contribution to the project.
+            Given the following tweets and replies from a yapper, evaluate their
+            behavior and intent. Focus on detecting low-effort engagement
+            farming versus genuine contribution to the project.
           </p>
-          
+
           <div className="space-y-3">
             <div>
-              <h3 className="text-xs font-semibold text-gray-800 mb-1">1. Summary</h3>
+              <h3 className="text-xs font-semibold text-gray-800 mb-1">
+                1. Summary
+              </h3>
               <ul className="text-xs text-gray-700 space-y-1 ml-3">
                 <li>a) What are the recurring themes/topics?</li>
-                <li>b) Is the tone informative, promotional, conversational, or repetitive?</li>
-                <li>c) Are they clearly explaining the project or just hyping it without substance?</li>
+                <li>
+                  b) Is the tone informative, promotional, conversational, or
+                  repetitive?
+                </li>
+                <li>
+                  c) Are they clearly explaining the project or just hyping it
+                  without substance?
+                </li>
               </ul>
             </div>
-            
+
             <div>
-              <h3 className="text-xs font-semibold text-gray-800 mb-1">2. Replies Analysis</h3>
+              <h3 className="text-xs font-semibold text-gray-800 mb-1">
+                2. Replies Analysis
+              </h3>
               <ul className="text-xs text-gray-700 space-y-1 ml-3">
-                <li>a) Are replies thoughtful and unique, or spammy and repetitive?</li>
+                <li>
+                  a) Are replies thoughtful and unique, or spammy and
+                  repetitive?
+                </li>
                 <li>b) Is there two-way engagement from the yapper?</li>
                 <li>c) Are any replies likely part of bot networks?</li>
               </ul>
             </div>
-            
+
             <div>
-              <h3 className="text-xs font-semibold text-gray-800 mb-1">3. Authenticity & Quality</h3>
+              <h3 className="text-xs font-semibold text-gray-800 mb-1">
+                3. Authenticity &amp; Quality
+              </h3>
               <p className="text-xs text-gray-700 mb-1 ml-3">Score based on:</p>
               <ul className="text-xs text-gray-700 space-y-1 ml-6">
                 <li>a) Originality of tweet content</li>
                 <li>b) Relevance to the project</li>
                 <li>c) Language variety</li>
-                <li>d) Signs of low-effort (copypasta, overused CTAs, mass tagging)</li>
+                <li>
+                  d) Signs of low-effort (copypasta, overused CTAs, mass
+                  tagging)
+                </li>
                 <li>e) Interaction depth in replies</li>
               </ul>
             </div>
-            
+
             <div>
-            <h3 className="text-xs font-semibold text-gray-800 mb-1">3. Authenticity & Quality</h3>
+              <h3 className="text-xs font-semibold text-gray-800 mb-1">
+                3. Authenticity &amp; Quality
+              </h3>
               <ul className="text-xs text-gray-700 space-y-1 ml-3">
                 <li>i) averageHashtags: Avg. number of hashtags per tweet</li>
                 <li>ii) averageMentions: Avg. number of @mentions per tweet</li>
-                <li>iii) gmTweetCount: Number of tweets that say “GM” or similar</li>
-                <li>iv) callToActionRatio: Proportion of tweets asking users to "Retweet", "Tag", "Follow", etc.</li>
+                <li>
+                  iii) gmTweetCount: Number of tweets that say &ldquo;GM&rdquo;
+                  or similar
+                </li>
+                <li>
+                  iv) callToActionRatio: Proportion of tweets asking users to
+                  &ldquo;Retweet&rdquo;, &ldquo;Tag&rdquo;,
+                  &ldquo;Follow&rdquo;, etc.
+                </li>
               </ul>
             </div>
-            
+
             <div>
-              <h3 className="text-xs font-semibold text-gray-800 mb-1">5. Bot-Like Behavior</h3>
+              <h3 className="text-xs font-semibold text-gray-800 mb-1">
+                5. Bot-Like Behavior
+              </h3>
               <ul className="text-xs text-gray-700 space-y-1 ml-3">
                 <li>a) Analyze tweet frequency, repetition, and uniformity.</li>
-                <li>b) Score from 0–100 based on patterns that resemble automated behavior.</li>
+                <li>
+                  b) Score from 0&ndash;100 based on patterns that resemble
+                  automated behavior.
+                </li>
               </ul>
             </div>
           </div>
