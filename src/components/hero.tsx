@@ -22,6 +22,7 @@ export default function Hero() {
           alt="Eva Banner"
           width={278.7}
           height={480}
+          priority
         />
       </motion.div>
       <div className="flex flex-col md:flex-row md:items-end justify-end md:justify-between h-[calc(100vh-theme(spacing.4)-76px)] max-w-7xl mx-auto py-12 gap-3">

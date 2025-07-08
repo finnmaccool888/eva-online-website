@@ -15,13 +15,13 @@ export default function TermsPage() {
           <p className="font-semibold">Effective Date: July 1, 2025</p>
 
           <p>
-            Welcome to Eva ("Eva", "we", "our", "us") at www.evaonline.xyz. By accessing or using our platform, you agree to be bound by these Terms of Service ("Terms"). Please read them carefully.
+            Welcome to Eva (&quot;Eva&quot;, &quot;we&quot;, &quot;our&quot;, &quot;us&quot;) at www.evaonline.xyz. By accessing or using our platform, you agree to be bound by these Terms of Service (&quot;Terms&quot;). Please read them carefully.
           </p>
 
           <section>
             <h2 className="text-xl font-bold mb-3">1. Overview</h2>
             <p>
-              Eva is a decentralized identity protocol for AI agents. It enables users to create, manage, and evolve intelligent agent personas ("Agents") using AI, blockchain, and social data layers. Eva operates on the Virtuals platform and offers persistent digital identities, interoperable agent frameworks, and tools for creators and developers.
+              Eva is a decentralized identity protocol for AI agents. It enables users to create, manage, and evolve intelligent agent personas (&quot;Agents&quot;) using AI, blockchain, and social data layers. Eva operates on the Virtuals platform and offers persistent digital identities, interoperable agent frameworks, and tools for creators and developers.
             </p>
           </section>
 
@@ -80,7 +80,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-xl font-bold mb-3">8. Disclaimers</h2>
             <p>
-              Eva is provided "as is" without warranties of any kind. We do not guarantee:
+              Eva is provided &quot;as is&quot; without warranties of any kind. We do not guarantee:
             </p>
             <ul className="list-disc pl-6 space-y-2">
               <li>Availability, accuracy, or performance of any AI or identity services.</li>
