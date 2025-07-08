@@ -20,7 +20,7 @@ export interface LeaderboardResponse {
 
 async function fetchLeaderboard(): Promise<LeaderboardEntry[]> {
   const response = await fetch(
-    "https://api.songjam.space/evaonlinexyz/leaderboard"
+    "https://evaonlinexyz-leaderboard.logesh-063.workers.dev/"
   );
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
