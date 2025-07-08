@@ -13,7 +13,7 @@ export default function PrivacyPage() {
         </h1>
         
         <div className="prose prose-lg max-w-none space-y-6">
-          <p className="font-semibold">Effective Date: [Insert Date]</p>
+          <p className="font-semibold">Effective Date: July 1, 2025</p>
           <p className="font-semibold">Website: www.evaonline.xyz</p>
           
           <p>

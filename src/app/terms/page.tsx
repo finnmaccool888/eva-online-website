@@ -13,7 +13,7 @@ export default function TermsPage() {
         </h1>
         
         <div className="prose prose-lg max-w-none space-y-6">
-          <p className="font-semibold">Effective Date: [Insert Date]</p>
+          <p className="font-semibold">Effective Date: July 1, 2025</p>
           
           <p>
             Welcome to Eva ("Eva", "we", "our", "us") at www.evaonline.xyz. By accessing or using our platform, you agree to be bound by these Terms of Service ("Terms"). Please read them carefully.
