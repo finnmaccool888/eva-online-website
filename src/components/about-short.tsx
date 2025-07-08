@@ -60,6 +60,10 @@ export default function AboutShort() {
         <Link href="/terms" className="text-sm text-[#48333D] hover:text-[#48333D]/70">
           Terms of Service
         </Link>
+        {" | "}
+        <Link href="/privacy" className="text-sm text-[#48333D] hover:text-[#48333D]/70">
+          Privacy Policy
+        </Link>
       </div>
     </div>
   );
