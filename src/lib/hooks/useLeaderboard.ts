@@ -8,7 +8,8 @@ export interface LeaderboardEntry {
   totalPoints: number;
   preGenesisPoints: number;
   postGenesisPoints: number;
-  flagCount?: number;
+  flagCount: number;
+  botScore: number;
 }
 
 export interface LeaderboardResponse {
