@@ -15,6 +15,7 @@ export default function AboutShort() {
               alt="diagram-eva"
               width={257}
               height={385}
+              style={{ height: "auto" }}
             />
           </div>
           <div className="flex flex-col gap-2">

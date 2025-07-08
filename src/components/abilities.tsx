@@ -35,6 +35,7 @@ export default function Abilities() {
           alt="Abilities"
           width={1920}
           height={1080}
+          priority
         />
       </motion.div>
       <div className="flex flex-col md:flex-row items-center justify-start gap-8 h-full max-w-7xl mx-auto relative z-10">
@@ -69,6 +70,7 @@ export default function Abilities() {
             alt="Abilities"
             width={382}
             height={379}
+            style={{ height: "auto" }}
           />
         </div>
         <div className="w-full h-full flex flex-col items-center justify-between gap-16">
