@@ -25,10 +25,10 @@ export default function TableDemo() {
   useEffect(() => {
     if (data) {
       setLikelyBottedData(
-        data.filter((d) => d.flagCount > 5 && d.botScore > 80)
+        data.filter((d) => d.flagCount > 5 && d.botScore >= 85)
       );
       setLeaderboardData(
-        data.filter((d) => d.flagCount < 5 && d.botScore < 80)
+        data.filter((d) => d.flagCount < 5 && d.botScore < 85)
       );
     }
   }, [data, showFlaggedYappers]);
