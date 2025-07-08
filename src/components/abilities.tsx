@@ -70,7 +70,7 @@ export default function Abilities() {
             alt="Abilities"
             width={382}
             height={379}
-            style={{ height: "auto" }}
+            style={{ width: "auto", height: "auto" }}
           />
         </div>
         <div className="w-full h-full flex flex-col items-center justify-between gap-16">
