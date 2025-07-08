@@ -195,7 +195,7 @@ export default function Stats() {
 
             <div>
               <h3 className="text-xs font-semibold text-gray-800 mb-1">
-                3. Authenticity &amp; Quality
+                4. Engagement Farming Indicators
               </h3>
               <ul className="text-xs text-gray-700 space-y-1 ml-3">
                 <li>i) averageHashtags: Avg. number of hashtags per tweet</li>
