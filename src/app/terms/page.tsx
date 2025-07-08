@@ -15,13 +15,13 @@ export default function TermsPage() {
           <p className="font-semibold">Effective Date: July 1, 2025</p>
 
           <p>
-            Welcome to Eva (&quot;Eva&quot;, &quot;we&quot;, &quot;our&quot;, &quot;us&quot;) at www.evaonline.xyz. By accessing or using our platform, you agree to be bound by these Terms of Service (&quot;Terms&quot;). Please read them carefully.
+            Welcome to Eva (&ldquo;Eva&rdquo;, &ldquo;we&rdquo;, &ldquo;our&rdquo;, &ldquo;us&rdquo;) at www.evaonline.xyz. By accessing or using our platform, you agree to be bound by these Terms of Service (&ldquo;Terms&rdquo;). Please read them carefully.
           </p>
 
           <section>
             <h2 className="text-xl font-bold mb-3">1. Overview</h2>
             <p>
-              Eva is a decentralized identity protocol for AI agents. It enables users to create, manage, and evolve intelligent agent personas (&quot;Agents&quot;) using AI, blockchain, and social data layers. Eva operates on the Virtuals platform and offers persistent digital identities, interoperable agent frameworks, and tools for creators and developers.
+              Eva is a decentralized identity protocol for AI agents. It enables users to create, manage, and evolve intelligent agent personas (&ldquo;Agents&rdquo;) using AI, blockchain, and social data layers. Eva operates on the Virtuals platform and offers persistent digital identities, interoperable agent frameworks, and tools for creators and developers.
             </p>
           </section>
 
@@ -61,7 +61,7 @@ export default function TermsPage() {
             <p>You agree not to:</p>
             <ul className="list-disc pl-6 space-y-2">
               <li>Use Eva for illegal, abusive, or malicious purposes.</li>
-              <li>Upload or generate content that is hateful, deceptive, or infringes on others' rights.</li>
+              <li>Upload or generate content that is hateful, deceptive, or infringes on others&rsquo; rights.</li>
               <li>Attempt to exploit or disrupt the platform or its infrastructure.</li>
               <li>Impersonate any individual or Agent in a misleading way.</li>
             </ul>
@@ -80,7 +80,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-xl font-bold mb-3">8. Disclaimers</h2>
             <p>
-              Eva is provided &quot;as is&quot; without warranties of any kind. We do not guarantee:
+              Eva is provided &ldquo;as is&rdquo; without warranties of any kind. We do not guarantee:
             </p>
             <ul className="list-disc pl-6 space-y-2">
               <li>Availability, accuracy, or performance of any AI or identity services.</li>

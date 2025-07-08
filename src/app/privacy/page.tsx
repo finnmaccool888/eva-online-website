@@ -16,7 +16,7 @@ export default function PrivacyPage() {
           <p className="font-semibold">Website: www.evaonline.xyz</p>
 
           <p>
-            Eva (&quot;Eva&quot;, &quot;we&quot;, &quot;our&quot;, or &quot;us&quot;) respects your privacy and is committed to protecting your personal information. This Privacy Policy explains what information we collect, how we use it, and your choices in relation to your data when you use our platform.
+            Eva (&ldquo;Eva&rdquo;, &ldquo;we&rdquo;, &ldquo;our&rdquo;, or &ldquo;us&rdquo;) respects your privacy and is committed to protecting your personal information. This Privacy Policy explains what information we collect, how we use it, and your choices in relation to your data when you use our platform.
           </p>
 
           <section>
@@ -85,7 +85,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-xl font-bold mb-3">4. Blockchain &amp; Public Data</h2>
             <p>
-              Information stored on a blockchain (such as your wallet activity or on-chain agent traits) is public, immutable, and outside Eva&apos;s control. Please use caution when linking personal data to blockchain activity.
+              Information stored on a blockchain (such as your wallet activity or on-chain agent traits) is public, immutable, and outside Eva&rsquo;s control. Please use caution when linking personal data to blockchain activity.
             </p>
           </section>
 
@@ -115,12 +115,12 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-xl font-bold mb-3">7. Data Security</h2>
             <p>
-              We use industry-standard security measures to protect your data, but no platform is completely secure. Protect your wallet, avoid phishing links, and don&apos;t share sensitive data unnecessarily.
+              We use industry-standard security measures to protect your data, but no platform is completely secure. Protect your wallet, avoid phishing links, and don&rsquo;t share sensitive data unnecessarily.
             </p>
           </section>
 
           <section>
-            <h2 className="text-xl font-bold mb-3">8. Children&apos;s Privacy</h2>
+            <h2 className="text-xl font-bold mb-3">8. Children&rsquo;s Privacy</h2>
             <p>
               Eva is not intended for children under 13. If you are a parent or guardian and believe we have collected data from a child, please contact us immediately.
             </p>
@@ -129,7 +129,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-xl font-bold mb-3">9. Changes to This Policy</h2>
             <p>
-              We may update this Privacy Policy from time to time. We&apos;ll notify you of significant changes via the site or email. Continued use after changes constitutes acceptance.
+              We may update this Privacy Policy from time to time. We&rsquo;ll notify you of significant changes via the site or email. Continued use after changes constitutes acceptance.
             </p>
           </section>
 
