@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import Navbar from "@/components/navbar";
 
 const assets = [
@@ -195,6 +196,10 @@ export default function AssetsPage() {
       </div>
       <div className="text-sm text-center mt-6 text-[#48333D]">
         COPYRIGHT © 2025 EVA ONLINE
+        <br />
+        <Link href="/terms" className="text-sm text-[#48333D] hover:text-[#48333D]/70">
+          Terms of Service
+        </Link>
       </div>
     </div>
   );

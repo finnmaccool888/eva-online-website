@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import GlassCard from "./glass-card";
 import PrimaryButton from "./primary-button";
 import AboutDialog from "./about-dialog";
@@ -55,6 +56,10 @@ export default function AboutShort() {
       </div>
       <div className="text-sm text-center mt-12">
         COPYRIGHT © 2025 EVA ONLINE
+        <br />
+        <Link href="/terms" className="text-sm text-[#48333D] hover:text-[#48333D]/70">
+          Terms of Service
+        </Link>
       </div>
     </div>
   );
