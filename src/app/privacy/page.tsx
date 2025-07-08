@@ -1,4 +1,3 @@
-
 import Navbar from "@/components/navbar";
 
 export default function PrivacyPage() {
@@ -11,18 +10,18 @@ export default function PrivacyPage() {
         <h1 className="text-3xl lg:text-4xl font-bold uppercase mb-8">
           Privacy Policy
         </h1>
-        
+
         <div className="prose prose-lg max-w-none space-y-6">
           <p className="font-semibold">Effective Date: July 1, 2025</p>
           <p className="font-semibold">Website: www.evaonline.xyz</p>
-          
+
           <p>
             Eva ("Eva", "we", "our", or "us") respects your privacy and is committed to protecting your personal information. This Privacy Policy explains what information we collect, how we use it, and your choices in relation to your data when you use our platform.
           </p>
 
           <section>
             <h2 className="text-xl font-bold mb-3">1. Information We Collect</h2>
-            
+
             <h3 className="text-lg font-semibold mb-2">a. Wallet & Identity Data</h3>
             <ul className="list-disc pl-6 space-y-2">
               <li>When you connect a crypto wallet, we collect your wallet address, which may be linked to public blockchain activity.</li>

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Navbar from "@/components/navbar";
+import Image from 'next/image';
 
 const assets = [
   // Top-level assets
@@ -173,9 +174,11 @@ export default function AssetsPage() {
               className="bg-white/10 rounded-lg p-4 flex flex-col items-center border border-white/20 shadow-md"
             >
               {asset.path.endsWith(".svg") || asset.path.endsWith(".png") ? (
-                <img
+                <Image
                   src={asset.path}
                   alt={asset.name}
+                  width={128}
+                  height={128}
                   className="w-32 h-32 object-contain mb-3 rounded"
                   loading="lazy"
                 />
