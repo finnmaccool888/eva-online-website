@@ -28,7 +28,7 @@ export default function TableDemo() {
         data.filter((d) => d.flagCount >= 5 && d.botScore >= 85)
       );
       setLeaderboardData(
-        data.filter((d) => d.flagCount < 5 && d.botScore < 85)
+        data.filter((d) => !(d.flagCount >= 5 && d.botScore >= 85))
       );
     }
   }, [data, showFlaggedYappers]);
