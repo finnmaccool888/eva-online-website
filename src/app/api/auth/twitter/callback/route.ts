@@ -49,6 +49,8 @@ export async function GET(request: NextRequest) {
 
     // Exchange code for access token
     try {
+      console.log('Starting token exchange with Twitter API...');
+      
       const tokenResponse = await fetch('https://api.twitter.com/2/oauth2/token', {
         method: 'POST',
         headers: {
@@ -65,14 +67,29 @@ export async function GET(request: NextRequest) {
 
       if (!tokenResponse.ok) {
         const errorText = await tokenResponse.text();
-        console.error('Token exchange failed:', errorText);
-        throw new Error(`Token exchange failed: ${tokenResponse.status}`);
+        console.error('Token exchange failed:', {
+          status: tokenResponse.status,
+          statusText: tokenResponse.statusText,
+          error: errorText,
+          redirectUri: `${baseUrl}/api/auth/twitter/callback`,
+          codeVerifierLength: codeVerifier.length
+        });
+        
+        // Check for specific Twitter errors
+        if (tokenResponse.status === 400) {
+          throw new Error('Invalid OAuth request - check your Twitter app configuration');
+        } else if (tokenResponse.status === 401) {
+          throw new Error('Invalid client credentials - check your Twitter API keys');
+        } else {
+          throw new Error(`Token exchange failed: ${tokenResponse.status} - ${errorText}`);
+        }
       }
 
       const tokenData = await tokenResponse.json();
       console.log('Token exchange successful');
 
-      // Get user information
+      // Get user information  
+      console.log('Fetching user information from Twitter API...');
       const userResponse = await fetch('https://api.twitter.com/2/users/me', {
         headers: {
           'Authorization': `Bearer ${tokenData.access_token}`,
@@ -80,8 +97,12 @@ export async function GET(request: NextRequest) {
       });
 
       if (!userResponse.ok) {
-        console.error('User info fetch failed:', userResponse.status);
-        throw new Error('Failed to fetch user information');
+        const userErrorText = await userResponse.text();
+        console.error('User info fetch failed:', {
+          status: userResponse.status,
+          error: userErrorText
+        });
+        throw new Error(`Failed to fetch user information: ${userResponse.status}`);
       }
 
       const userData = await userResponse.json();

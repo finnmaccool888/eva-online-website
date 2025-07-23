@@ -21,13 +21,29 @@ function generateCodeChallenge(verifier: string): string {
 export async function GET() {
   try {
     const clientId = process.env.TWITTER_CLIENT_ID;
+    const clientSecret = process.env.TWITTER_CLIENT_SECRET;
     const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
     
+    // Better validation and logging
+    console.log('Environment check:', {
+      hasClientId: !!clientId,
+      hasClientSecret: !!clientSecret,
+      baseUrl: baseUrl,
+      nodeEnv: process.env.NODE_ENV
+    });
+    
     if (!clientId) {
-      // Use demo mode if no credentials are set
       console.log('Twitter credentials not found, using demo mode');
       const callbackUrl = `${baseUrl}/api/auth/twitter/callback?code=demo_code&state=demo_state`;
       return NextResponse.json({ authUrl: callbackUrl });
+    }
+
+    if (!clientSecret) {
+      console.error('TWITTER_CLIENT_SECRET is missing!');
+      return NextResponse.json(
+        { error: 'Twitter configuration incomplete' },
+        { status: 500 }
+      );
     }
     
     // Real Twitter OAuth 2.0 flow with proper PKCE
