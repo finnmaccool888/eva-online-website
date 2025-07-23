@@ -142,7 +142,7 @@ export default function ProfilePage() {
               <div>
                 <div className="font-medium mb-1">Twitter Account Connected Successfully!</div>
                 <div className="text-sm">
-                  Your Twitter account has been verified and connected. We're now checking if you're eligible for OG
+                  Your Twitter account has been verified and connected. We&apos;re now checking if you&apos;re eligible for OG
                   status based on early support for Eva Online.
                 </div>
               </div>
@@ -160,7 +160,7 @@ export default function ProfilePage() {
               <div>
                 <div className="font-medium mb-1">Registering Your OG Status...</div>
                 <div className="text-sm">
-                  We're processing your OG claim and linking it to your wallet address. This will only take a moment.
+                  We&apos;re processing your OG claim and linking it to your wallet address. This will only take a moment.
                 </div>
               </div>
             </div>
@@ -365,7 +365,7 @@ export default function ProfilePage() {
           <div className="relative">
             <div className="relative p-8 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">
               <h3 className="text-2xl font-bold text-[#48333D] text-center mb-4">
-                Confirm Your OG Status in Eva's Memory Bank
+                Confirm Your OG Status in Eva&apos;s Memory Bank
               </h3>
               <p className="text-center text-gray-600 mb-6">
                 Share your OG status with the community by posting this image and tagging @EvaOnlineXyz
@@ -429,10 +429,10 @@ export default function ProfilePage() {
                   <span className="font-semibold">Instructions:</span>
                 </p>
                 <ol className="text-xs text-gray-500 mt-2 space-y-1">
-                  <li>1. Click "Download Image" to save the OG status image</li>
-                  <li>2. Click "Share on X" to open the tweet composer</li>
+                  <li>1. Click &quot;Download Image&quot; to save the OG status image</li>
+                  <li>2. Click &quot;Share on X&quot; to open the tweet composer</li>
                   <li>3. Attach the downloaded image to your tweet</li>
-                  <li>4. Post to confirm your OG status in Eva's memory bank!</li>
+                  <li>4. Post to confirm your OG status in Eva&apos;s memory bank!</li>
                 </ol>
               </div>
             </div>

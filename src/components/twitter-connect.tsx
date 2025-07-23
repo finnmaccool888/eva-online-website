@@ -101,7 +101,7 @@ export function TwitterConnect({ onConnect }: TwitterConnectProps) {
             <div className="text-sm text-red-800">
               <div className="font-medium mb-2">Twitter OAuth Error Detected</div>
               <p className="mb-3">
-                The "Something went wrong" error usually means your Twitter app configuration needs to be fixed.
+                The &quot;Something went wrong&quot; error usually means your Twitter app configuration needs to be fixed.
               </p>
 
               <div className="space-y-2">
@@ -118,10 +118,10 @@ export function TwitterConnect({ onConnect }: TwitterConnectProps) {
                       Twitter Developer Portal
                     </a>
                   </li>
-                  <li>Select your app → "App settings"</li>
-                  <li>Under "User authentication settings" click "Edit"</li>
-                  <li>Make sure "OAuth 2.0" is enabled (not OAuth 1.0a)</li>
-                  <li>Set App permissions to "Read" only</li>
+                  <li>Select your app → &quot;App settings&quot;</li>
+                  <li>Under &quot;User authentication settings&quot; click &quot;Edit&quot;</li>
+                  <li>Make sure &quot;OAuth 2.0&quot; is enabled (not OAuth 1.0a)</li>
+                  <li>Set App permissions to &quot;Read&quot; only</li>
                   <li>
                     Verify callback URL matches exactly:{" "}
                     <code className="bg-gray-100 px-1 rounded text-xs">

@@ -4,7 +4,6 @@ export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
     const code = searchParams.get('code');
-    const state = searchParams.get('state');
     const error = searchParams.get('error');
 
     // Handle OAuth errors

@@ -62,7 +62,7 @@ export default function OGWallPage() {
           </div>
           <p className="text-sm lg:text-base">
             These community members showed early support for Eva Online by tweeting about the project. 
-            Their contributions are forever recorded in Eva's memory bank.
+            Their contributions are forever recorded in Eva&apos;s memory bank.
           </p>
         </div>
       </div>
@@ -83,7 +83,7 @@ export default function OGWallPage() {
         </div>
         {searchTerm && (
           <p className="text-xs text-gray-600 mt-2">
-            💡 Tip: You can search with or without the @ symbol (e.g., "username" or "@username")
+            💡 Tip: You can search with or without the @ symbol (e.g., &quot;username&quot; or &quot;@username&quot;)
           </p>
         )}
       </div>
@@ -123,7 +123,7 @@ export default function OGWallPage() {
 
         {filteredOGs.length === 0 && (
           <div className="text-center py-16">
-            <p className="text-gray-500">No OGs found matching "{searchTerm}"</p>
+            <p className="text-gray-500">No OGs found matching &quot;{searchTerm}&quot;</p>
           </div>
         )}
       </div>
