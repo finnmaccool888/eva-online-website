@@ -6,9 +6,8 @@ import { Providers } from "@/components/providers";
 
 const chakraPetch = Chakra_Petch({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["400", "600"],
   display: "swap",
-  fallback: ["system-ui", "sans-serif"],
 });
 
 export const metadata: Metadata = {
