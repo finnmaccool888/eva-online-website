@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Extract code verifier from state (in production, use secure session storage)
-    const [originalState, codeVerifier] = state?.split(':') || [];
+    const [, codeVerifier] = state?.split(':') || [];
     
     if (!codeVerifier) {
       console.error('Code verifier not found in state');
