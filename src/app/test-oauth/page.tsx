@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 
 export default function TestOAuthPage() {
-  const [healthData, setHealthData] = useState<any>(null)
+  const [healthData, setHealthData] = useState<Record<string, unknown> | null>(null)
   const [authUrl, setAuthUrl] = useState<string>("")
   const [loading, setLoading] = useState(false)
 
@@ -14,7 +14,7 @@ export default function TestOAuthPage() {
       const response = await fetch("/api/auth/twitter/health")
       const data = await response.json()
       setHealthData(data)
-    } catch (error) {
+    } catch {
       setHealthData({ error: "Failed to fetch health data" })
     }
     setLoading(false)
@@ -27,8 +27,8 @@ export default function TestOAuthPage() {
       const data = await response.json()
       setAuthUrl(data.authUrl || "No auth URL returned")
       console.log("Full response:", data)
-    } catch (error) {
-      setAuthUrl("Error: " + error)
+    } catch (err) {
+      setAuthUrl("Error: " + err)
     }
     setLoading(false)
   }
