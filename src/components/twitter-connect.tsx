@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { Twitter, Shield, CheckCircle, AlertTriangle, ExternalLink } from "lucide-react"
+import { Twitter, Shield, CheckCircle, AlertTriangle, ExternalLink, Clock } from "lucide-react"
 
 interface TwitterConnectProps {
   onConnect: (handle: string) => void
@@ -14,6 +14,8 @@ export function TwitterConnect({ onConnect }: TwitterConnectProps) {
   const [username, setUsername] = useState("")
   const [isVerified, setIsVerified] = useState(false)
   const [showTroubleshooting, setShowTroubleshooting] = useState(false)
+  const [rateLimitError, setRateLimitError] = useState<string | null>(null)
+  const [retryAfter, setRetryAfter] = useState<number | null>(null)
 
   useEffect(() => {
     // Check if we're returning from Twitter OAuth
@@ -39,19 +41,47 @@ export function TwitterConnect({ onConnect }: TwitterConnectProps) {
     }
   }, [onConnect])
 
+  // Countdown timer for rate limit
+  useEffect(() => {
+    if (retryAfter && retryAfter > 0) {
+      const timer = setInterval(() => {
+        setRetryAfter((prev) => {
+          if (prev && prev <= 1) {
+            setRateLimitError(null)
+            return null
+          }
+          return prev ? prev - 1 : null
+        })
+      }, 1000)
+
+      return () => clearInterval(timer)
+    }
+  }, [retryAfter])
+
   const handleTwitterAuth = async () => {
     setIsLoading(true)
+    setRateLimitError(null)
+    setShowTroubleshooting(false)
 
     try {
       // Get Twitter OAuth URL from our API
       const response = await fetch("/api/auth/twitter")
+
+      if (response.status === 429) {
+        const errorData = await response.json()
+        setRateLimitError(errorData.message || "Rate limit exceeded. Please wait before trying again.")
+        setRetryAfter(errorData.retryAfter || 60)
+        setIsLoading(false)
+        return
+      }
+
       const data = await response.json()
 
       if (data.authUrl) {
         // Redirect to Twitter OAuth
         window.location.href = data.authUrl
       } else {
-        throw new Error("Failed to get auth URL")
+        throw new Error(data.error || "Failed to get auth URL")
       }
     } catch (error) {
       console.error("Twitter auth error:", error)
@@ -65,6 +95,8 @@ export function TwitterConnect({ onConnect }: TwitterConnectProps) {
     setIsConnected(false)
     setIsVerified(false)
     setShowTroubleshooting(false)
+    setRateLimitError(null)
+    setRetryAfter(null)
     onConnect("")
   }
 
@@ -93,8 +125,29 @@ export function TwitterConnect({ onConnect }: TwitterConnectProps) {
 
   return (
     <div className="space-y-4">
+      {/* Rate Limit Error */}
+      {rateLimitError && (
+        <div className="bg-orange-50/80 p-4 rounded-lg border border-orange-200 space-y-3">
+          <div className="flex items-start space-x-2">
+            <Clock className="w-5 h-5 text-orange-600 mt-0.5" />
+            <div className="text-sm text-orange-800">
+              <div className="font-medium mb-2">Rate Limit Reached</div>
+              <p className="mb-3">{rateLimitError}</p>
+              {retryAfter && (
+                <div className="flex items-center space-x-2">
+                  <span>Please wait:</span>
+                  <span className="font-mono bg-orange-100 px-2 py-1 rounded text-orange-900">
+                    {Math.floor(retryAfter / 60)}:{(retryAfter % 60).toString().padStart(2, "0")}
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* OAuth Error Troubleshooting */}
-      {showTroubleshooting && (
+      {showTroubleshooting && !rateLimitError && (
         <div className="bg-red-50/80 p-4 rounded-lg border border-red-200 space-y-3">
           <div className="flex items-start space-x-2">
             <AlertTriangle className="w-5 h-5 text-red-600 mt-0.5" />
@@ -128,7 +181,14 @@ export function TwitterConnect({ onConnect }: TwitterConnectProps) {
                       {window.location.origin}/api/auth/twitter/callback
                     </code>
                   </li>
-                  <li>Save and wait 10 minutes before testing again</li>
+                  <li>
+                    Verify Website URL matches exactly:{" "}
+                    <code className="bg-gray-100 px-1 rounded text-xs">
+                      {window.location.origin}
+                    </code>
+                  </li>
+                  <li>Save all changes in Twitter Developer Portal.</li>
+                  <li>Try connecting again.</li>
                 </ol>
               </div>
             </div>
@@ -152,14 +212,14 @@ export function TwitterConnect({ onConnect }: TwitterConnectProps) {
 
       <Button
         onClick={handleTwitterAuth}
-        disabled={isLoading}
-        className="w-full bg-blue-500/20 hover:bg-blue-500/30 text-blue-800 border border-blue-300 backdrop-blur-sm"
+        disabled={isLoading || !!rateLimitError}
+        className="w-full bg-blue-500/20 hover:bg-blue-500/30 text-blue-800 border border-blue-300 backdrop-blur-sm disabled:opacity-50"
       >
         <Twitter className="w-4 h-4 mr-2" />
-        {isLoading ? "Connecting..." : "Connect with Twitter OAuth"}
+        {isLoading ? "Connecting..." : rateLimitError ? `Wait ${retryAfter}s` : "Connect with Twitter OAuth"}
       </Button>
 
-      {showTroubleshooting && (
+      {showTroubleshooting && !rateLimitError && (
         <div className="text-center">
           <Button
             onClick={() => window.open("https://developer.twitter.com/en/portal/dashboard", "_blank")}
