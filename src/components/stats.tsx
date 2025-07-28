@@ -227,6 +227,25 @@ export default function Stats() {
           </div>
         </div>
       </div>
+      <div className="flex flex-col gap-3">
+        <h2 className="text-base font-bold">
+          Stake <span className="text-[#FF007A]">$EVA</span>
+        </h2>
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 bg-[#FF007A] rounded-full"></div>
+            <p className="text-xs text-gray-700">EVA stake multiplier bonus</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 bg-[#FF007A] rounded-full"></div>
+            <p className="text-xs text-gray-700">Mystery Stake Bonus</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 bg-[#FF007A] rounded-full"></div>
+            <p className="text-xs text-gray-700">IP activation</p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
