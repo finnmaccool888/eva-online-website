@@ -11,8 +11,6 @@ import {
 import { LeaderboardEntry, useLeaderboard } from "@/lib/hooks/useLeaderboard";
 import { formatNumber } from "@/lib/utils";
 import { useEffect, useState } from "react";
-import PrimaryButton from "./primary-button";
-import Link from "next/link";
 
 export default function TableDemo() {
   const { data, isLoading, isError, error } = useLeaderboard();
