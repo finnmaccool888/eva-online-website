@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import moment from "moment";
 
 export default function Countdown() {
-  const targetDate = moment.unix(1751554800);
+  const targetDate = moment.unix(1754022600);
   const [timeLeft, setTimeLeft] = useState("");
 
   useEffect(() => {
