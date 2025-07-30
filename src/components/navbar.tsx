@@ -37,6 +37,14 @@ export default function Navbar({ inverse }: { inverse?: boolean }) {
             ABOUT
           </Button>
         </AboutDialog>
+        <Link href="/stake">
+          <Button
+            variant="ghost"
+            className={inverse ? "text-[#48333D] hover:text-[#48333D]/60" : ""}
+          >
+            STAKE
+          </Button>
+        </Link>
         <Link href="/leaderboard">
           <Button
             variant="ghost"
