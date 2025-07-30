@@ -2,6 +2,19 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+### Environment Setup
+
+To use the staking balance checker feature, you'll need to set up an Alchemy API key:
+
+1. Get your API key from [Alchemy](https://www.alchemy.com/)
+2. Create a `.env.local` file in the root directory
+3. Add the following line to your `.env.local` file:
+   ```
+   NEXT_PUBLIC_ALCHEMY_API_KEY=your_alchemy_api_key_here
+   ```
+
+### Development Server
+
 First, run the development server:
 
 ```bash
@@ -34,4 +47,5 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
 # Trigger Vercel deployment

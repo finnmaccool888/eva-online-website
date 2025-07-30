@@ -1,14 +1,54 @@
 "use client";
 
+import { useState } from "react";
 import Navbar from "@/components/navbar";
 import Corners from "@/components/corners";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import {
+  getStakingStatus,
+  isValidEthereumAddress,
+  type StakingInfo,
+} from "@/lib/staking";
 
 export default function Stake() {
+  const [walletAddress, setWalletAddress] = useState("");
+  const [stakingInfo, setStakingInfo] = useState<StakingInfo | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleCheckBalance = async () => {
+    if (!walletAddress.trim()) {
+      setError("Please enter a wallet address");
+      return;
+    }
+
+    if (!isValidEthereumAddress(walletAddress.trim())) {
+      setError(
+        "Please enter a valid Ethereum address (0x followed by 40 characters)"
+      );
+      return;
+    }
+
+    setIsLoading(true);
+    setError("");
+    setStakingInfo(null);
+
+    try {
+      const info = await getStakingStatus(walletAddress.trim());
+      setStakingInfo(info);
+    } catch (err) {
+      setError("Failed to fetch staking information. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <div className="relative bg-top p-4 min-h-screen md:min-h-auto md:pb-[200px]">
+    <div className="relative bg-top p-4 min-h-screen flex flex-col">
       <Navbar inverse />
 
-      <div className="flex flex-col lg:flex-row justify-center text-[#48333D] gap-8 lg:gap-16 max-w-6xl mx-auto pt-16 px-4">
+      <div className="flex-1 flex flex-col lg:flex-row justify-center text-[#48333D] gap-8 lg:gap-16 max-w-6xl mx-auto pt-16 px-4">
         {/* Left side - Staking Information */}
         <div className="flex flex-col w-full lg:w-1/2">
           <h1 className="text-3xl lg:text-4xl font-bold uppercase mb-6">
@@ -107,10 +147,80 @@ export default function Stake() {
               </p>
             </div>
           </div>
+
+          {/* Check Staking Balance */}
+          <div className="relative mt-8">
+            {/* <Corners /> */}
+            <div className="p-6 space-y-4">
+              <h3 className="text-xl font-bold text-[#FF007A]">
+                Check Your Staking $EVA Balance
+              </h3>
+              <div className="space-y-3">
+                <Input
+                  type="text"
+                  placeholder="Enter wallet address (0x...)"
+                  value={walletAddress}
+                  onChange={(e) => setWalletAddress(e.target.value)}
+                  className="!border-[#FF007A]/20 focus:!border-[#FF007A] focus:!ring-2 focus:!ring-[#FF007A]/20 focus:!ring-offset-0 focus:!outline-none bg-white/90 backdrop-blur-sm text-[#48333D] placeholder:text-[#48333D]/60"
+                />
+                {error && <p className="text-red-500 text-sm">{error}</p>}
+                <Button
+                  onClick={handleCheckBalance}
+                  disabled={isLoading}
+                  className="w-full bg-gradient-to-r from-[#FF007A] to-[#FF6B9D] hover:from-[#FF6B9D] hover:to-[#FF007A] text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                >
+                  {isLoading ? "Checking..." : "Check Balance"}
+                </Button>
+              </div>
+
+              {/* Staking Results */}
+              {stakingInfo && (
+                <div className="mt-4 p-4 bg-gradient-to-r from-[#FF007A]/10 to-[#FF6B9D]/10 rounded-lg border border-[#FF007A]/20">
+                  <h4 className="font-bold text-[#FF007A] mb-2">
+                    Staking Status
+                  </h4>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span>Balance:</span>
+                      <span className="font-mono">
+                        {stakingInfo.formattedBalance} {stakingInfo.symbol}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Minimum Stake:</span>
+                      <span
+                        className={
+                          stakingInfo.hasMinimumStake
+                            ? "text-green-600"
+                            : "text-red-600"
+                        }
+                      >
+                        {stakingInfo.hasMinimumStake ? "✓ Met" : "✗ Not Met"}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Status:</span>
+                      <span
+                        className={
+                          stakingInfo.hasMinimumStake
+                            ? "text-green-600 font-bold"
+                            : "text-gray-600"
+                        }
+                      >
+                        {stakingInfo.hasMinimumStake
+                          ? "Active Staker"
+                          : "No Active Stake"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="text-sm text-center mt-6 text-[#48333D]">
+      <div className="text-sm text-center py-6 text-[#48333D]">
         COPYRIGHT © 2025 EVA ONLINE
       </div>
     </div>
