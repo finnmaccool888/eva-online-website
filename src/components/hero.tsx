@@ -43,29 +43,9 @@ export default function Hero() {
               <PrimaryButton size="lg">JOIN THE REVOLUTION</PrimaryButton>
             </Link> */}
             <div className="space-y-2" style={{ marginTop: "10px" }}>
-              <Link
-                href="https://app.virtuals.io/virtuals/33654"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <Link href="/stake" rel="noopener noreferrer">
                 <PrimaryButton size="lg">STAKE $EVA</PrimaryButton>
               </Link>
-              <div className="space-y-1 ml-2" style={{ marginTop: "10px" }}>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-[#FF007A] rounded-full"></div>
-                  <p className="text-sm text-white/80">
-                    EVA stake multiplier bonus
-                  </p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-[#FF007A] rounded-full"></div>
-                  <p className="text-sm text-white/80">Mystery Stake Bonus</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-[#FF007A] rounded-full"></div>
-                  <p className="text-sm text-white/80">IP activation</p>
-                </div>
-              </div>
             </div>
           </div>
         </div>
