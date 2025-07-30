@@ -60,6 +60,24 @@ export default function Stake() {
                 </p>
               </div>
             </div>
+
+            {/* Stake $EVA Button */}
+            <div className="relative mt-8">
+              {/* <Corners /> */}
+              <div className="p-6 text-center">
+                <a
+                  href="https://app.virtuals.io/virtuals/33654"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block bg-gradient-to-r from-[#FF007A] to-[#FF6B9D] hover:from-[#FF6B9D] hover:to-[#FF007A] text-white font-bold py-4 px-8 rounded-lg text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                >
+                  Stake $EVA
+                </a>
+                <p className="text-sm mt-3 text-gray-600">
+                  Click to open the Virtuals staking platform
+                </p>
+              </div>
+            </div>
           </div>
         </div>
 
