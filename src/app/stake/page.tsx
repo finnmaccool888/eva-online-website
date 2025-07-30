@@ -38,6 +38,7 @@ export default function Stake() {
       const info = await getStakingStatus(walletAddress.trim());
       setStakingInfo(info);
     } catch (err) {
+      console.log(err);
       setError("Failed to fetch staking information. Please try again.");
     } finally {
       setIsLoading(false);
