@@ -184,11 +184,11 @@ export default function Stake() {
                     <div className="flex justify-between">
                       <span>Balance:</span>
                       <span className="font-mono">
-                        {stakingInfo.formattedBalance} {stakingInfo.symbol}
+                        {stakingInfo.formattedBalance} $EVA
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span>Minimum Stake:</span>
+                      <span>Minimum Stake (50k): </span>
                       <span
                         className={
                           stakingInfo.hasMinimumStake
@@ -197,6 +197,20 @@ export default function Stake() {
                         }
                       >
                         {stakingInfo.hasMinimumStake ? "✓ Met" : "✗ Not Met"}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Optimal amount (500k):</span>
+                      <span
+                        className={
+                          stakingInfo.optimalStake
+                            ? "text-green-600"
+                            : "text-red-600"
+                        }
+                      >
+                        {stakingInfo.optimalStake
+                          ? "✓ Optimal"
+                          : "✗ Not Optimal"}
                       </span>
                     </div>
                     <div className="flex justify-between">

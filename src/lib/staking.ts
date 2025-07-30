@@ -1,7 +1,8 @@
 import { ethers } from "ethers";
 
 // Constants
-const MIN_STAKED_AMOUNT = ethers.parseUnits("1", 18); // 100 EVA minimum stake
+const MIN_STAKED_AMOUNT = ethers.parseUnits("50000", 18); // 100 EVA minimum stake
+const OPTIMAL_STAKED_AMOUNT = ethers.parseUnits("500000", 18); // 100 EVA minimum stake
 const STACKING_CONTRACT_ADDRESS = "0x4C143539356444ABA748b8523A39D953f24D8d80";
 
 // ERC20 ABI for balance checking
@@ -14,6 +15,7 @@ const ERC20_ABI = [
 
 export interface StakingInfo {
   hasMinimumStake: boolean;
+  optimalStake: boolean;
   balance: string;
   formattedBalance: string;
   symbol: string;
@@ -45,6 +47,7 @@ export const getStakingStatus = async (
     if (balance > 0) {
       return {
         hasMinimumStake: balance >= MIN_STAKED_AMOUNT,
+        optimalStake: balance >= OPTIMAL_STAKED_AMOUNT,
         balance: balance.toString(),
         formattedBalance: ethers.formatUnits(balance, 18),
         symbol: "EVA",
@@ -54,6 +57,7 @@ export const getStakingStatus = async (
 
     return {
       hasMinimumStake: false,
+      optimalStake: false,
       balance: "0",
       formattedBalance: "0",
       symbol: "EVA",
@@ -63,6 +67,7 @@ export const getStakingStatus = async (
     console.error("Error fetching staking status:", error);
     return {
       hasMinimumStake: false,
+      optimalStake: false,
       balance: "0",
       formattedBalance: "0",
       symbol: "EVA",
