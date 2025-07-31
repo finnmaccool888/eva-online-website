@@ -11,6 +11,7 @@ import {
 import { LeaderboardEntry, useLeaderboard } from "@/lib/hooks/useLeaderboard";
 import { formatNumber } from "@/lib/utils";
 import { useEffect, useState } from "react";
+import SeasonTwoBanner from "./season-two-banner";
 
 export default function TableDemo() {
   const { data, isLoading, isError, error } = useLeaderboard();
@@ -34,10 +35,13 @@ export default function TableDemo() {
   }, [data, showFlaggedYappers]);
 
   if (isLoading) {
-    return (
-      <div className="w-full overflow-x-auto">
-        {/* Add the Connect Wallet for Airdrop */}
-        <Table className="w-full p-4 rounded-lg border border-white bg-white/10 text-[#48333D] min-w-[400px]">
+      return (
+    <div className="w-full overflow-x-auto">
+      {/* Season Two Banner */}
+      <SeasonTwoBanner />
+      
+      {/* Add the Connect Wallet for Airdrop */}
+      <Table className="w-full p-4 rounded-lg border border-white bg-white/10 text-[#48333D] min-w-[400px]">
           <TableHeader>
             <TableRow className="text-[#48333D] font-bold">
               <TableHead className="w-[100px] text-[#48333D]">Rank</TableHead>
@@ -75,6 +79,9 @@ export default function TableDemo() {
 
   return (
     <div className="w-full overflow-x-auto">
+      {/* Season Two Banner */}
+      <SeasonTwoBanner />
+      
       {/* Add the Connect Wallet for Airdrop */}
       <div className="mb-4 flex justify-center">
         <button
