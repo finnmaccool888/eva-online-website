@@ -35,13 +35,13 @@ export default function TableDemo() {
   }, [data, showFlaggedYappers]);
 
   if (isLoading) {
-      return (
-    <div className="w-full overflow-x-auto">
-      {/* Season Two Banner */}
-      <SeasonTwoBanner />
-      
-      {/* Add the Connect Wallet for Airdrop */}
-      <Table className="w-full p-4 rounded-lg border border-white bg-white/10 text-[#48333D] min-w-[400px]">
+    return (
+      <div className="w-full overflow-x-auto">
+        {/* Season Two Banner */}
+        <SeasonTwoBanner />
+
+        {/* Add the Connect Wallet for Airdrop */}
+        <Table className="w-full p-4 rounded-lg border border-white bg-white/10 text-[#48333D] min-w-[400px]">
           <TableHeader>
             <TableRow className="text-[#48333D] font-bold">
               <TableHead className="w-[100px] text-[#48333D]">Rank</TableHead>
@@ -81,10 +81,18 @@ export default function TableDemo() {
     <div className="w-full overflow-x-auto">
       {/* Season Two Banner */}
       <SeasonTwoBanner />
-      
+
       {/* Add the Connect Wallet for Airdrop */}
       <div className="mb-4 flex justify-center">
-        <button
+        {/* <div className="text-center py-6">
+          <div className="text-lg font-semibold text-gray-700 mb-2">
+            Submissions are closed
+          </div>
+          <div className="text-sm text-gray-500">
+            Wallet submission for airdrop has ended
+          </div>
+        </div> */}
+        {/* <button
           className="group relative flex items-center justify-center px-6 py-3 rounded-full bg-gradient-to-r from-[#FF007A]/20 to-[#FF007A]/10 border border-[#FF007A]/30 shadow-none opacity-90 hover:opacity-100 hover:bg-gradient-to-r hover:from-[#FF007A]/30 hover:to-[#FF007A]/20 hover:shadow-[0_0_12px_2px_rgba(255,0,122,0.25)] transition-all duration-300 font-medium text-[#FF007A] hover:text-[#FF007A]/90 text-sm tracking-wide"
           onClick={() => {
             const url = "https://leaderboard.songjam.space/evaonlinexyz";
@@ -108,7 +116,7 @@ export default function TableDemo() {
             <span>Connect Wallet for Airdrop</span>
           </span>
           <span className="absolute inset-0 rounded-full bg-white/0 group-hover:bg-[#FF007A]/10 transition-colors duration-300 blur-sm" />
-        </button>
+        </button> */}
       </div>
       <Table className="w-full p-4 rounded-lg border border-white bg-white/10 text-[#48333D] min-w-[400px]">
         <TableHeader>
