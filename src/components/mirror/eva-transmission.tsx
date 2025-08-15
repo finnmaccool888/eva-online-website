@@ -25,40 +25,122 @@ const moodIcons = {
 };
 
 // Calculate human score based on answer quality
-function calculateHumanScore(sessionData: Array<{ answer: string; reaction: EvaReaction | null }>): number {
-  if (sessionData.length === 0) return 0;
+function calculateHumanScore(sessionData: Array<{ answer: string; reaction: EvaReaction | null; question: MirrorQuestion }>): { 
+  score: number; 
+  breakdown: {
+    chipOnlyAnswers: number;
+    thoughtfulAnswers: number;
+    averageLength: number;
+    detailLevel: 'minimal' | 'basic' | 'detailed' | 'comprehensive';
+    feedback: string[];
+  }
+} {
+  if (sessionData.length === 0) return { 
+    score: 0, 
+    breakdown: { 
+      chipOnlyAnswers: 0, 
+      thoughtfulAnswers: 0, 
+      averageLength: 0, 
+      detailLevel: 'minimal', 
+      feedback: [] 
+    } 
+  };
   
   let totalScore = 0;
+  let chipOnlyAnswers = 0;
+  let thoughtfulAnswers = 0;
+  let totalLength = 0;
+  const feedback: string[] = [];
   
-  sessionData.forEach(({ answer, reaction }) => {
-    let score = 50; // Base score
-    
-    // Length score (up to 20 points)
+  sessionData.forEach(({ answer, reaction, question }) => {
+    let score = 30; // Reduced base score
+    const charCount = answer.trim().length;
     const wordCount = answer.trim().split(/\s+/).length;
-    if (wordCount >= 20) score += 20;
-    else if (wordCount >= 10) score += 15;
-    else if (wordCount >= 5) score += 10;
-    else score += 5;
+    totalLength += charCount;
     
-    // Detail score (up to 15 points) - check for punctuation, specific examples
-    const hasPunctuation = /[.!?,;:]/.test(answer);
-    const hasMultipleSentences = answer.split(/[.!?]+/).filter(s => s.trim()).length > 1;
-    if (hasMultipleSentences) score += 15;
-    else if (hasPunctuation) score += 8;
-    else score += 3;
+    // Check if answer is chip-only (very short, likely just selected suggestions)
+    const isChipOnly = charCount < 20 || wordCount < 4;
     
-    // Engagement score (up to 15 points) - based on Eva's reaction
-    if (reaction) {
-      if (reaction.mood === "shocked" || reaction.mood === "curious") score += 15;
-      else if (reaction.mood === "contemplative") score += 12;
-      else if (reaction.mood === "playful") score += 10;
+    if (isChipOnly) {
+      chipOnlyAnswers++;
+      score = Math.min(score, 40); // Cap chip-only answers at 40
+    } else {
+      thoughtfulAnswers++;
+      
+      // Length score (up to 25 points for thoughtful answers)
+      if (charCount >= 120) score += 25;
+      else if (charCount >= 80) score += 20;
+      else if (charCount >= 50) score += 15;
+      else if (charCount >= 30) score += 10;
       else score += 5;
+      
+      // Detail score (up to 20 points) - check for punctuation, multiple sentences
+      const hasPunctuation = /[.!?,;:]/.test(answer);
+      const hasMultipleSentences = answer.split(/[.!?]+/).filter(s => s.trim().length > 3).length > 1;
+      const hasSpecificDetails = /\b(because|when|where|how|why|specifically|example|like|such as)\b/i.test(answer);
+      
+      if (hasMultipleSentences && hasSpecificDetails) score += 20;
+      else if (hasMultipleSentences) score += 15;
+      else if (hasPunctuation && hasSpecificDetails) score += 12;
+      else if (hasPunctuation) score += 8;
+      else score += 3;
+      
+      // Personal touch score (up to 15 points) - first person references, emotions
+      const hasPersonalPronouns = /\b(I|me|my|myself|personally)\b/i.test(answer);
+      const hasEmotions = /\b(feel|think|believe|love|hate|fear|hope|excited|nervous|happy|sad|angry)\b/i.test(answer);
+      
+      if (hasPersonalPronouns && hasEmotions) score += 15;
+      else if (hasPersonalPronouns) score += 10;
+      else if (hasEmotions) score += 8;
+      else score += 3;
+    }
+    
+    // Engagement score (up to 10 points) - based on Eva's reaction
+    if (reaction) {
+      if (reaction.mood === "shocked" || reaction.mood === "curious") score += 10;
+      else if (reaction.mood === "contemplative") score += 8;
+      else if (reaction.mood === "playful") score += 6;
+      else score += 3;
     }
     
     totalScore += Math.min(score, 100); // Cap at 100 per answer
   });
   
-  return Math.round(totalScore / sessionData.length);
+  const averageScore = Math.round(totalScore / sessionData.length);
+  const averageLength = Math.round(totalLength / sessionData.length);
+  
+  // Generate feedback based on performance
+  if (chipOnlyAnswers > sessionData.length * 0.7) {
+    feedback.push("Most responses were very brief - try sharing more personal details next time");
+  }
+  if (chipOnlyAnswers > 0 && thoughtfulAnswers > 0) {
+    feedback.push(`${chipOnlyAnswers} quick responses and ${thoughtfulAnswers} detailed responses detected`);
+  }
+  if (averageLength < 30) {
+    feedback.push("Try writing 1-2 sentences with specific examples");
+  } else if (averageLength < 60) {
+    feedback.push("Good start! Consider adding more personal context");
+  } else if (averageLength >= 100) {
+    feedback.push("Excellent response depth - great self-reflection!");
+  }
+  
+  // Determine detail level
+  let detailLevel: 'minimal' | 'basic' | 'detailed' | 'comprehensive';
+  if (averageScore >= 85) detailLevel = 'comprehensive';
+  else if (averageScore >= 70) detailLevel = 'detailed';
+  else if (averageScore >= 50) detailLevel = 'basic';
+  else detailLevel = 'minimal';
+  
+  return {
+    score: averageScore,
+    breakdown: {
+      chipOnlyAnswers,
+      thoughtfulAnswers,
+      averageLength,
+      detailLevel,
+      feedback
+    }
+  };
 }
 
 export default function EvaTransmission() {
@@ -306,7 +388,7 @@ export default function EvaTransmission() {
     }
 
     // Calculate and save human score to profile
-    const humanScore = calculateHumanScore(sessionData);
+    const { score: humanScore, breakdown } = calculateHumanScore(sessionData);
     const questionsAnswered = sessionData.length;
     const pointsEarned = questionsAnswered * 500;
     
@@ -634,7 +716,7 @@ export default function EvaTransmission() {
 
         {/* Complete Stage */}
         {stage === "complete" && (() => {
-          const humanScore = calculateHumanScore(sessionData);
+          const { score: humanScore, breakdown } = calculateHumanScore(sessionData);
           const questionsAnswered = sessionData.length;
           const pointsPerQuestion = 500;
           const totalPoints = questionsAnswered * pointsPerQuestion;
@@ -698,10 +780,10 @@ export default function EvaTransmission() {
                   <div className="text-xs sm:text-sm text-muted-foreground space-y-1">
                     <p>Based on response depth, authenticity, and engagement</p>
                     <p className="text-red-800">
-                      {humanScore >= 80 && "Exceptional human qualities detected!"}
-                      {humanScore >= 60 && humanScore < 80 && "Strong human consciousness patterns"}
-                      {humanScore >= 40 && humanScore < 60 && "Developing human traits observed"}
-                      {humanScore < 40 && "Further calibration recommended"}
+                      {humanScore >= 80 && "Exceptional self-reflection and detail!"}
+                      {humanScore >= 60 && humanScore < 80 && "Good depth, try adding more personal examples"}
+                      {humanScore >= 40 && humanScore < 60 && "Developing well - more detail would help"}
+                      {humanScore < 40 && "Consider writing 1-2 full sentences with specific examples"}
                     </p>
                   </div>
                 </motion.div>
@@ -738,6 +820,39 @@ export default function EvaTransmission() {
                       🎉 {sessionData.filter(d => d.reaction?.unlock).length} new traits discovered!
                     </div>
                   )}
+                </motion.div>
+
+                {/* Detailed Breakdown */}
+                <motion.div 
+                  className="bg-muted/50 rounded-lg p-4 space-y-3"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6 }}
+                >
+                  <h3 className="text-sm font-semibold">Detailed Breakdown</h3>
+                  <div className="grid grid-cols-2 gap-3 text-sm">
+                    <div className="bg-background/50 rounded p-2">
+                      <div className="text-muted-foreground text-xs">Chip-only Answers</div>
+                      <div className="font-bold text-red-400">{breakdown.chipOnlyAnswers}</div>
+                    </div>
+                    <div className="bg-background/50 rounded p-2">
+                      <div className="text-muted-foreground text-xs">Thoughtful Answers</div>
+                      <div className="font-bold text-green-400">{breakdown.thoughtfulAnswers}</div>
+                    </div>
+                    <div className="bg-background/50 rounded p-2">
+                      <div className="text-muted-foreground text-xs">Average Answer Length</div>
+                      <div className="font-bold text-blue-400">{breakdown.averageLength} characters</div>
+                    </div>
+                    <div className="bg-background/50 rounded p-2">
+                      <div className="text-muted-foreground text-xs">Detail Level</div>
+                      <div className="font-bold text-purple-400">{breakdown.detailLevel}</div>
+                    </div>
+                  </div>
+                  <div className="text-xs text-muted-foreground space-y-1">
+                    {breakdown.feedback.map((item, index) => (
+                      <p key={index}>{item}</p>
+                    ))}
+                  </div>
                 </motion.div>
               </div>
 
