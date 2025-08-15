@@ -37,20 +37,28 @@ export default function Navbar({ inverse }: { inverse?: boolean }) {
             ABOUT
           </Button>
         </AboutDialog>
+        <Link href="/mirror">
+          <Button
+            variant="ghost"
+            className={inverse ? "text-[#48333D] hover:text-[#48333D]/60" : ""}
+          >
+            MIRROR
+          </Button>
+        </Link>
+        <Link href="/profile">
+          <Button
+            variant="ghost"
+            className={inverse ? "text-[#48333D] hover:text-[#48333D]/60" : ""}
+          >
+            PROFILE
+          </Button>
+        </Link>
         <Link href="/stake">
           <Button
             variant="ghost"
             className={inverse ? "text-[#48333D] hover:text-[#48333D]/60" : ""}
           >
             STAKE
-          </Button>
-        </Link>
-        <Link href="/leaderboard">
-          <Button
-            variant="ghost"
-            className={inverse ? "text-[#48333D] hover:text-[#48333D]/60" : ""}
-          >
-            LEADERBOARD
           </Button>
         </Link>
         <Link
@@ -79,14 +87,6 @@ export default function Navbar({ inverse }: { inverse?: boolean }) {
             className={inverse ? "text-[#48333D] hover:text-[#48333D]/60" : ""}
           >
             OG WALL
-          </Button>
-        </Link>
-        <Link href="/og-checker">
-          <Button
-            variant="ghost"
-            className={inverse ? "text-[#48333D] hover:text-[#48333D]/60" : ""}
-          >
-            OG CLAIM
           </Button>
         </Link>
         <Link

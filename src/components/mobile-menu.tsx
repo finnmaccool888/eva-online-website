@@ -50,13 +50,33 @@ export function MobileMenu({
               ABOUT
             </Button>
           </AboutDialog>
-          <Button
-            variant="ghost"
-            inverse={inverse}
-            className="w-full justify-start"
-          >
-            LEADERBOARD
-          </Button>
+          <Link href="/mirror" className="w-full">
+            <Button
+              variant="ghost"
+              inverse={inverse}
+              className="w-full justify-start"
+            >
+              MIRROR
+            </Button>
+          </Link>
+          <Link href="/profile" className="w-full">
+            <Button
+              variant="ghost"
+              inverse={inverse}
+              className="w-full justify-start"
+            >
+              PROFILE
+            </Button>
+          </Link>
+          <Link href="/stake" className="w-full">
+            <Button
+              variant="ghost"
+              inverse={inverse}
+              className="w-full justify-start"
+            >
+              STAKE
+            </Button>
+          </Link>
           <Link
             href="https://eva-online.gitbook.io/eva-agent-online"
             target="_blank"
