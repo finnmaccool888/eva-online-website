@@ -3,10 +3,10 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { UserProfile } from "@/lib/mirror/types";
-import { Calendar, Edit3, Star, TrendingUp, ChevronRight, Clock, Info } from "lucide-react";
+import { Calendar, Edit3, Star, TrendingUp, ChevronRight, Info } from "lucide-react";
 import EditSessionDialog from "./edit-session-dialog";
 import ScoringExplanation from "./scoring-explanation";
-import { loadProfile, saveProfile, updateProfilePoints } from "@/lib/mirror/profile";
+import { saveProfile, updateProfilePoints } from "@/lib/mirror/profile";
 import { reAnalyzeSession, updateProfileWithNewSessionData } from "@/lib/mirror/session-analysis";
 
 interface SessionHistoryProps {

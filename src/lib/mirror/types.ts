@@ -79,6 +79,15 @@ export type UserProfile = {
 		questionsAnswered: number;
 		humanScore: number;
 		pointsEarned: number;
+		sessionData?: Array<{
+			questionId: string;
+			questionText: string;
+			answer: string;
+			quality?: number;
+			sincerity?: number;
+			pointsAwarded?: number;
+			reasoning?: string;
+		}>;
 	}>;
 	// OG status fields
 	isOG?: boolean;

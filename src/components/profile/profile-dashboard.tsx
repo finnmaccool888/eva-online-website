@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { loadProfile, saveProfile, updateProfilePoints } from "@/lib/mirror/profile";
-import { loadUserData, createOrUpdateUser, updateUserProfile } from "@/lib/supabase/services";
 import { UserProfile } from "@/lib/mirror/types";
+import { loadProfile, saveProfile } from "@/lib/mirror/profile";
+import { loadUserData, createOrUpdateUser } from "@/lib/supabase/services";
 import ProfileHeader from "./profile-header";
 import StatsCards from "./stats-cards";
 import LeaderboardWidget from "./leaderboard-widget";

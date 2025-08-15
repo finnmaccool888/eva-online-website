@@ -41,6 +41,34 @@ export function calculatePoints(profile: UserProfile): number {
   return points;
 }
 
+// Calculate total points including session history
+export function calculateTotalPoints(profile: UserProfile): number {
+  let totalPoints = calculatePoints(profile);
+  
+  // Add points from session history if available
+  if (profile.sessionHistory && Array.isArray(profile.sessionHistory)) {
+    totalPoints += profile.sessionHistory.reduce((sum, session) => {
+      return sum + (session.pointsEarned || 0);
+    }, 0);
+  }
+  
+  // Add points from the base points field
+  totalPoints += profile.points || 0;
+  
+  return totalPoints;
+}
+
+// Update profile points based on session history and recalculate totals
+export function updateProfilePoints(profile: UserProfile): UserProfile {
+  const updated = { ...profile };
+  
+  // Recalculate points and trust score
+  updated.points = calculateTotalPoints(updated);
+  updated.trustScore = calculateTrustScore(updated);
+  
+  return updated;
+}
+
 export function calculateTrustScore(profile: UserProfile, trustPenalty: number = 0): number {
   let score = 0;
   
