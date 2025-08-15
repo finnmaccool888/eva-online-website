@@ -1,78 +1,112 @@
-import { NextResponse } from 'next/server';
-import crypto from 'crypto';
+import { NextRequest, NextResponse } from "next/server";
+import crypto from "crypto";
 
+// Twitter OAuth 2.0 endpoints
+const TWITTER_AUTH_URL = "https://twitter.com/i/oauth2/authorize";
+const TWITTER_TOKEN_URL = "https://api.twitter.com/2/oauth2/token";
+
+// OAuth 2.0 configuration
+const CLIENT_ID = process.env.TWITTER_CLIENT_ID!;
+const CLIENT_SECRET = process.env.TWITTER_CLIENT_SECRET!;
+const REDIRECT_URI = process.env.NODE_ENV === "production" 
+  ? "https://www.evaonline.xyz/api/auth/twitter/callback"
+  : "http://localhost:3000/api/auth/twitter/callback";
+
+// Base64URL encode helper
 function base64URLEncode(str: Buffer): string {
-  return str.toString('base64')
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_')
-    .replace(/=/g, '');
+  return str.toString("base64")
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=/g, "");
 }
 
+// PKCE generator
 function generateCodeVerifier(): string {
-  const verifier = base64URLEncode(crypto.randomBytes(32));
-  return verifier;
+  return base64URLEncode(crypto.randomBytes(32));
 }
 
 function generateCodeChallenge(verifier: string): string {
-  const challenge = base64URLEncode(crypto.createHash('sha256').update(verifier).digest());
-  return challenge;
+  return base64URLEncode(crypto.createHash("sha256").update(verifier).digest());
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
-    const clientId = process.env.TWITTER_CLIENT_ID;
-    const clientSecret = process.env.TWITTER_CLIENT_SECRET;
-    const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
-    
-    // Better validation and logging
-    console.log('Environment check:', {
-      hasClientId: !!clientId,
-      hasClientSecret: !!clientSecret,
-      baseUrl: baseUrl,
-      nodeEnv: process.env.NODE_ENV
-    });
-    
-    if (!clientId) {
-      console.log('Twitter credentials not found, using demo mode');
-      const callbackUrl = `${baseUrl}/api/auth/twitter/callback?code=demo_code&state=demo_state`;
-      return NextResponse.json({ authUrl: callbackUrl });
+    // Check if credentials exist
+    if (!CLIENT_ID || !CLIENT_SECRET) {
+      console.error("Missing Twitter OAuth credentials");
+      const baseUrl = `${req.nextUrl.protocol}//${req.nextUrl.host}`;
+      return NextResponse.redirect(`${baseUrl}/mirror?error=config_error`);
     }
 
-    if (!clientSecret) {
-      console.error('TWITTER_CLIENT_SECRET is missing!');
-      return NextResponse.json(
-        { error: 'Twitter configuration incomplete' },
-        { status: 500 }
-      );
-    }
-    
-    // Real Twitter OAuth 2.0 flow with proper PKCE
-    const state = crypto.randomBytes(16).toString('hex');
+    // Generate PKCE code verifier and state
     const codeVerifier = generateCodeVerifier();
     const codeChallenge = generateCodeChallenge(codeVerifier);
+    const state = Math.random().toString(36).substring(7);
     
-    // Store the code verifier (in production, use a secure session store)
-    // For now, we'll include it in the state parameter (not recommended for production)
-    const stateWithVerifier = `${state}:${codeVerifier}`;
+    console.log("OAuth request:", {
+      clientId: CLIENT_ID,
+      redirectUri: REDIRECT_URI,
+      hasSecret: !!CLIENT_SECRET
+    });
     
-    const authUrl = new URL('https://twitter.com/i/oauth2/authorize');
-    authUrl.searchParams.append('response_type', 'code');
-    authUrl.searchParams.append('client_id', clientId);
-    authUrl.searchParams.append('redirect_uri', `${baseUrl}/api/auth/twitter/callback`);
-    authUrl.searchParams.append('scope', 'tweet.read users.read offline.access');
-    authUrl.searchParams.append('state', stateWithVerifier);
-    authUrl.searchParams.append('code_challenge', codeChallenge);
-    authUrl.searchParams.append('code_challenge_method', 'S256');
+    // Create the redirect URL
+    const authUrl = `${TWITTER_AUTH_URL}?` + new URLSearchParams({
+      response_type: "code",
+      client_id: CLIENT_ID,
+      redirect_uri: REDIRECT_URI,
+      scope: "tweet.read users.read offline.access",
+      state: state,
+      code_challenge: codeChallenge,
+      code_challenge_method: "S256"
+    });
     
-    console.log('Generated auth URL:', authUrl.toString());
-    console.log('Callback URL will be:', `${baseUrl}/api/auth/twitter/callback`);
+    // Store in cookies for callback
+    const response = NextResponse.redirect(authUrl);
     
-    return NextResponse.json({ authUrl: authUrl.toString() });
+    console.log("Setting OAuth state cookies and redirecting to Twitter");
+    
+    // Clear any existing auth cookies to prevent conflicts
+    response.cookies.set("twitter_auth", "", {
+      maxAge: 0,
+      path: "/",
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax"
+    });
+    
+    response.cookies.set("twitter_auth_client", "", {
+      maxAge: 0,
+      path: "/",
+      httpOnly: false,
+      secure: false,
+      sameSite: "lax"
+    });
+    
+    // Set cookies with proper options
+    response.cookies.set("twitter_state", state, {
+      httpOnly: true,
+      secure: false, // Explicitly set to false for localhost
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 10, // 10 minutes
+      // Add domain explicitly for localhost
+      ...(process.env.NODE_ENV === "development" && { domain: "localhost" })
+    });
+    
+    response.cookies.set("code_verifier", codeVerifier, {
+      httpOnly: true,
+      secure: false, // Explicitly set to false for localhost
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 10, // 10 minutes
+      // Add domain explicitly for localhost
+      ...(process.env.NODE_ENV === "development" && { domain: "localhost" })
+    });
+    
+    return response;
   } catch (error) {
-    console.error('Twitter auth error:', error);
-    return NextResponse.json(
-      { error: 'Failed to initialize Twitter authentication' },
-      { status: 500 }
-    );
+    console.error("Twitter OAuth error:", error);
+    const baseUrl = `${req.nextUrl.protocol}//${req.nextUrl.host}`;
+    return NextResponse.redirect(`${baseUrl}/mirror?error=auth_failed`);
   }
 } 
