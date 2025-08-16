@@ -1,5 +1,6 @@
 import { supabase, handleSupabaseError } from './client';
 import type { UserProfile, SoulSeed, AnalyzedMemory } from '@/lib/mirror/types';
+import { enforceOGPoints } from './og-enforcement';
 
 // User operations
 export async function createOrUpdateUser(twitterHandle: string, twitterName?: string, isOG: boolean = false) {
@@ -11,48 +12,39 @@ export async function createOrUpdateUser(twitterHandle: string, twitterName?: st
       .single();
 
     if (existingUser) {
-      // Update is_og status if not already set
-      if (isOG && !existingUser.is_og) {
-        await supabase
-          .from('users')
-          .update({ is_og: true })
-          .eq('id', existingUser.id);
-          
-        // Award OG points if profile exists
-        if (existingUser.user_profiles) {
-          const currentPoints = existingUser.user_profiles.points || 0;
-          await supabase
-            .from('user_profiles')
-            .update({ 
-              points: currentPoints + 10000,
-              is_og_rewarded: true 
-            })
-            .eq('user_id', existingUser.id);
-        }
-      }
-      return { user: existingUser, isNew: false, ogPointsAwarded: isOG && !existingUser.is_og };
+      // Always enforce OG points for existing users
+      const enforcement = await enforceOGPoints(twitterHandle);
+      
+      return { 
+        user: existingUser, 
+        isNew: false, 
+        ogPointsAwarded: enforcement.pointsFixed 
+      };
     }
 
+    // Create new user - check OG status from source of truth
+    const { isOG: actuallyIsOG } = await enforceOGPoints(twitterHandle);
+    
     const { data: newUser, error } = await supabase
       .from('users')
       .insert({
         twitter_handle: twitterHandle,
         twitter_name: twitterName,
-        is_og: isOG,
+        is_og: actuallyIsOG, // Use verified OG status
       })
       .select()
       .single();
 
     if (error) throw error;
 
-    // Create profile with OG points if applicable
+    // Create profile with correct points
     await supabase.from('user_profiles').insert({
       user_id: newUser.id,
-      points: isOG ? 10000 : 0,
-      is_og_rewarded: isOG,
+      points: actuallyIsOG ? 11000 : 1000, // Base + OG bonus if applicable
+      is_og_rewarded: actuallyIsOG,
     });
 
-    return { user: newUser, isNew: true, ogPointsAwarded: isOG };
+    return { user: newUser, isNew: true, ogPointsAwarded: actuallyIsOG };
   } catch (error) {
     console.error('Error creating/updating user:', error);
     throw error;

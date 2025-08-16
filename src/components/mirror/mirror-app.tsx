@@ -14,6 +14,7 @@ import PasswordGate from "@/components/mirror/password-gate";
 import { readJson, writeJson, StorageKeys } from "@/lib/mirror/storage";
 import { loadProfile } from "@/lib/mirror/profile";
 import { useTwitterAuth } from "@/lib/hooks/useTwitterAuth";
+import { setTwitterAuth } from "@/lib/mirror/auth";
 
 export default function MirrorApp() {
   const [showWizard, setShowWizard] = useState(false);
@@ -143,7 +144,9 @@ export default function MirrorApp() {
         profile.personalInfo.bio;
       
       if (!profile) {
-        // Create default profile
+        // Create default profile - always check OG status from source of truth
+        const { isOG: verifiedOG } = await import('@/lib/mirror/og-verification').then(m => ({ isOG: m.isOG(auth.twitterHandle) }));
+        
         const newProfile = {
           twitterId: auth.twitterId,
           twitterHandle: auth.twitterHandle,
@@ -155,23 +158,45 @@ export default function MirrorApp() {
             bio: "",
           },
           socialProfiles: [],
-          points: auth.isOG ? 11000 : 1000, // 1000 base + 10000 OG bonus
+          points: verifiedOG ? 11000 : 1000, // 1000 base + 10000 OG bonus
           trustScore: 20,
           createdAt: Date.now(),
           updatedAt: Date.now(),
-          isOG: auth.isOG || false,
-          ogPointsAwarded: auth.isOG || false,
+          isOG: verifiedOG,
+          ogPointsAwarded: verifiedOG,
         };
         writeJson(StorageKeys.userProfile, newProfile);
+        
+        // Update auth isOG if different
+        if (auth.isOG !== verifiedOG) {
+          auth.isOG = verifiedOG;
+          setTwitterAuth(auth);
+        }
       } else {
-        // Check if existing profile needs OG points
-        if (auth.isOG && !profile.ogPointsAwarded) {
-          profile.points = (profile.points || 0) + 10000;
+        // Check if existing profile needs OG points - verify from source of truth
+        const { isOG: verifiedOG } = await import('@/lib/mirror/og-verification').then(m => ({ isOG: m.isOG(auth.twitterHandle) }));
+        
+        if (verifiedOG && (!profile.ogPointsAwarded || profile.points < 11000)) {
+          // Calculate session points to preserve them
+          let sessionPoints = 0;
+          if (profile.sessionHistory && Array.isArray(profile.sessionHistory)) {
+            sessionPoints = profile.sessionHistory.reduce((sum: number, session: any) => {
+              return sum + (session.pointsEarned || 0);
+            }, 0);
+          }
+          
+          profile.points = 11000 + sessionPoints; // Base + OG + sessions
           profile.isOG = true;
           profile.ogPointsAwarded = true;
           profile.updatedAt = Date.now();
           writeJson(StorageKeys.userProfile, profile);
-          console.log('[MirrorApp] Added OG points to existing profile');
+          console.log('[MirrorApp] Enforced OG points for existing profile');
+        }
+        
+        // Update auth isOG if different
+        if (auth.isOG !== verifiedOG) {
+          auth.isOG = verifiedOG;
+          setTwitterAuth(auth);
         }
       }
       

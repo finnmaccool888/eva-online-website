@@ -30,13 +30,17 @@ export default function ProfileDashboard({ auth }: ProfileDashboardProps) {
       try {
         console.log('[ProfileDashboard] Loading profile data from Supabase for:', auth.twitterHandle);
         
-        // First, ensure user exists in Supabase
-        const { user, isNew } = await createOrUpdateUser(auth.twitterHandle, auth.twitterName, auth.isOG);
+        // First, ensure user exists in Supabase and OG points are enforced
+        const { user, isNew, ogPointsAwarded } = await createOrUpdateUser(auth.twitterHandle, auth.twitterName, auth.isOG);
         
         if (!user) {
           console.error('[ProfileDashboard] Failed to create/get user');
           setLoading(false);
           return;
+        }
+        
+        if (ogPointsAwarded) {
+          console.log('[ProfileDashboard] OG points were enforced for user');
         }
 
         // Load complete user data from Supabase

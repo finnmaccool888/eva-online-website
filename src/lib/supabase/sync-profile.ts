@@ -1,6 +1,7 @@
 import { supabase } from './client';
 import { loadProfile, calculateTotalPoints } from '@/lib/mirror/profile';
 import { getTwitterAuth } from '@/lib/mirror/auth';
+import { enforceOGPoints } from './og-enforcement';
 
 /**
  * Comprehensive profile sync that ensures Supabase matches localStorage exactly
@@ -12,6 +13,10 @@ export async function syncCompleteProfile() {
       console.error('[SyncProfile] No auth found');
       return { success: false, error: 'No authentication' };
     }
+
+    // First, enforce OG points if applicable
+    const ogEnforcement = await enforceOGPoints(auth.twitterHandle);
+    console.log('[SyncProfile] OG enforcement result:', ogEnforcement);
 
     // Get user from Supabase
     const { data: user, error: userError } = await supabase
