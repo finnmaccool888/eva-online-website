@@ -241,7 +241,11 @@ export default function MirrorApp() {
         'auth_failed': 'Authentication failed. Please try again.',
         'invalid_request': 'Invalid OAuth request. Check your Twitter app configuration.',
         'invalid_client': 'Invalid Client ID or Secret. Check your environment variables.',
-        'missing_params': 'Missing required parameters from Twitter.'
+        'missing_params': 'Missing required parameters from Twitter.',
+        'callback_failed': 'Authentication callback failed. Check server logs.',
+        'network_error': 'Network error during authentication. Please try again.',
+        'token_error': 'Failed to exchange authorization code for token.',
+        'user_fetch_error': 'Failed to fetch user information from Twitter.'
       };
       
       const errorMessage = errorMessages[error] || `Authentication error: ${error}`;

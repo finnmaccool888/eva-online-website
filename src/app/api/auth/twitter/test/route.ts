@@ -6,6 +6,10 @@ export async function GET(req: NextRequest) {
   const nodeEnv = process.env.NODE_ENV;
   const baseUrl = process.env.NEXT_PUBLIC_URL || `${req.nextUrl.protocol}//${req.nextUrl.host}`;
   
+  // Check Supabase configuration
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
+  
   // Test if we can reach Twitter's OAuth endpoints
   let twitterTestResult = "Not tested";
   try {
@@ -43,6 +47,14 @@ export async function GET(req: NextRequest) {
       clientIdPrefix: clientId?.substring(0, 5) + "...",
       hasClientSecret: !!clientSecret,
       clientSecretLength: clientSecret?.length || 0,
+    },
+    supabase: {
+      hasSupabaseUrl: !!supabaseUrl,
+      hasSupabaseAnonKey: !!supabaseAnonKey,
+      supabaseUrlPrefix: supabaseUrl?.substring(0, 30) + "...",
+      isConfigured: !!supabaseUrl && !!supabaseAnonKey && 
+                     supabaseUrl !== 'https://placeholder.supabase.co' && 
+                     supabaseAnonKey !== 'placeholder-key',
     },
     urls: {
       currentUrl: req.url,

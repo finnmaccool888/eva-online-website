@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createOrUpdateUser } from "@/lib/supabase/services";
+import { hasValidSupabaseConfig } from "@/lib/supabase/client";
 import { isOG } from "@/lib/mirror/og-verification";
 
 const CLIENT_ID = process.env.TWITTER_CLIENT_ID!;
@@ -144,8 +145,20 @@ export async function GET(req: NextRequest) {
     // Check if user is an OG
     const userIsOG = isOG(user.username);
     
-    // Create or update user in Supabase
-    const { user: dbUser, ogPointsAwarded } = await createOrUpdateUser(user.username, user.name, userIsOG);
+    let ogPointsAwarded = false;
+    
+    // Create or update user in Supabase if configured
+    if (hasValidSupabaseConfig) {
+      try {
+        const result = await createOrUpdateUser(user.username, user.name, userIsOG);
+        ogPointsAwarded = result.ogPointsAwarded || false;
+      } catch (dbError) {
+        console.error("Database error (non-fatal):", dbError);
+        // Continue without database - auth will still work
+      }
+    } else {
+      console.log("Supabase not configured, skipping database operations");
+    }
     
     // Create auth session
     const authData = {
@@ -210,10 +223,27 @@ export async function GET(req: NextRequest) {
     
     return response;
     
-  } catch (error) {
+  } catch (error: any) {
     console.error("Twitter callback error:", error);
     // Get the base URL for error redirect
     const baseUrl = `${req.nextUrl.protocol}//${req.nextUrl.host}`;
-    return NextResponse.redirect(`${baseUrl}/mirror?error=callback_failed`);
+    
+    // Try to provide more specific error information
+    let errorType = "callback_failed";
+    let errorDetails = "Unknown error";
+    
+    if (error.message) {
+      errorDetails = error.message.substring(0, 100);
+    }
+    
+    if (error.message?.includes("fetch")) {
+      errorType = "network_error";
+    } else if (error.message?.includes("token")) {
+      errorType = "token_error";
+    } else if (error.message?.includes("user")) {
+      errorType = "user_fetch_error";
+    }
+    
+    return NextResponse.redirect(`${baseUrl}/mirror?error=${errorType}&details=${encodeURIComponent(errorDetails)}`);
   }
 } 
