@@ -15,6 +15,7 @@ import { readJson, writeJson, StorageKeys } from "@/lib/mirror/storage";
 import { loadProfile } from "@/lib/mirror/profile";
 import { useTwitterAuth } from "@/lib/hooks/useTwitterAuth";
 import { setTwitterAuth } from "@/lib/mirror/auth";
+import { isOG } from "@/lib/mirror/og-verification";
 
 export default function MirrorApp() {
   const [showWizard, setShowWizard] = useState(false);
@@ -145,7 +146,7 @@ export default function MirrorApp() {
       
       if (!profile) {
         // Create default profile - always check OG status from source of truth
-        const { isOG: verifiedOG } = await import('@/lib/mirror/og-verification').then(m => ({ isOG: m.isOG(auth.twitterHandle) }));
+        const verifiedOG = isOG(auth.twitterHandle);
         
         const newProfile = {
           twitterId: auth.twitterId,
@@ -174,7 +175,7 @@ export default function MirrorApp() {
         }
       } else {
         // Check if existing profile needs OG points - verify from source of truth
-        const { isOG: verifiedOG } = await import('@/lib/mirror/og-verification').then(m => ({ isOG: m.isOG(auth.twitterHandle) }));
+        const verifiedOG = isOG(auth.twitterHandle);
         
         if (verifiedOG && (!profile.ogPointsAwarded || profile.points < 11000)) {
           // Calculate session points to preserve them
