@@ -31,10 +31,12 @@ export default function MirrorApp() {
     hasHookAuth: !!auth,
     hasLocalAuth: typeof window !== 'undefined' ? !!localStorage.getItem('twitter_auth') : false,
     hasAuth: !!auth,
-    isInitialized
+    isInitialized,
+    passwordVerified,
+    authError
   };
   
-  console.log('[MirrorApp] State:', state);
+  console.log('[MirrorApp] Render state:', state);
   
   // Check if OG popup was already shown
   useEffect(() => {
@@ -222,13 +224,13 @@ export default function MirrorApp() {
     window.location.href = '/profile';
   }
   
-  // Show loading while checking auth or not initialized
-  if (loading || (!isInitialized && auth)) {
+  // Show loading only while checking auth
+  if (loading) {
     return (
       <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
         <div className="text-center">
           <p className="text-sm sm:text-base text-muted-foreground animate-pulse">
-            {loading ? "Checking authentication..." : "Loading your digital soul..."}
+            Checking authentication...
           </p>
         </div>
       </div>
@@ -306,11 +308,12 @@ export default function MirrorApp() {
     );
   }
   
-  // Show password gate if authenticated but not verified
+    // Show password gate if authenticated but not verified
   if (auth && !passwordVerified) {
+    console.log('[MirrorApp] Showing password gate for authenticated user');
     return (
       <PasswordGate 
-        isOG={auth.isOG || false}
+        isOG={auth.isOG || false} 
         onSuccess={handlePasswordSuccess}
         onProfileRedirect={handleProfileRedirect}
       />
