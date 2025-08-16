@@ -38,8 +38,13 @@ export async function GET(req: NextRequest) {
     
     // Check for errors
     if (error) {
-      console.error("Twitter OAuth error:", error);
-      return NextResponse.redirect(`${baseUrl}/mirror?error=access_denied`);
+      const errorDescription = searchParams.get("error_description");
+      console.error("Twitter OAuth error:", {
+        error,
+        errorDescription,
+        fullUrl: req.url
+      });
+      return NextResponse.redirect(`${baseUrl}/mirror?error=${error}&details=${encodeURIComponent(errorDescription || "No description")}`);
     }
     
     if (!code || !state) {

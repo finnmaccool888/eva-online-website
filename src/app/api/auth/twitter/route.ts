@@ -55,7 +55,7 @@ export async function GET(req: NextRequest) {
     });
     
     // Create the redirect URL
-    const authUrl = `${TWITTER_AUTH_URL}?` + new URLSearchParams({
+    const params = new URLSearchParams({
       response_type: "code",
       client_id: CLIENT_ID,
       redirect_uri: REDIRECT_URI,
@@ -63,6 +63,16 @@ export async function GET(req: NextRequest) {
       state: state,
       code_challenge: codeChallenge,
       code_challenge_method: "S256"
+    });
+    
+    const authUrl = `${TWITTER_AUTH_URL}?${params}`;
+    
+    console.log("OAuth URL being generated:", {
+      authUrl,
+      params: params.toString(),
+      redirectUri: REDIRECT_URI,
+      clientId: CLIENT_ID,
+      clientIdLength: CLIENT_ID.length
     });
     
     // Store in cookies for callback

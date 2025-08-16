@@ -238,7 +238,10 @@ export default function MirrorApp() {
         'access_denied': 'Twitter authorization was denied.',
         'token_failed': 'Failed to complete authentication. Please try again.',
         'config_error': 'Authentication is not properly configured. Please check Twitter app settings.',
-        'auth_failed': 'Authentication failed. Please try again.'
+        'auth_failed': 'Authentication failed. Please try again.',
+        'invalid_request': 'Invalid OAuth request. Check your Twitter app configuration.',
+        'invalid_client': 'Invalid Client ID or Secret. Check your environment variables.',
+        'missing_params': 'Missing required parameters from Twitter.'
       };
       
       const errorMessage = errorMessages[error] || `Authentication error: ${error}`;
