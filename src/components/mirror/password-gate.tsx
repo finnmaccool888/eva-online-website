@@ -42,7 +42,7 @@ export default function PasswordGate({ isOG, onSuccess, onProfileRedirect }: Pas
   };
 
   return (
-    <div className="min-h-screen bg-black text-white flex items-center justify-center p-4">
+    <div className="min-h-screen bg-pink-50 text-gray-900 flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -54,7 +54,7 @@ export default function PasswordGate({ isOG, onSuccess, onProfileRedirect }: Pas
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="flex items-center justify-center gap-2 text-yellow-400"
+            className="flex items-center justify-center gap-2 text-yellow-600"
           >
             <Sparkles className="w-4 h-4" />
             <span className="text-sm font-medium">OG EARLY ACCESS</span>
@@ -62,7 +62,7 @@ export default function PasswordGate({ isOG, onSuccess, onProfileRedirect }: Pas
           </motion.div>
         )}
 
-        <div className="bg-white/5 backdrop-blur-lg rounded-2xl p-8 border border-white/10">
+        <div className="bg-white rounded-2xl p-8 border border-gray-200 shadow-lg">
           <div className="text-center space-y-4 mb-8">
             <motion.div
               initial={{ scale: 0 }}
@@ -73,18 +73,18 @@ export default function PasswordGate({ isOG, onSuccess, onProfileRedirect }: Pas
               <Lock className="w-8 h-8 text-white" />
             </motion.div>
 
-            <h2 className="text-2xl font-bold">Enter the Mirror State</h2>
+            <h2 className="text-2xl font-bold text-gray-900">Enter the Mirror State</h2>
             
             {isOG ? (
-              <p className="text-gray-400">
+              <p className="text-gray-600">
                 As an OG member, you have exclusive early access to EVA's Mirror module.
               </p>
             ) : (
               <div className="space-y-3">
-                <p className="text-gray-400">
+                <p className="text-gray-600">
                   The Mirror module is currently in OG-only early access.
                 </p>
-                <p className="text-yellow-400 text-sm">
+                <p className="text-yellow-600 text-sm font-medium">
                   You can still create your profile and prepare for the next module!
                 </p>
               </div>
@@ -98,13 +98,13 @@ export default function PasswordGate({ isOG, onSuccess, onProfileRedirect }: Pas
                 placeholder="Enter password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-white/5 border-white/10 text-white placeholder:text-gray-500 pr-10"
+                className="w-full bg-white border-gray-300 text-gray-900 placeholder:text-gray-400 pr-10 focus:border-pink-400 focus:ring-pink-400"
                 disabled={isSubmitting}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors"
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
@@ -114,7 +114,7 @@ export default function PasswordGate({ isOG, onSuccess, onProfileRedirect }: Pas
               <motion.p
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="text-red-400 text-sm text-center"
+                className="text-red-600 text-sm text-center font-medium"
               >
                 {error}
               </motion.p>
@@ -133,7 +133,7 @@ export default function PasswordGate({ isOG, onSuccess, onProfileRedirect }: Pas
                 <>
                   <Button
                     type="submit"
-                    className="w-full bg-gray-700 hover:bg-gray-600"
+                    className="w-full bg-gray-600 hover:bg-gray-700 text-white"
                     disabled={isSubmitting || !password}
                   >
                     {isSubmitting ? "Checking..." : "Try Anyway"}
@@ -155,16 +155,16 @@ export default function PasswordGate({ isOG, onSuccess, onProfileRedirect }: Pas
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
-              className="mt-6 p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg"
+              className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg"
             >
-              <p className="text-sm text-yellow-400 text-center">
+              <p className="text-sm text-yellow-700 text-center">
                 <strong>Note:</strong> Even with the correct password, only OG members can access the Mirror module during early access.
               </p>
             </motion.div>
           )}
         </div>
 
-        <p className="text-center text-xs text-gray-500">
+        <p className="text-center text-xs text-gray-600">
           Need help? Contact support on Twitter @evaonlinexyz
         </p>
       </motion.div>
