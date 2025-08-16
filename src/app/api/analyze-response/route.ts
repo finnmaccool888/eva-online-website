@@ -3,8 +3,10 @@ import OpenAI from "openai";
 
 // Initialize OpenAI
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: process.env.OPENAI_API_KEY || 'placeholder-key',
 });
+
+const hasValidOpenAIKey = process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'placeholder-key';
 
 export interface AnalysisRequest {
   userInput: string;
