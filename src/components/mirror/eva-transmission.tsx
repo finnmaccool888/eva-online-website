@@ -909,7 +909,7 @@ export default function EvaTransmission() {
                 >
                   View Your Profile
                 </PrimaryButton>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-gray-700">
                   Redirecting to your profile in {redirectCountdown}s...
                 </p>
               </motion.div>

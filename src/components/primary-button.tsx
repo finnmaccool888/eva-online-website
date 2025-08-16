@@ -19,6 +19,7 @@ export default function PrimaryButton({
       className={cn(
         "h-[40px] cursor-pointer transition-transform hover:scale-[1.01] active:scale-[0.99]",
         "bg-no-repeat bg-center bg-cover transition-[background-image] duration-300 ease-in-out",
+        "text-gray-800 font-medium",
         inverse && "text-primary-foreground",
         size === "lg"
           ? inverse
