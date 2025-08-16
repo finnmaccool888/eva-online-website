@@ -12,7 +12,9 @@ export interface TwitterAuth {
 }
 
 export function getTwitterAuth(): TwitterAuth | null {
-  return readJson<TwitterAuth | null>(StorageKeys.twitterAuth, null);
+  const auth = readJson<TwitterAuth | null>(StorageKeys.twitterAuth, null);
+  console.log('[getTwitterAuth] Retrieved auth:', auth ? 'Found' : 'Not found', auth);
+  return auth;
 }
 
 export function setTwitterAuth(auth: TwitterAuth): void {

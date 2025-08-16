@@ -11,16 +11,23 @@ export function useTwitterAuth() {
   const checkAuth = useCallback(async () => {
     if (checked) return;
     
-    console.log('[useTwitterAuth] Checking authentication...');
+    console.log('[useTwitterAuth] Starting authentication check at', new Date().toISOString());
+    
+    // Debug: Log all localStorage keys
+    console.log('[useTwitterAuth] All localStorage keys:', Object.keys(localStorage));
+    console.log('[useTwitterAuth] Current URL:', window.location.href);
     
     // First check localStorage (with proper namespaced key)
+    console.log('[useTwitterAuth] Checking localStorage...');
     const localAuth = getTwitterAuth();
     if (localAuth) {
-      console.log('[useTwitterAuth] Found auth in localStorage');
+      console.log('[useTwitterAuth] Found auth in localStorage:', localAuth);
       setAuth(localAuth);
       setLoading(false);
       setChecked(true);
       return;
+    } else {
+      console.log('[useTwitterAuth] No auth found in localStorage');
     }
     
     // Also check for non-namespaced key in case it exists
@@ -116,6 +123,7 @@ export function useTwitterAuth() {
       console.error('[useTwitterAuth] Auth check error:', error);
     }
     
+    console.log('[useTwitterAuth] Auth check complete. Auth found:', !!auth);
     setLoading(false);
     setChecked(true);
   }, [checked]);
@@ -124,7 +132,18 @@ export function useTwitterAuth() {
     if (!checked) {
       checkAuth();
     }
-  }, [checked, checkAuth]);
+    
+    // Add a timeout to prevent infinite loading
+    const timeout = setTimeout(() => {
+      if (loading) {
+        console.warn('[useTwitterAuth] Auth check timeout - forcing completion');
+        setLoading(false);
+        setChecked(true);
+      }
+    }, 5000); // 5 second timeout
+    
+    return () => clearTimeout(timeout);
+  }, [checked, checkAuth, loading]);
   
   console.log('[useTwitterAuth] Render - loading:', loading, 'auth:', !!auth);
   
