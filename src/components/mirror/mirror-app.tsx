@@ -227,9 +227,9 @@ export default function MirrorApp() {
   // Show loading only while checking auth
   if (loading) {
     return (
-      <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
+      <div className="min-h-screen bg-black text-white flex items-center justify-center p-4">
         <div className="text-center">
-          <p className="text-sm sm:text-base text-muted-foreground animate-pulse">
+          <p className="text-sm sm:text-base text-gray-400 animate-pulse">
             Checking authentication...
           </p>
         </div>
@@ -267,11 +267,11 @@ export default function MirrorApp() {
       const fullErrorMessage = details ? `${errorMessage} (${details})` : errorMessage;
       
       return (
-        <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
+        <div className="min-h-screen bg-black text-white flex items-center justify-center p-4">
           <div className="text-center space-y-4 max-w-sm">
             <div className="space-y-2">
               <p className="text-lg font-semibold text-red-500">Authentication Failed</p>
-              <p className="text-sm text-muted-foreground">{fullErrorMessage}</p>
+              <p className="text-sm text-gray-400">{fullErrorMessage}</p>
             </div>
             <button 
               onClick={() => {
@@ -279,7 +279,7 @@ export default function MirrorApp() {
                 window.history.replaceState({}, '', cleanUrl);
                 window.location.href = '/api/auth/twitter';
               }}
-              className="px-6 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 text-sm font-medium transition-colors"
+              className="px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 rounded-md text-white text-sm font-medium transition-all"
             >
               Try Again
             </button>
@@ -291,18 +291,18 @@ export default function MirrorApp() {
     // Show redirecting message if we're in the process of redirecting
     if (isRedirecting) {
       return (
-        <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
+        <div className="min-h-screen bg-black text-white flex items-center justify-center p-4">
           <div className="text-center">
-            <p className="text-sm sm:text-base text-muted-foreground">Redirecting to Twitter for authentication...</p>
+            <p className="text-sm sm:text-base text-gray-400">Redirecting to Twitter for authentication...</p>
           </div>
         </div>
       );
     }
     
     return (
-      <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
+      <div className="min-h-screen bg-black text-white flex items-center justify-center p-4">
         <div className="text-center">
-          <p className="text-sm sm:text-base text-muted-foreground">Loading...</p>
+          <p className="text-sm sm:text-base text-gray-400">Loading...</p>
         </div>
       </div>
     );
@@ -341,11 +341,11 @@ export default function MirrorApp() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground px-4 py-6 sm:py-8 md:py-12">
+    <div className="min-h-screen bg-black text-white px-4 py-6 sm:py-8 md:py-12">
       <div className="mx-auto max-w-lg sm:max-w-xl md:max-w-2xl lg:max-w-3xl space-y-6 sm:space-y-8">
         <div className="text-center">
           <h1 className="text-2xl sm:text-3xl font-bold">Eva&apos;s Mirror</h1>
-          <p className="text-sm sm:text-base text-muted-foreground mt-2">
+          <p className="text-sm sm:text-base text-gray-400 mt-2">
             Feed your digital soul. Shape your mirror.
           </p>
         </div>

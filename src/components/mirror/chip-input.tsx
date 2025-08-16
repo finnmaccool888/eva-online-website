@@ -27,7 +27,7 @@ export default function ChipInput({
           {chips.map((c) => (
             <button
               key={c}
-              className="rounded-full border border-border px-3 py-1 text-sm hover:bg-accent hover:text-accent-foreground bg-muted text-muted-foreground"
+              className="rounded-full border border-white/20 px-3 py-1 text-sm hover:bg-white/10 hover:text-white bg-white/5 text-gray-400"
               onClick={() => appendChip(c)}
               type="button"
             >
@@ -37,7 +37,7 @@ export default function ChipInput({
         </div>
       )}
       <textarea
-        className="w-full min-h-24 rounded-md border border-border bg-background p-3 text-foreground placeholder:text-muted-foreground"
+        className="w-full min-h-24 rounded-md border border-white/20 bg-black/50 p-3 text-white placeholder:text-gray-500"
         placeholder={placeholder}
         value={text}
         onChange={(e) => {

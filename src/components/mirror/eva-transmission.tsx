@@ -468,14 +468,14 @@ export default function EvaTransmission() {
       {stage !== "intro" && stage !== "complete" && (
         <div className="mb-8">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-xs text-muted-foreground">
+            <span className="text-xs text-gray-500">
               Question {currentIndex + 1} of {questions.length}
             </span>
-            <span className="text-xs text-muted-foreground">
+            <span className="text-xs text-gray-500">
               {currentQuestion?.category}
             </span>
           </div>
-          <div className="w-full bg-muted h-1 rounded-full overflow-hidden">
+          <div className="w-full bg-white/10 h-1 rounded-full overflow-hidden">
             <motion.div 
               className="bg-gradient-to-r from-red-900 to-pink-500 h-full"
               initial={{ width: 0 }}
@@ -521,7 +521,7 @@ export default function EvaTransmission() {
               {userVibe === "cyber" && `Connection established, ${userAlias}`}
             </h2>
             
-            <p className="text-lg text-muted-foreground max-w-md mx-auto">
+            <p className="text-lg text-gray-400 max-w-md mx-auto">
               {userVibe === "ethereal" && "I'm Eva, studying your species through careful observation. Your answers help me understand what it means to be... human."}
               {userVibe === "zen" && "I am Eva, observing the flow of consciousness. Your reflections illuminate the path of understanding."}
               {userVibe === "cyber" && "EVA v2.0 online. Analyzing human behavioral patterns. Your data contributes to my understanding protocols."}
@@ -544,7 +544,7 @@ export default function EvaTransmission() {
               return null;
             })()}
 
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-gray-400">
               {userVibe === "ethereal" && `Today's transmission contains ${questions.length} questions. Shall we begin?`}
               {userVibe === "zen" && `${questions.length} contemplations await. Ready to explore?`}
               {userVibe === "cyber" && `[QUERY COUNT: ${questions.length}] Initialize session?`}
@@ -572,10 +572,10 @@ export default function EvaTransmission() {
                 className="w-12 h-12 rounded-full flex-shrink-0"
               />
               <div className="flex-1 space-y-3">
-                <p className="text-sm text-muted-foreground italic">
+                <p className="text-sm text-gray-400 italic">
                   {currentQuestion.evaPrompt}
                 </p>
-                <h3 className="text-xl font-medium">
+                <h3 className="text-xl font-medium text-white">
                   {currentQuestion.text}
                 </h3>
               </div>
@@ -591,7 +591,7 @@ export default function EvaTransmission() {
             <div className="flex justify-between items-center">
               <button
                 onClick={skipQuestion}
-                className="text-sm text-muted-foreground hover:text-foreground"
+                className="text-sm text-gray-500 hover:text-white transition-colors"
               >
                 Skip this question
               </button>
