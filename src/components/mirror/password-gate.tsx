@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Lock, Eye, EyeOff, Sparkles } from "lucide-react";
+import { Eye, EyeOff, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -70,7 +70,11 @@ export default function PasswordGate({ isOG, onSuccess, onProfileRedirect }: Pas
               transition={{ type: "spring", stiffness: 200 }}
               className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto"
             >
-              <Lock className="w-8 h-8 text-white" />
+              <img 
+                src="https://i.imgur.com/S81wjZD.png" 
+                alt="Lock" 
+                className="w-8 h-8"
+              />
             </motion.div>
 
             <h2 className="text-2xl font-bold text-gray-900">Enter the Mirror State</h2>
