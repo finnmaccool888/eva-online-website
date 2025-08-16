@@ -231,22 +231,25 @@ export default function MirrorApp() {
       // Clear the error from URL
       const cleanUrl = window.location.pathname;
       
+      const details = new URLSearchParams(window.location.search).get('details');
+      
       const errorMessages: Record<string, string> = {
         'invalid_state': 'Session expired. Please try logging in again.',
         'access_denied': 'Twitter authorization was denied.',
         'token_failed': 'Failed to complete authentication. Please try again.',
-        'config_error': 'Authentication is not properly configured.',
+        'config_error': 'Authentication is not properly configured. Please check Twitter app settings.',
         'auth_failed': 'Authentication failed. Please try again.'
       };
       
       const errorMessage = errorMessages[error] || `Authentication error: ${error}`;
+      const fullErrorMessage = details ? `${errorMessage} (${details})` : errorMessage;
       
       return (
         <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
           <div className="text-center space-y-4 max-w-sm">
             <div className="space-y-2">
               <p className="text-lg font-semibold text-red-500">Authentication Failed</p>
-              <p className="text-sm text-muted-foreground">{errorMessage}</p>
+              <p className="text-sm text-muted-foreground">{fullErrorMessage}</p>
             </div>
             <button 
               onClick={() => {

@@ -33,7 +33,12 @@ export async function GET(req: NextRequest) {
   try {
     // Check if credentials exist
     if (!CLIENT_ID || !CLIENT_SECRET) {
-      console.error("Missing Twitter OAuth credentials");
+      console.error("Missing Twitter OAuth credentials", {
+        hasClientId: !!CLIENT_ID,
+        hasClientSecret: !!CLIENT_SECRET,
+        clientIdLength: CLIENT_ID?.length || 0,
+        nodeEnv: process.env.NODE_ENV
+      });
       const baseUrl = `${req.nextUrl.protocol}//${req.nextUrl.host}`;
       return NextResponse.redirect(`${baseUrl}/mirror?error=config_error`);
     }

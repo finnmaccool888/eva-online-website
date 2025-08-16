@@ -85,6 +85,13 @@ export async function GET(req: NextRequest) {
     }
     
     // Exchange code for access token
+    console.log("Token exchange attempt:", {
+      redirectUri: REDIRECT_URI,
+      codeLength: code.length,
+      hasCodeVerifier: !!codeVerifier,
+      clientIdLength: CLIENT_ID?.length || 0
+    });
+    
     const tokenResponse = await fetch("https://api.twitter.com/2/oauth2/token", {
       method: "POST",
       headers: {
@@ -101,8 +108,14 @@ export async function GET(req: NextRequest) {
     
     if (!tokenResponse.ok) {
       const error = await tokenResponse.text();
-      console.error("Token exchange failed:", error);
-      return NextResponse.redirect(`${baseUrl}/mirror?error=token_failed`);
+      console.error("Token exchange failed:", {
+        status: tokenResponse.status,
+        statusText: tokenResponse.statusText,
+        error: error,
+        redirectUri: REDIRECT_URI,
+        nodeEnv: process.env.NODE_ENV
+      });
+      return NextResponse.redirect(`${baseUrl}/mirror?error=token_failed&details=${encodeURIComponent(error.substring(0, 100))}`);
     }
     
     const tokenData: TwitterTokenResponse = await tokenResponse.json();
