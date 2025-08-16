@@ -69,7 +69,7 @@ export default function Onboarding({ onDone }: { onDone: () => void }) {
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full max-w-md mx-auto px-4">
       <AnimatePresence mode="wait">
         {phase === "intro" && (
           <motion.div
@@ -78,17 +78,17 @@ export default function Onboarding({ onDone }: { onDone: () => void }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
           >
-            <GlassCard>
-              <div className="space-y-4">
-                <div className="text-xs sm:text-sm opacity-70">Eva beamed in</div>
-                <div className="text-base sm:text-lg font-semibold">Let&apos;s set your signal.</div>
-                <p className="text-xs sm:text-sm opacity-80">
+            <div className="bg-white/90 backdrop-blur rounded-2xl p-6 shadow-sm">
+              <div className="space-y-6">
+                <div className="text-sm text-gray-600">Eva beamed in</div>
+                <div className="text-2xl font-bold text-black">Let's set your signal.</div>
+                <p className="text-base text-gray-700 leading-relaxed">
                   Tell me what to call you and choose a vibe. Then answer three quick pulses. On-chain vibes, off-chain wisdom.
                 </p>
-                <div className="space-y-2">
-                  <label className="text-xs sm:text-sm font-medium">What should I call you?</label>
+                <div className="space-y-3">
+                  <label className="text-base font-medium text-black">What should I call you?</label>
                   <input
-                    className="w-full rounded-md border border-border bg-background/50 px-3 py-2 text-sm sm:text-base text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    className="w-full rounded-lg bg-gray-100 px-4 py-3 text-base text-gray-800 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-400"
                     placeholder="Seeker, anon, or your style"
                     value={alias}
                     onChange={(e) => {
@@ -100,7 +100,7 @@ export default function Onboarding({ onDone }: { onDone: () => void }) {
                     <motion.p 
                       initial={{ opacity: 0, y: -5 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="text-xs sm:text-sm text-red-400"
+                      className="text-sm text-red-500"
                     >
                       {aliasError}
                     </motion.p>
@@ -110,24 +110,24 @@ export default function Onboarding({ onDone }: { onDone: () => void }) {
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
-                      className="text-xs sm:text-sm text-red-900 italic flex items-center gap-2"
+                      className="text-sm text-purple-600 italic flex items-center gap-2"
                     >
                       <span className="animate-pulse">✨</span>
                       {playfulComment}
                     </motion.div>
                   )}
                 </div>
-                <div className="space-y-2">
-                  <label className="text-xs sm:text-sm font-medium">Vibe</label>
-                  <div className="grid grid-cols-3 gap-2">
+                <div className="space-y-3">
+                  <label className="text-base font-medium text-black">Vibe</label>
+                  <div className="grid grid-cols-3 gap-3">
                     {(["ethereal", "zen", "cyber"] as const).map((v) => (
                       <button
                         key={v}
                         onClick={() => setVibe(v)}
-                        className={`rounded-md border px-2 py-1.5 sm:px-3 sm:py-2 text-xs sm:text-sm transition-all ${
+                        className={`rounded-lg px-4 py-3 text-base font-medium transition-all ${
                           vibe === v
-                            ? "border-primary bg-primary/20 text-primary"
-                            : "border-border bg-background/50 hover:bg-background"
+                            ? "bg-gray-800 text-white"
+                            : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                         }`}
                       >
                         {v}
@@ -136,12 +136,16 @@ export default function Onboarding({ onDone }: { onDone: () => void }) {
                   </div>
                 </div>
                 <div className="pt-2">
-                  <PrimaryButton onClick={start} disabled={!alias.trim()} className="w-full">
-                    Begin Transmission
-                  </PrimaryButton>
+                  <button 
+                    onClick={start} 
+                    disabled={!alias.trim()}
+                    className="w-full bg-gray-800 text-white rounded-lg py-3 px-4 font-medium text-base hover:bg-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                  >
+                    Begin
+                  </button>
                 </div>
               </div>
-            </GlassCard>
+            </div>
           </motion.div>
         )}
         
@@ -152,20 +156,20 @@ export default function Onboarding({ onDone }: { onDone: () => void }) {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -100 }}
           >
-            <GlassCard>
-              <div className="space-y-4">
+            <div className="bg-white/90 backdrop-blur rounded-2xl p-6 shadow-sm">
+              <div className="space-y-6">
                 <div className="flex items-center gap-2">
-                  <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
-                  <span className="text-xs sm:text-sm opacity-70">Eva is listening...</span>
+                  <div className="h-2 w-2 rounded-full bg-purple-500 animate-pulse" />
+                  <span className="text-sm text-gray-600">Eva is listening...</span>
                 </div>
-                <div className="space-y-2">
-                  <p className="text-xs sm:text-sm opacity-70">{questions[qIndex].evaPrompt}</p>
-                  <p className="text-sm sm:text-lg font-semibold">{questions[qIndex].text}</p>
+                <div className="space-y-3">
+                  <p className="text-sm text-gray-600">{questions[qIndex].evaPrompt}</p>
+                  <p className="text-xl font-semibold text-black">{questions[qIndex].text}</p>
                 </div>
                 <textarea
-                  className="w-full rounded-md border border-border bg-background/50 px-3 py-2 text-sm sm:text-base text-foreground placeholder:text-muted-foreground resize-none focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  className="w-full rounded-lg bg-gray-100 px-4 py-3 text-base text-gray-800 placeholder:text-gray-500 resize-none focus:outline-none focus:ring-2 focus:ring-purple-400"
                   placeholder="Share your truth..."
-                  rows={3}
+                  rows={4}
                   value={currentAnswer}
                   onChange={(e) => setCurrentAnswer(e.target.value)}
                 />
@@ -175,7 +179,7 @@ export default function Onboarding({ onDone }: { onDone: () => void }) {
                       <button
                         key={chip}
                         onClick={() => setCurrentAnswer(chip)}
-                        className="text-xs px-2 py-1 sm:px-3 sm:py-1.5 rounded-full border border-border hover:bg-background/50 transition-colors"
+                        className="text-sm px-4 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors"
                       >
                         {chip}
                       </button>
@@ -183,15 +187,19 @@ export default function Onboarding({ onDone }: { onDone: () => void }) {
                   </div>
                 )}
                 <div className="flex justify-between items-center pt-2">
-                  <span className="text-xs sm:text-sm opacity-50">
+                  <span className="text-sm text-gray-500">
                     {qIndex + 1} of {questions.length}
                   </span>
-                  <PrimaryButton onClick={nextQuestion} disabled={!currentAnswer.trim()}>
+                  <button 
+                    onClick={nextQuestion} 
+                    disabled={!currentAnswer.trim()}
+                    className="bg-gray-800 text-white rounded-lg py-2 px-6 font-medium text-base hover:bg-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                  >
                     {qIndex < questions.length - 1 ? "Next" : "Complete"}
-                  </PrimaryButton>
+                  </button>
                 </div>
               </div>
-            </GlassCard>
+            </div>
           </motion.div>
         )}
         
@@ -201,22 +209,22 @@ export default function Onboarding({ onDone }: { onDone: () => void }) {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
           >
-            <GlassCard>
-              <div className="text-center py-6 sm:py-8">
+            <div className="bg-white/90 backdrop-blur rounded-2xl p-8 shadow-sm">
+              <div className="text-center">
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ type: "spring", delay: 0.2 }}
-                  className="text-3xl sm:text-4xl mb-3 sm:mb-4"
+                  className="text-4xl mb-4"
                 >
                   ✨
                 </motion.div>
-                <h3 className="text-base sm:text-lg font-semibold mb-2">Soul seed planted</h3>
-                <p className="text-xs sm:text-sm opacity-70">
+                <h3 className="text-xl font-semibold mb-2 text-black">Soul seed planted</h3>
+                <p className="text-base text-gray-600">
                   Your digital consciousness begins to grow...
                 </p>
               </div>
-            </GlassCard>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

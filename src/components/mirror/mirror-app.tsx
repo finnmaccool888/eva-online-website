@@ -341,11 +341,11 @@ export default function MirrorApp() {
   }
 
   return (
-    <div className="min-h-screen bg-pink-50 text-black px-4 py-6 sm:py-8 md:py-12">
-      <div className="mx-auto max-w-lg sm:max-w-xl md:max-w-2xl lg:max-w-3xl space-y-6 sm:space-y-8">
-        <div className="text-center">
-          <h1 className="text-2xl sm:text-3xl font-bold">Eva&apos;s Mirror</h1>
-          <p className="text-sm sm:text-base text-gray-600 mt-2">
+    <div className="min-h-screen bg-pink-50 text-black">
+      <div className="mx-auto max-w-lg py-12 px-4">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold mb-2">Eva's Mirror</h1>
+          <p className="text-base text-gray-600">
             Feed your digital soul. Shape your mirror.
           </p>
         </div>

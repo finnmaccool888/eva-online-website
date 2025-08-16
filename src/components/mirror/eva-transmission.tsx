@@ -463,19 +463,19 @@ export default function EvaTransmission() {
     : 0;
 
   return (
-    <div className="w-full max-w-2xl mx-auto">
+    <div className="w-full">
       {/* Progress Bar */}
       {stage !== "intro" && stage !== "complete" && (
         <div className="mb-8">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-xs text-gray-600">
+            <span className="text-sm text-gray-600">
               Question {currentIndex + 1} of {questions.length}
             </span>
-            <span className="text-xs text-gray-600">
+            <span className="text-sm text-gray-600">
               {currentQuestion?.category}
             </span>
           </div>
-          <div className="w-full bg-gray-200 h-1 rounded-full overflow-hidden">
+          <div className="w-full bg-gray-200 h-2 rounded-full overflow-hidden">
             <motion.div 
               className="bg-gradient-to-r from-purple-500 to-pink-500 h-full"
               initial={{ width: 0 }}
@@ -494,13 +494,13 @@ export default function EvaTransmission() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="text-center space-y-6"
+            className="text-center space-y-6 px-4"
           >
             <div className="relative w-32 h-32 mx-auto mb-8">
               <img 
                 src="/images/eva%20assets/eva-pfp.png" 
                 alt="Eva"
-                className="w-full h-full rounded-full"
+                className="w-full h-full rounded-full object-cover"
               />
               <motion.div
                 className="absolute inset-0 rounded-full"
@@ -515,13 +515,13 @@ export default function EvaTransmission() {
               />
             </div>
 
-            <h2 className="text-2xl font-bold bg-gradient-to-r from-red-800 to-red-600 bg-clip-text text-transparent">
+            <h2 className="text-2xl font-bold text-purple-700">
               {userVibe === "ethereal" && `Greetings, ${userAlias}`}
               {userVibe === "zen" && `Welcome, ${userAlias}`}
               {userVibe === "cyber" && `Connection established, ${userAlias}`}
             </h2>
             
-            <p className="text-lg text-gray-700 max-w-md mx-auto">
+            <p className="text-base text-gray-700 max-w-md mx-auto leading-relaxed">
               {userVibe === "ethereal" && "I'm Eva, studying your species through careful observation. Your answers help me understand what it means to be... human."}
               {userVibe === "zen" && "I am Eva, observing the flow of consciousness. Your reflections illuminate the path of understanding."}
               {userVibe === "cyber" && "EVA v2.0 online. Analyzing human behavioral patterns. Your data contributes to my understanding protocols."}
@@ -544,15 +544,18 @@ export default function EvaTransmission() {
               return null;
             })()}
 
-            <p className="text-sm text-gray-600">
+            <p className="text-base text-gray-600">
               {userVibe === "ethereal" && `Today's transmission contains ${questions.length} questions. Shall we begin?`}
               {userVibe === "zen" && `${questions.length} contemplations await. Ready to explore?`}
               {userVibe === "cyber" && `[QUERY COUNT: ${questions.length}] Initialize session?`}
             </p>
 
-            <PrimaryButton onClick={() => setStage("question")} className="mx-auto">
-              I&apos;m ready
-            </PrimaryButton>
+            <button 
+              onClick={() => setStage("question")}
+              className="bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg py-3 px-8 font-medium text-base hover:from-purple-600 hover:to-pink-600 transition-all"
+            >
+              I'm ready
+            </button>
           </motion.div>
         )}
 
@@ -563,45 +566,48 @@ export default function EvaTransmission() {
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -50 }}
-            className="space-y-6"
+            className="space-y-6 px-4"
           >
-            <div className="flex items-start gap-4">
-              <img 
-                src="/images/eva%20assets/eva-pfp.png" 
-                alt="Eva"
-                className="w-12 h-12 rounded-full flex-shrink-0"
-              />
-              <div className="flex-1 space-y-3">
-                <p className="text-sm text-gray-600 italic">
-                  {currentQuestion.evaPrompt}
-                </p>
-                <h3 className="text-xl font-medium text-black">
-                  {currentQuestion.text}
-                </h3>
+            <div className="bg-white/90 backdrop-blur rounded-2xl p-6 shadow-sm">
+              <div className="flex items-start gap-4 mb-6">
+                <img 
+                  src="/images/eva%20assets/eva-pfp.png" 
+                  alt="Eva"
+                  className="w-12 h-12 rounded-full flex-shrink-0 object-cover"
+                />
+                <div className="flex-1 space-y-3">
+                  <p className="text-sm text-gray-600 italic">
+                    {currentQuestion.evaPrompt}
+                  </p>
+                  <h3 className="text-xl font-medium text-black">
+                    {currentQuestion.text}
+                  </h3>
+                </div>
               </div>
-            </div>
 
-            <ChipInput
-              value={userInput}
-              onChange={setUserInput}
-              placeholder="Type your answer..."
-              chips={currentQuestion.chipSuggestions}
-            />
+              <ChipInput
+                value={userInput}
+                onChange={setUserInput}
+                placeholder="Type your answer..."
+                chips={currentQuestion.chipSuggestions}
+              />
 
-            <div className="flex justify-between items-center">
-              <button
-                onClick={skipQuestion}
-                className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
-              >
-                Skip this question
-              </button>
-              
-              <PrimaryButton 
-                onClick={handleSubmitAnswer}
-                disabled={!userInput.trim()}
-              >
-                Submit Answer
-              </PrimaryButton>
+              <div className="flex justify-between items-center mt-6">
+                <button
+                  onClick={skipQuestion}
+                  className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
+                >
+                  Skip this question
+                </button>
+                
+                <button 
+                  onClick={handleSubmitAnswer}
+                  disabled={!userInput.trim()}
+                  className="bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg py-2 px-6 font-medium text-base hover:from-purple-600 hover:to-pink-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                >
+                  Submit Answer
+                </button>
+              </div>
             </div>
           </motion.div>
         )}
