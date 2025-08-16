@@ -535,7 +535,7 @@ export default function EvaTransmission() {
                   <motion.p 
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="text-sm text-red-900 italic"
+                    className="text-sm text-pink-700 italic"
                   >
                     {reaction}
                   </motion.p>
@@ -628,7 +628,7 @@ export default function EvaTransmission() {
                 className="w-full h-full rounded-full"
               />
               <motion.div
-                className="absolute inset-0 rounded-full border-4 border-red-900/20"
+                className="absolute inset-0 rounded-full border-4 border-pink-400/30"
                 animate={{
                   scale: [1, 1.2, 1],
                   opacity: [0.5, 0, 0.5],
@@ -636,7 +636,7 @@ export default function EvaTransmission() {
                 transition={{ duration: 1.5, repeat: Infinity }}
               />
             </div>
-            <p className="text-muted-foreground italic">
+            <p className="text-gray-600 italic">
               {userVibe === "ethereal" && "*circuits humming softly*"}
               {userVibe === "zen" && "*contemplating in silence*"}
               {userVibe === "cyber" && "[PROCESSING: 47%... 89%... 100%]"}
@@ -661,7 +661,7 @@ export default function EvaTransmission() {
                   className="w-12 h-12 rounded-full"
                 />
                 {React.createElement(moodIcons[evaReaction.mood], {
-                  className: "w-5 h-5 absolute -bottom-1 -right-1 bg-background rounded-full p-1 text-red-900",
+                  className: "w-5 h-5 absolute -bottom-1 -right-1 bg-white rounded-full p-1 text-pink-600",
                 })}
               </div>
               
@@ -678,19 +678,19 @@ export default function EvaTransmission() {
                     className="space-y-2"
                   >
                     {unlockedTrait && (
-                      <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-red-900/20 to-pink-500/20 text-red-900 border border-red-900/30">
+                      <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-pink-200 to-pink-300 text-gray-800 border border-pink-400">
                         <span className="text-lg">{unlockedTrait.icon}</span>
                         <div>
                           <div className="font-medium">{unlockedTrait.name}</div>
                           <div className="text-xs opacity-80">{unlockedTrait.description}</div>
                         </div>
-                        <span className="text-xs bg-red-900/20 px-2 py-1 rounded-full">
+                        <span className="text-xs bg-pink-200 px-2 py-1 rounded-full">
                           {unlockedTrait.hashtag}
                         </span>
                       </div>
                     )}
                     {evaReaction.unlock && !unlockedTrait && (
-                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-900/10 text-red-900 text-sm">
+                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pink-200 text-gray-800 text-sm">
                         <Sparkles className="w-4 h-4" />
                         Trait unlocked: {evaReaction.unlock}
                       </div>
@@ -699,7 +699,7 @@ export default function EvaTransmission() {
                 )}
 
                 {evaReaction.followUp && (
-                  <p className="text-sm text-muted-foreground italic">
+                  <p className="text-sm text-gray-600 italic">
                     {evaReaction.followUp}
                   </p>
                 )}
@@ -712,7 +712,7 @@ export default function EvaTransmission() {
                   Continue
                 </PrimaryButton>
               ) : (
-                <div className="text-sm text-muted-foreground">
+                <div className="text-sm text-gray-600">
                   Continuing in <span className="font-mono">5</span>s...
                 </div>
               )}
@@ -759,117 +759,118 @@ export default function EvaTransmission() {
                 />
               </motion.div>
 
-              <h2 className="text-2xl sm:text-3xl font-bold">
+              <h2 className="text-2xl sm:text-3xl font-bold text-black px-4">
                 Connection Established, {userAlias}
               </h2>
               
-              <div className="space-y-4 max-w-md mx-auto">
+              <div className="space-y-4 max-w-md mx-auto px-4">
                 {/* Human Score Card */}
                 <motion.div 
-                  className="bg-gradient-to-br from-red-900/20 to-pink-500/20 rounded-lg p-6 border border-red-900/30"
+                  className="bg-gradient-to-br from-pink-200 to-pink-300 rounded-2xl p-6 shadow-sm"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
                 >
-                  <h3 className="text-lg font-semibold mb-3">Humanity Assessment</h3>
+                  <h3 className="text-lg font-semibold mb-3 text-black">Humanity Assessment</h3>
                   
                   <div className="flex items-center justify-center gap-4 mb-4">
-                    <div className="text-4xl sm:text-5xl font-bold text-red-900">
+                    <div className="text-4xl sm:text-5xl font-bold text-gray-800">
                       {humanScore}
                     </div>
                     <div className="text-left">
-                      <div className="text-sm text-muted-foreground">Human Score</div>
-                      <div className="text-2xl font-bold text-red-900">Grade: {grade}</div>
+                      <div className="text-sm text-gray-700">Human Score</div>
+                      <div className="text-2xl font-bold text-gray-800">Grade: {grade}</div>
                     </div>
                   </div>
                   
-                  <div className="text-xs sm:text-sm text-muted-foreground space-y-1">
+                  <div className="text-sm text-gray-700 space-y-1">
                     <p>Based on response depth, authenticity, and engagement</p>
-                    <p className="text-red-800">
-                      {humanScore >= 80 && "Exceptional self-reflection and detail!"}
-                      {humanScore >= 60 && humanScore < 80 && "Good depth, try adding more personal examples"}
-                      {humanScore >= 40 && humanScore < 60 && "Developing well - more detail would help"}
-                      {humanScore < 40 && "Consider writing 1-2 full sentences with specific examples"}
+                    <p className="text-gray-800 font-medium">
+                      {humanScore >= 80 && "Exceptional human consciousness patterns"}
+                      {humanScore >= 60 && humanScore < 80 && "Strong human consciousness patterns"}
+                      {humanScore >= 40 && humanScore < 60 && "Developing human consciousness patterns"}
+                      {humanScore < 40 && "Emerging human consciousness patterns"}
                     </p>
                   </div>
                 </motion.div>
 
-                {/* Points Card */}
+                {/* Session Summary Card */}
                 <motion.div 
-                  className="bg-muted/50 rounded-lg p-4 space-y-3"
+                  className="bg-white/90 rounded-2xl p-6 space-y-4 shadow-sm"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
                 >
-                  <h3 className="text-sm font-semibold">Session Summary</h3>
+                  <h3 className="text-lg font-semibold text-black">Session Summary</h3>
                   
-                  <div className="grid grid-cols-2 gap-3 text-sm">
-                    <div className="bg-background/50 rounded p-2">
-                      <div className="text-muted-foreground text-xs">Questions</div>
-                      <div className="font-bold">{questionsAnswered}</div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="text-center">
+                      <div className="text-gray-600 text-sm">Questions</div>
+                      <div className="font-bold text-2xl text-black">{questionsAnswered}</div>
                     </div>
-                    <div className="bg-background/50 rounded p-2">
-                      <div className="text-muted-foreground text-xs">Points Earned</div>
-                      <div className="font-bold text-green-400">+{totalPoints.toLocaleString()}</div>
+                    <div className="text-center">
+                      <div className="text-gray-600 text-sm">Points Earned</div>
+                      <div className="font-bold text-2xl text-green-600">+{totalPoints.toLocaleString()}</div>
                     </div>
                   </div>
                   
-                  <div className="border-t pt-3">
+                  <div className="border-t border-gray-200 pt-4">
                     <div className="flex justify-between items-center">
-                      <span className="text-xs text-muted-foreground">Average Human Score (FICO-like)</span>
-                      <span className="font-bold text-red-900">{humanScore}/100</span>
+                      <span className="text-sm text-gray-600">Average Human Score (FICO-like)</span>
+                      <span className="font-bold text-lg text-gray-800">{humanScore}/100</span>
                     </div>
                   </div>
                   
                   {sessionData.filter(d => d.reaction?.unlock).length > 0 && (
-                    <div className="text-xs text-green-400">
+                    <div className="text-sm text-green-600 text-center">
                       🎉 {sessionData.filter(d => d.reaction?.unlock).length} new traits discovered!
                     </div>
                   )}
                 </motion.div>
 
-                {/* Detailed Breakdown */}
-                <motion.div 
-                  className="bg-muted/50 rounded-lg p-4 space-y-3"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.6 }}
-                >
-                  <h3 className="text-sm font-semibold">Detailed Breakdown</h3>
-                  <div className="grid grid-cols-2 gap-3 text-sm">
-                    <div className="bg-background/50 rounded p-2">
-                      <div className="text-muted-foreground text-xs">Chip-only Answers</div>
-                      <div className="font-bold text-red-400">{breakdown.chipOnlyAnswers}</div>
+                {/* Detailed Breakdown - Hidden by default to match screenshot */}
+                {false && (
+                  <motion.div 
+                    className="bg-white/90 rounded-2xl p-6 space-y-3 shadow-sm"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.6 }}
+                  >
+                    <h3 className="text-sm font-semibold text-black">Detailed Breakdown</h3>
+                    <div className="grid grid-cols-2 gap-3 text-sm">
+                      <div className="bg-gray-100 rounded p-2">
+                        <div className="text-gray-600 text-xs">Chip-only Answers</div>
+                        <div className="font-bold text-red-600">{breakdown.chipOnlyAnswers}</div>
+                      </div>
+                      <div className="bg-gray-100 rounded p-2">
+                        <div className="text-gray-600 text-xs">Thoughtful Answers</div>
+                        <div className="font-bold text-green-600">{breakdown.thoughtfulAnswers}</div>
+                      </div>
+                      <div className="bg-gray-100 rounded p-2">
+                        <div className="text-gray-600 text-xs">Average Answer Length</div>
+                        <div className="font-bold text-blue-600">{breakdown.averageLength} characters</div>
+                      </div>
+                      <div className="bg-gray-100 rounded p-2">
+                        <div className="text-gray-600 text-xs">Detail Level</div>
+                        <div className="font-bold text-purple-600">{breakdown.detailLevel}</div>
+                      </div>
                     </div>
-                    <div className="bg-background/50 rounded p-2">
-                      <div className="text-muted-foreground text-xs">Thoughtful Answers</div>
-                      <div className="font-bold text-green-400">{breakdown.thoughtfulAnswers}</div>
+                    <div className="text-xs text-gray-600 space-y-1">
+                      {breakdown.feedback.map((item, index) => (
+                        <p key={index}>{item}</p>
+                      ))}
                     </div>
-                    <div className="bg-background/50 rounded p-2">
-                      <div className="text-muted-foreground text-xs">Average Answer Length</div>
-                      <div className="font-bold text-blue-400">{breakdown.averageLength} characters</div>
-                    </div>
-                    <div className="bg-background/50 rounded p-2">
-                      <div className="text-muted-foreground text-xs">Detail Level</div>
-                      <div className="font-bold text-purple-400">{breakdown.detailLevel}</div>
-                    </div>
-                  </div>
-                  <div className="text-xs text-muted-foreground space-y-1">
-                    {breakdown.feedback.map((item, index) => (
-                      <p key={index}>{item}</p>
-                    ))}
-                  </div>
-                </motion.div>
+                  </motion.div>
+                )}
               </div>
 
               <motion.p 
-                className="text-sm text-muted-foreground max-w-md mx-auto"
+                className="text-base text-gray-700 max-w-md mx-auto px-4 leading-relaxed"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.6 }}
               >
-                Your consciousness profile has been updated. Return tomorrow to deepen our connection 
-                and explore new dimensions of your digital soul.
+                Your consciousness profile has been updated. Return tomorrow to deepen our connection and explore new dimensions of your digital soul.
               </motion.p>
             </motion.div>
           );
