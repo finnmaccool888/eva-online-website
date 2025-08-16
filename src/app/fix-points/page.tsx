@@ -57,17 +57,17 @@ export default function FixPointsPage() {
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4">
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8">Fix Points Utility</h1>
+        <h1 className="text-3xl font-bold mb-8 text-gray-900">Fix Points Utility</h1>
         
         {auth && (
           <div className="bg-white rounded-lg shadow p-6 mb-6">
-            <h2 className="text-xl font-semibold mb-4">Your Current Status</h2>
-            <div className="space-y-2">
+            <h2 className="text-xl font-semibold mb-4 text-gray-900">Your Current Status</h2>
+            <div className="space-y-2 text-gray-800">
               <p>Twitter: @{auth.twitterHandle}</p>
               <p>OG Status: {auth.isOG ? "✅ OG Member" : "❌ Not OG"}</p>
               <p>Profile Points: {profile?.points || 0}</p>
               <p>Session Points: {profile?.sessionHistory?.reduce((sum: number, s: any) => sum + (s.pointsEarned || 0), 0) || 0}</p>
-              <p className="font-bold">Total Points (Calculated): {totalPoints}</p>
+              <p className="font-bold text-gray-900">Total Points (Calculated): {totalPoints}</p>
               {auth.isOG && totalPoints < 10000 && (
                 <p className="text-red-600">⚠️ Missing OG bonus! You should have at least 10,000 points.</p>
               )}
@@ -77,8 +77,8 @@ export default function FixPointsPage() {
 
         <div className="bg-white rounded-lg shadow p-6 space-y-4">
           <div>
-            <h3 className="font-semibold mb-2">Sync My Points</h3>
-            <p className="text-sm text-gray-600 mb-4">
+            <h3 className="font-semibold mb-2 text-gray-900">Sync My Points</h3>
+            <p className="text-sm text-gray-700 mb-4">
               This will sync your localStorage points to Supabase, ensuring your total is correct.
             </p>
             <PrimaryButton 
@@ -89,9 +89,9 @@ export default function FixPointsPage() {
             </PrimaryButton>
           </div>
 
-          <div className="border-t pt-4">
-            <h3 className="font-semibold mb-2">Fix All OG Points (Admin)</h3>
-            <p className="text-sm text-gray-600 mb-4">
+          <div className="border-t border-gray-200 pt-4">
+            <h3 className="font-semibold mb-2 text-gray-900">Fix All OG Points (Admin)</h3>
+            <p className="text-sm text-gray-700 mb-4">
               This will check all OG users and ensure they have their 10,000 point bonus.
             </p>
             <PrimaryButton 
