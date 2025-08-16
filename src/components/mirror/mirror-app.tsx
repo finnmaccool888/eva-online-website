@@ -10,6 +10,7 @@ import AuthStatus from "@/components/mirror/auth-status";
 import OGPopup from "@/components/mirror/og-popup";
 import PointsDisplay from "@/components/mirror/points-display";
 import AccessDenied from "@/components/mirror/access-denied";
+import PasswordGate from "@/components/mirror/password-gate";
 import { readJson, writeJson, StorageKeys } from "@/lib/mirror/storage";
 import { loadProfile } from "@/lib/mirror/profile";
 import { useTwitterAuth } from "@/lib/hooks/useTwitterAuth";
@@ -21,6 +22,7 @@ export default function MirrorApp() {
   const [showOGPopup, setShowOGPopup] = useState(false);
   const [ogPopupShown, setOgPopupShown] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
+  const [passwordVerified, setPasswordVerified] = useState(false);
   const { auth, loading } = useTwitterAuth();
   const redirectingRef = useRef(false);
   
@@ -38,6 +40,12 @@ export default function MirrorApp() {
   useEffect(() => {
     const shown = localStorage.getItem('ogPopupShown') === 'true';
     setOgPopupShown(shown);
+  }, []);
+
+  // Check if password has been verified in this session
+  useEffect(() => {
+    const verified = sessionStorage.getItem('mirrorPasswordVerified') === 'true';
+    setPasswordVerified(verified);
   }, []);
   
   // Handle URL errors
@@ -177,10 +185,14 @@ export default function MirrorApp() {
   function handleOGPopupClose() {
     setShowOGPopup(false);
   }
-  
-  // Check if user is OG - if not, deny access
-  if (auth && !loading && !auth.isOG) {
-    return <AccessDenied username={auth.twitterHandle} />;
+
+  function handlePasswordSuccess() {
+    sessionStorage.setItem('mirrorPasswordVerified', 'true');
+    setPasswordVerified(true);
+  }
+
+  function handleProfileRedirect() {
+    window.location.href = '/profile';
   }
   
   // Show loading while checking auth or not initialized
@@ -246,6 +258,37 @@ export default function MirrorApp() {
     );
   }
   
+  // Show password gate if authenticated but not verified
+  if (auth && !passwordVerified) {
+    return (
+      <PasswordGate 
+        isOG={auth.isOG || false}
+        onSuccess={handlePasswordSuccess}
+        onProfileRedirect={handleProfileRedirect}
+      />
+    );
+  }
+
+  // Only allow OG members to proceed past this point
+  if (auth && passwordVerified && !auth.isOG) {
+    return (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center p-4">
+        <div className="text-center space-y-4">
+          <h2 className="text-2xl font-bold">Access Restricted</h2>
+          <p className="text-gray-400">
+            The Mirror module is currently in OG-only early access.
+          </p>
+          <button
+            onClick={handleProfileRedirect}
+            className="px-6 py-2 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 rounded-lg transition-colors"
+          >
+            Go to Profile
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background text-foreground px-4 py-6 sm:py-8 md:py-12">
       <div className="mx-auto max-w-lg sm:max-w-xl md:max-w-2xl lg:max-w-3xl space-y-6 sm:space-y-8">
