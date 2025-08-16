@@ -67,6 +67,7 @@ export async function GET(req: NextRequest) {
     
     // Store in cookies for callback
     const response = NextResponse.redirect(authUrl);
+    const isProduction = process.env.NODE_ENV === "production";
     
     console.log("Setting OAuth state cookies and redirecting to Twitter");
     
@@ -75,7 +76,7 @@ export async function GET(req: NextRequest) {
       maxAge: 0,
       path: "/",
       httpOnly: true,
-      secure: false,
+      secure: isProduction,
       sameSite: "lax"
     });
     
@@ -83,29 +84,25 @@ export async function GET(req: NextRequest) {
       maxAge: 0,
       path: "/",
       httpOnly: false,
-      secure: false,
+      secure: isProduction,
       sameSite: "lax"
     });
     
     // Set cookies with proper options
     response.cookies.set("twitter_state", state, {
       httpOnly: true,
-      secure: false, // Explicitly set to false for localhost
+      secure: isProduction, // Use secure cookies in production
       sameSite: "lax",
       path: "/",
       maxAge: 60 * 10, // 10 minutes
-      // Add domain explicitly for localhost
-      ...(process.env.NODE_ENV === "development" && { domain: "localhost" })
     });
     
     response.cookies.set("code_verifier", codeVerifier, {
       httpOnly: true,
-      secure: false, // Explicitly set to false for localhost
+      secure: isProduction, // Use secure cookies in production
       sameSite: "lax",
       path: "/",
       maxAge: 60 * 10, // 10 minutes
-      // Add domain explicitly for localhost
-      ...(process.env.NODE_ENV === "development" && { domain: "localhost" })
     });
     
     return response;

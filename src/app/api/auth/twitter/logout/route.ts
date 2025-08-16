@@ -3,13 +3,14 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
   const baseUrl = `${req.nextUrl.protocol}//${req.nextUrl.host}`;
   const response = NextResponse.redirect(`${baseUrl}/mirror`);
+  const isProduction = process.env.NODE_ENV === "production";
   
   // Clear all auth-related cookies
   response.cookies.set("twitter_auth", "", {
     maxAge: 0,
     path: "/",
     httpOnly: true,
-    secure: false,
+    secure: isProduction,
     sameSite: "lax"
   });
   
@@ -17,7 +18,7 @@ export async function POST(req: NextRequest) {
     maxAge: 0,
     path: "/",
     httpOnly: false,
-    secure: false,
+    secure: isProduction,
     sameSite: "lax"
   });
   
@@ -26,7 +27,7 @@ export async function POST(req: NextRequest) {
     maxAge: 0,
     path: "/",
     httpOnly: true,
-    secure: false,
+    secure: isProduction,
     sameSite: "lax"
   });
   
@@ -34,7 +35,7 @@ export async function POST(req: NextRequest) {
     maxAge: 0,
     path: "/",
     httpOnly: true,
-    secure: false,
+    secure: isProduction,
     sameSite: "lax"
   });
   

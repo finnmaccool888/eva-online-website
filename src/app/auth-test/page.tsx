@@ -3,13 +3,27 @@
 import { useState } from 'react';
 
 export default function AuthTestPage() {
+  const [healthResult, setHealthResult] = useState<any>(null);
   const [testResult, setTestResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
+  
+  async function testOAuthHealth() {
+    setLoading(true);
+    try {
+      const res = await fetch('/api/auth/twitter/health');
+      const data = await res.json();
+      setHealthResult(data);
+    } catch (error) {
+      setHealthResult({ error: error.toString() });
+    } finally {
+      setLoading(false);
+    }
+  }
   
   async function testOAuthConfig() {
     setLoading(true);
     try {
-      const res = await fetch('/api/auth/twitter/health');
+      const res = await fetch('/api/auth/twitter/test');
       const data = await res.json();
       setTestResult(data);
     } catch (error) {
@@ -55,19 +69,40 @@ export default function AuthTestPage() {
         </div>
         
         <div className="border rounded-lg p-4 space-y-4">
-          <h2 className="text-xl font-semibold">OAuth Configuration Status</h2>
-          <button
-            onClick={testOAuthConfig}
-            disabled={loading}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
-          >
-            {loading ? 'Testing...' : 'Test Configuration'}
-          </button>
+          <h2 className="text-xl font-semibold">OAuth Configuration Tests</h2>
+          <div className="flex gap-4">
+            <button
+              onClick={testOAuthHealth}
+              disabled={loading}
+              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
+            >
+              {loading ? 'Testing...' : 'Test Health'}
+            </button>
+            <button
+              onClick={testOAuthConfig}
+              disabled={loading}
+              className="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 disabled:opacity-50"
+            >
+              {loading ? 'Testing...' : 'Test Full Config'}
+            </button>
+          </div>
+          
+          {healthResult && (
+            <div>
+              <h3 className="font-semibold text-sm mt-4">Health Check:</h3>
+              <pre className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-xs overflow-x-auto">
+                {JSON.stringify(healthResult, null, 2)}
+              </pre>
+            </div>
+          )}
           
           {testResult && (
-            <pre className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-xs overflow-x-auto">
-              {JSON.stringify(testResult, null, 2)}
-            </pre>
+            <div>
+              <h3 className="font-semibold text-sm mt-4">Full Diagnostics:</h3>
+              <pre className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-xs overflow-x-auto">
+                {JSON.stringify(testResult, null, 2)}
+              </pre>
+            </div>
           )}
         </div>
         

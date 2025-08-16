@@ -29,6 +29,7 @@ export async function GET(req: NextRequest) {
   try {
     // Get the base URL for redirects
     const baseUrl = `${req.nextUrl.protocol}//${req.nextUrl.host}`;
+    const isProduction = process.env.NODE_ENV === "production";
     
     const searchParams = req.nextUrl.searchParams;
     const code = searchParams.get("code");
@@ -70,14 +71,14 @@ export async function GET(req: NextRequest) {
         maxAge: 0,
         path: "/",
         httpOnly: true,
-        secure: false,
+        secure: isProduction,
         sameSite: "lax"
       });
       response.cookies.set("code_verifier", "", {
         maxAge: 0,
         path: "/",
         httpOnly: true,
-        secure: false,
+        secure: isProduction,
         sameSite: "lax"
       });
       
@@ -179,11 +180,10 @@ export async function GET(req: NextRequest) {
       name: "twitter_auth",
       value: JSON.stringify(authCookieData),
       httpOnly: true,
-      secure: false, // Set to false for localhost development
+      secure: isProduction, // Use secure cookies in production
       sameSite: "lax",
       path: "/",
       maxAge: 60 * 60 * 24 * 30, // 30 days
-      domain: undefined, // Let browser handle domain
     });
     
     // Also set a non-httpOnly cookie as backup for client-side reading
@@ -191,11 +191,10 @@ export async function GET(req: NextRequest) {
       name: "twitter_auth_client",
       value: JSON.stringify(authCookieData),
       httpOnly: false,
-      secure: false,
+      secure: isProduction, // Use secure cookies in production
       sameSite: "lax",
       path: "/",
       maxAge: 60 * 60 * 24 * 30,
-      domain: undefined,
     });
     
     // Clean up state cookies
