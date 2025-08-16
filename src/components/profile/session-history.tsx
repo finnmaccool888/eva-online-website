@@ -156,17 +156,17 @@ export default function SessionHistory({ profile, onUpdateProfile }: SessionHist
   };
 
   return (
-    <div className="bg-card/50 backdrop-blur-sm rounded-lg border border-border p-6">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <Calendar className="w-5 h-5 text-primary" />
-          <h2 className="text-xl font-semibold">Session History</h2>
+          <Calendar className="w-5 h-5 text-gray-900" />
+          <h2 className="text-xl font-semibold text-gray-900">Session History</h2>
         </div>
         
         <div className="flex items-center gap-3">
           <button
             onClick={() => setScoringExplanationOpen(true)}
-            className="flex items-center gap-1 px-3 py-1 text-xs bg-primary/10 hover:bg-primary/20 rounded-lg border border-primary/30 transition-colors"
+            className="flex items-center gap-1 px-3 py-1 text-xs bg-pink-50 hover:bg-pink-100 rounded-lg border border-pink-200 transition-colors"
             title="How are sessions scored?"
           >
             <Info className="w-3 h-3" />
@@ -174,7 +174,7 @@ export default function SessionHistory({ profile, onUpdateProfile }: SessionHist
           </button>
           
           {sessions.length > 0 && (
-            <span className="text-sm text-muted-foreground">
+            <span className="text-sm text-gray-600">
               {sessions.length} session{sessions.length !== 1 ? 's' : ''}
             </span>
           )}
@@ -183,14 +183,14 @@ export default function SessionHistory({ profile, onUpdateProfile }: SessionHist
 
       {sessions.length === 0 ? (
         <div className="text-center py-8">
-          <Calendar className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
-          <p className="text-muted-foreground">No sessions completed yet</p>
-          <p className="text-sm text-muted-foreground mt-1">
+          <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+          <p className="text-gray-600">No sessions completed yet</p>
+          <p className="text-sm text-gray-500 mt-1">
             Start your first Mirror session to see your history here
           </p>
           <a
             href="/mirror"
-            className="inline-block mt-4 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors text-sm"
+            className="inline-block mt-4 px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors text-sm"
           >
             Start Session
           </a>
@@ -205,10 +205,10 @@ export default function SessionHistory({ profile, onUpdateProfile }: SessionHist
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.05 }}
-                className="border border-border rounded-lg overflow-hidden"
+                className="border border-gray-200 rounded-lg overflow-hidden"
               >
                 <div
-                  className="flex items-center gap-4 p-4 hover:bg-background/30 cursor-pointer transition-colors"
+                  className="flex items-center gap-4 p-4 hover:bg-gray-50 cursor-pointer transition-colors"
                   onClick={() => setExpandedSession(expandedSession === index ? null : index)}
                 >
                   <div className="flex-1">
@@ -216,7 +216,7 @@ export default function SessionHistory({ profile, onUpdateProfile }: SessionHist
                       <span className="text-sm font-medium">
                         {formatDate(session.date)}
                       </span>
-                      <span className="text-xs text-muted-foreground">
+                      <span className="text-xs text-gray-600">
                         {formatTime(session.date)}
                       </span>
                     </div>
@@ -231,14 +231,14 @@ export default function SessionHistory({ profile, onUpdateProfile }: SessionHist
                       
                       <div className="flex items-center gap-1">
                         <TrendingUp className="w-4 h-4 text-green-500" />
-                        <span className="text-sm text-muted-foreground">
+                        <span className="text-sm text-green-600">
                           +{session.pointsEarned} pts
                         </span>
                       </div>
                       
                       <div className="flex items-center gap-1">
                         <Calendar className="w-4 h-4 text-blue-500" />
-                        <span className="text-sm text-muted-foreground">
+                        <span className="text-sm text-gray-600">
                           {session.questionsAnswered} questions
                         </span>
                       </div>
@@ -246,7 +246,7 @@ export default function SessionHistory({ profile, onUpdateProfile }: SessionHist
                   </div>
                   
                   <ChevronRight 
-                    className={`w-5 h-5 text-muted-foreground transition-transform ${
+                    className={`w-5 h-5 text-gray-400 transition-transform ${
                       expandedSession === index ? 'rotate-90' : ''
                     }`} 
                   />
@@ -257,15 +257,15 @@ export default function SessionHistory({ profile, onUpdateProfile }: SessionHist
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: 'auto' }}
                     exit={{ opacity: 0, height: 0 }}
-                    className="border-t border-border p-4 bg-background/20"
+                    className="border-t border-gray-200 p-4 bg-gray-50"
                   >
                     <div className="space-y-3">
                       <div className="grid grid-cols-2 gap-4 text-sm">
                         <div>
-                          <span className="text-muted-foreground">Performance:</span>
+                          <span className="text-gray-600">Performance:</span>
                           <div className="mt-1">
                             <div className="flex items-center gap-2">
-                              <div className="flex-1 bg-muted rounded-full h-2">
+                              <div className="flex-1 bg-gray-200 rounded-full h-2">
                                 <div 
                                   className={`h-2 rounded-full transition-all ${
                                     session.humanScore >= 80 ? 'bg-green-500' :
@@ -282,7 +282,7 @@ export default function SessionHistory({ profile, onUpdateProfile }: SessionHist
                         </div>
                         
                         <div>
-                          <span className="text-muted-foreground">Points Breakdown:</span>
+                          <span className="text-gray-600">Points Breakdown:</span>
                           <div className="mt-1 text-xs space-y-1">
                             <div className="flex justify-between">
                               <span>Base Questions:</span>
@@ -296,10 +296,10 @@ export default function SessionHistory({ profile, onUpdateProfile }: SessionHist
                         </div>
                       </div>
 
-                      <div className="pt-3 border-t border-border">
+                      <div className="pt-3 border-t border-gray-200">
                         <button 
                           onClick={() => handleEditSession(index)}
-                          className="flex items-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors"
+                          className="flex items-center gap-2 text-sm text-pink-600 hover:text-pink-700 transition-colors"
                         >
                           <Edit3 className="w-4 h-4" />
                           Review & Improve Answers

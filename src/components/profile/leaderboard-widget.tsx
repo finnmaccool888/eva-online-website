@@ -98,27 +98,27 @@ export default function LeaderboardWidget({ currentUser }: LeaderboardWidgetProp
       case 3:
         return <Award className="w-5 h-5 text-orange-500" />;
       default:
-        return <span className="text-muted-foreground font-bold">#{rank}</span>;
+        return <span className="text-gray-600 font-bold">#{rank}</span>;
     }
   };
 
   if (loading) {
     return (
-      <div className="bg-card/50 backdrop-blur-sm rounded-lg border border-border p-6">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
         <div className="flex items-center gap-2 mb-4">
-          <TrendingUp className="w-5 h-5 text-primary" />
-          <h2 className="text-xl font-semibold">Leaderboard</h2>
+          <TrendingUp className="w-5 h-5 text-gray-900" />
+          <h2 className="text-xl font-semibold text-gray-900">Leaderboard</h2>
         </div>
         <div className="space-y-3">
           {[1, 2, 3, 4, 5].map((i) => (
             <div key={i} className="animate-pulse">
-              <div className="flex items-center gap-3 p-3 rounded-lg bg-background/30">
-                <div className="w-8 h-8 bg-muted rounded-full" />
+              <div className="flex items-center gap-3 p-3 rounded-lg bg-gray-50">
+                <div className="w-8 h-8 bg-gray-200 rounded-full" />
                 <div className="flex-1">
-                  <div className="h-4 bg-muted rounded w-24 mb-1" />
-                  <div className="h-3 bg-muted rounded w-16" />
+                  <div className="h-4 bg-gray-200 rounded w-24 mb-1" />
+                  <div className="h-3 bg-gray-200 rounded w-16" />
                 </div>
-                <div className="h-4 bg-muted rounded w-12" />
+                <div className="h-4 bg-gray-200 rounded w-12" />
               </div>
             </div>
           ))}
@@ -128,10 +128,10 @@ export default function LeaderboardWidget({ currentUser }: LeaderboardWidgetProp
   }
 
   return (
-    <div className="bg-card/50 backdrop-blur-sm rounded-lg border border-border p-6">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
       <div className="flex items-center gap-2 mb-4">
-        <TrendingUp className="w-5 h-5 text-primary" />
-        <h2 className="text-xl font-semibold">Global Leaderboard</h2>
+        <TrendingUp className="w-5 h-5 text-gray-900" />
+        <h2 className="text-xl font-semibold text-gray-900">Global Leaderboard</h2>
       </div>
 
       {error && (
@@ -152,8 +152,8 @@ export default function LeaderboardWidget({ currentUser }: LeaderboardWidgetProp
               transition={{ duration: 0.3, delay: index * 0.05 }}
               className={`flex items-center gap-3 p-3 rounded-lg transition-colors ${
                 isCurrentUser 
-                  ? 'bg-primary/10 border border-primary/20' 
-                  : 'bg-background/30 hover:bg-background/50'
+                  ? 'bg-pink-100 border border-pink-200' 
+                  : 'bg-gray-50 hover:bg-gray-100'
               }`}
             >
               <div className="flex items-center justify-center w-8">
@@ -174,10 +174,10 @@ export default function LeaderboardWidget({ currentUser }: LeaderboardWidgetProp
               </div>
               
               <div className="flex-1 min-w-0">
-                <p className={`text-sm font-medium truncate ${isCurrentUser ? 'text-primary' : ''}`}>
+                <p className={`text-sm font-medium truncate ${isCurrentUser ? 'text-pink-700' : 'text-gray-900'}`}>
                   {entry.twitterName}
                 </p>
-                <p className="text-xs text-muted-foreground truncate">
+                <p className="text-xs text-gray-600 truncate">
                   @{entry.twitterHandle}
                 </p>
               </div>
@@ -186,7 +186,7 @@ export default function LeaderboardWidget({ currentUser }: LeaderboardWidgetProp
                 <p className="text-sm font-bold">
                   {entry.points.toLocaleString()}
                 </p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-gray-600">
                   {entry.humanScore}/100
                 </p>
               </div>

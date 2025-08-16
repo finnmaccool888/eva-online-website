@@ -119,13 +119,13 @@ export default function ProfileDashboard({ auth }: ProfileDashboardProps) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background text-foreground">
-        <Navbar />
+      <div className="min-h-screen bg-pink-50 text-gray-900">
+        <Navbar inverse />
         <div className="flex items-center justify-center h-96">
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-            className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full"
+            className="w-8 h-8 border-2 border-pink-600 border-t-transparent rounded-full"
           />
         </div>
       </div>
@@ -134,8 +134,8 @@ export default function ProfileDashboard({ auth }: ProfileDashboardProps) {
 
   if (!profile) {
     return (
-      <div className="min-h-screen bg-background text-foreground">
-        <Navbar />
+      <div className="min-h-screen bg-pink-50 text-gray-900">
+        <Navbar inverse />
         <div className="container mx-auto px-4 py-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -143,12 +143,12 @@ export default function ProfileDashboard({ auth }: ProfileDashboardProps) {
             className="text-center space-y-4"
           >
             <h1 className="text-2xl font-bold">Profile Not Found</h1>
-            <p className="text-muted-foreground">
+            <p className="text-gray-600">
               Complete your first Mirror session to create your profile.
             </p>
             <a
               href="/mirror"
-              className="inline-block px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+              className="inline-block px-6 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
             >
               Start Mirror Session
             </a>
@@ -159,8 +159,8 @@ export default function ProfileDashboard({ auth }: ProfileDashboardProps) {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <Navbar />
+    <div className="min-h-screen bg-pink-50 text-gray-900">
+      <Navbar inverse />
       <div className="container mx-auto px-4 py-8 space-y-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

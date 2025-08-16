@@ -33,7 +33,7 @@ export default function ProfileHeader({ auth, profile }: ProfileHeaderProps) {
   const actualPoints = calculateTotalPoints(profile);
 
   return (
-    <div className="bg-card/50 backdrop-blur-sm rounded-lg border border-border p-6">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
       {/* Logout Button */}
       <div className="flex justify-end mb-4">
         <button
@@ -67,7 +67,7 @@ export default function ProfileHeader({ auth, profile }: ProfileHeaderProps) {
           
           <div>
             <h1 className="text-2xl font-bold">{auth.twitterName}</h1>
-            <p className="text-muted-foreground">@{auth.twitterHandle}</p>
+            <p className="text-gray-600">@{auth.twitterHandle}</p>
             {auth.isOG && (
               <div className="flex items-center gap-1 mt-1">
                             <Star className="w-4 h-4 text-blue-500" />
@@ -79,26 +79,26 @@ export default function ProfileHeader({ auth, profile }: ProfileHeaderProps) {
 
         {/* Key Stats */}
         <div className="flex-1 grid grid-cols-2 md:grid-cols-4 gap-4 ml-0 md:ml-8">
-          <div className="text-center p-3 bg-background/50 rounded-lg">
-            <div className="text-2xl font-bold text-primary">{actualPoints.toLocaleString()}</div>
-            <div className="text-sm text-muted-foreground">Total Points</div>
+          <div className="text-center p-3 bg-pink-50 rounded-lg">
+            <div className="text-2xl font-bold text-gray-900">{actualPoints.toLocaleString()}</div>
+            <div className="text-sm text-gray-600">Total Points</div>
           </div>
           
-          <div className="text-center p-3 bg-background/50 rounded-lg">
-            <div className="text-2xl font-bold text-green-500">{profile.humanScore || 0}</div>
-            <div className="text-sm text-muted-foreground">Human Score</div>
+          <div className="text-center p-3 bg-green-50 rounded-lg">
+            <div className="text-2xl font-bold text-green-600">{profile.humanScore || 0}</div>
+            <div className="text-sm text-gray-600">Human Score</div>
           </div>
           
-          <div className="text-center p-3 bg-background/50 rounded-lg">
-            <div className="text-2xl font-bold text-blue-500">{profile.totalQuestionsAnswered || 0}</div>
-            <div className="text-sm text-muted-foreground">Questions</div>
+          <div className="text-center p-3 bg-blue-50 rounded-lg">
+            <div className="text-2xl font-bold text-blue-600">{profile.totalQuestionsAnswered || 0}</div>
+            <div className="text-sm text-gray-600">Questions</div>
           </div>
           
-          <div className="text-center p-3 bg-background/50 rounded-lg">
-            <div className="text-2xl font-bold text-orange-500">
+          <div className="text-center p-3 bg-orange-50 rounded-lg">
+            <div className="text-2xl font-bold text-orange-600">
               {profile.sessionHistory?.length || 0}
             </div>
-            <div className="text-sm text-muted-foreground">Sessions</div>
+            <div className="text-sm text-gray-600">Sessions</div>
           </div>
         </div>
       </div>
@@ -106,7 +106,7 @@ export default function ProfileHeader({ auth, profile }: ProfileHeaderProps) {
       {/* Status Messages - Only show intentional, permanent badges */}
       <div className="mt-4 flex flex-wrap gap-2">
         {profile.sessionHistory && profile.sessionHistory.length === 1 && (
-          <div className="flex items-center gap-1 px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm">
+          <div className="flex items-center gap-1 px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm">
             <Award className="w-4 h-4" />
             First Session Complete!
           </div>
