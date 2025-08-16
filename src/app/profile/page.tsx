@@ -45,7 +45,13 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <ProfileDashboard auth={auth} />
+      <ProfileDashboard auth={{
+        twitterId: auth.twitterId,
+        twitterHandle: auth.twitterHandle,
+        twitterName: auth.twitterName || auth.twitterHandle,
+        profileImage: auth.profileImage || "",
+        isOG: auth.isOG || false,
+      }} />
     </div>
   );
 } 
