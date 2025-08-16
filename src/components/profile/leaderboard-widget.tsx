@@ -194,15 +194,6 @@ export default function LeaderboardWidget({ currentUser }: LeaderboardWidgetProp
           );
         })}
       </div>
-
-      <div className="mt-4 pt-4 border-t border-border">
-        <a
-          href="/leaderboard"
-          className="w-full block text-center py-2 px-4 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg transition-colors text-sm font-medium"
-        >
-          View Full Leaderboard
-        </a>
-      </div>
     </div>
   );
 } 
