@@ -16,6 +16,8 @@ import { loadProfile } from "@/lib/mirror/profile";
 import { useTwitterAuth } from "@/lib/hooks/useTwitterAuth";
 import { setTwitterAuth } from "@/lib/mirror/auth";
 import { isOG } from "@/lib/mirror/og-verification";
+import { checkSessionLimit } from "@/lib/mirror/session-limits";
+import SessionLimitReached from "@/components/mirror/session-limit-reached";
 
 export default function MirrorApp() {
   const [showWizard, setShowWizard] = useState(false);
@@ -26,6 +28,8 @@ export default function MirrorApp() {
   const [authError, setAuthError] = useState<string | null>(null);
   const [passwordVerified, setPasswordVerified] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
+  const [showSessionLimit, setShowSessionLimit] = useState(false);
+  const [sessionLimitStatus, setSessionLimitStatus] = useState<ReturnType<typeof checkSessionLimit> | null>(null);
   const { auth, loading } = useTwitterAuth();
   
   const state = {
@@ -236,6 +240,19 @@ export default function MirrorApp() {
     writeJson(StorageKeys.onboarded, true);
     setOnboarded(true);
   }
+  
+  // Check session limits before showing Eva transmission
+  useEffect(() => {
+    if (onboarded && !showWizard && passwordVerified && auth) {
+      const profile = loadProfile();
+      const limitStatus = checkSessionLimit(profile);
+      setSessionLimitStatus(limitStatus);
+      
+      if (!limitStatus.canStartSession) {
+        setShowSessionLimit(true);
+      }
+    }
+  }, [onboarded, showWizard, passwordVerified, auth]);
 
   function handleOGPopupClose() {
     setShowOGPopup(false);
@@ -383,8 +400,21 @@ export default function MirrorApp() {
           <OnboardingWizard onComplete={handleWizardComplete} />
         ) : !onboarded ? (
           <Onboarding onDone={handleOnboardingDone} />
+        ) : showSessionLimit && sessionLimitStatus ? (
+          <SessionLimitReached 
+            limitStatus={sessionLimitStatus} 
+            onBack={() => setShowSessionLimit(false)}
+          />
         ) : (
-          <EvaTransmission />
+          <EvaTransmission onComplete={() => {
+            // Re-check session limits after completing a session
+            const profile = loadProfile();
+            const limitStatus = checkSessionLimit(profile);
+            setSessionLimitStatus(limitStatus);
+            if (!limitStatus.canStartSession) {
+              setShowSessionLimit(true);
+            }
+          }} />
         )}
         
         <ResetControls />

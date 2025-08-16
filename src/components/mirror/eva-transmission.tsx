@@ -143,7 +143,11 @@ function calculateHumanScore(sessionData: Array<{ answer: string; reaction: EvaR
   };
 }
 
-export default function EvaTransmission() {
+interface EvaTransmissionProps {
+  onComplete?: () => void;
+}
+
+export default function EvaTransmission({ onComplete }: EvaTransmissionProps = {}) {
   const [stage, setStage] = useState<TransmissionStage>("intro");
   const [questions, setQuestions] = useState<MirrorQuestion[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -478,6 +482,11 @@ export default function EvaTransmission() {
     });
 
     setStage("complete");
+    
+    // Call the onComplete callback if provided
+    if (onComplete) {
+      onComplete();
+    }
   }
 
   function skipQuestion() {
