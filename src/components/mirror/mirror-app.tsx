@@ -74,7 +74,14 @@ export default function MirrorApp() {
   }, []);
   
   useEffect(() => {
-    console.log('[MirrorApp] Effect running, loading:', loading, 'auth:', !!auth, 'isRedirecting:', isRedirecting);
+    console.log('[MirrorApp] Main effect running:', {
+      loading,
+      hasAuth: !!auth,
+      isRedirecting,
+      isInitialized,
+      passwordVerified,
+      authError
+    });
     
     // Still loading auth
     if (loading) {
@@ -106,21 +113,21 @@ export default function MirrorApp() {
       return;
     }
     
-    // Have auth but password not verified - DON'T redirect, just show password gate
-    if (auth && !passwordVerified) {
-      console.log('[MirrorApp] Auth found but password not verified, showing password gate');
+    // Have auth - initialize the app if not already initialized
+    if (auth && !isInitialized) {
+      console.log('[MirrorApp] Auth found, initializing app. Password verified:', passwordVerified);
       // Clear any redirect flags since we have auth
       sessionStorage.removeItem('mirrorAuthRedirecting');
-      // Don't trigger any redirects here, just let the password gate show
+      
+      // Initialize regardless of password verification status
       setIsInitialized(true);
-      return;
-    }
-    
-    // Have auth and password verified, initialize app if not already done
-    if (auth && passwordVerified && !isInitialized) {
-      console.log('[MirrorApp] Initializing app with auth:', auth);
-      // Clear any redirect flags since we successfully have auth
-      sessionStorage.removeItem('mirrorAuthRedirecting');
+      
+      // Only proceed with full initialization if password is verified
+      if (!passwordVerified) {
+        console.log('[MirrorApp] Password not verified yet, will show password gate');
+        return;
+      }
+      console.log('[MirrorApp] Proceeding with full initialization');
       track("daily_opened");
       
       const profile = loadProfile();
@@ -176,6 +183,12 @@ export default function MirrorApp() {
         localStorage.setItem('ogPopupShown', 'true');
         setOgPopupShown(true);
       }
+    }
+    
+    // If we have an auth error, still initialize to show the error state
+    if (authError && !isInitialized) {
+      console.log('[MirrorApp] Auth error present, initializing to show error');
+      setIsInitialized(true);
     }
   }, [loading, auth, isInitialized, ogPopupShown, passwordVerified, authError, isRedirecting]);
   
