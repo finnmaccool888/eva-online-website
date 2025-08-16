@@ -415,32 +415,48 @@ export default function EvaTransmission() {
     // Load and update profile
     const profile = loadProfile();
     
-    // Update average human score
-    if (profile.humanScore && profile.totalQuestionsAnswered) {
-      // Calculate new average
-      const totalScore = profile.humanScore * profile.totalQuestionsAnswered + humanScore * questionsAnswered;
-      const totalQuestions = profile.totalQuestionsAnswered + questionsAnswered;
-      profile.humanScore = Math.round(totalScore / totalQuestions);
-      profile.totalQuestionsAnswered = totalQuestions;
-    } else {
-      // First session
-      profile.humanScore = humanScore;
-      profile.totalQuestionsAnswered = questionsAnswered;
-    }
-    
-    // Add points
-    profile.points += pointsEarned;
-    
-    // Add to session history
+    // Add to session history with duplicate prevention
     if (!profile.sessionHistory) {
       profile.sessionHistory = [];
     }
-    profile.sessionHistory.push({
-      date: Date.now(),
-      questionsAnswered,
-      humanScore,
-      pointsEarned
-    });
+    
+    // Check for duplicate session within the last 5 minutes
+    const now = Date.now();
+    const fiveMinutesAgo = now - (5 * 60 * 1000);
+    const isDuplicate = profile.sessionHistory.some(session => 
+      session.date > fiveMinutesAgo && 
+      session.questionsAnswered === questionsAnswered
+    );
+    
+    if (!isDuplicate) {
+      // Update average human score
+      if (profile.humanScore && profile.totalQuestionsAnswered) {
+        // Calculate new average
+        const totalScore = profile.humanScore * profile.totalQuestionsAnswered + humanScore * questionsAnswered;
+        const totalQuestions = profile.totalQuestionsAnswered + questionsAnswered;
+        profile.humanScore = Math.round(totalScore / totalQuestions);
+        profile.totalQuestionsAnswered = totalQuestions;
+      } else {
+        // First session
+        profile.humanScore = humanScore;
+        profile.totalQuestionsAnswered = questionsAnswered;
+      }
+      
+      // Add points
+      profile.points += pointsEarned;
+      
+      // Add session to history
+      profile.sessionHistory.push({
+        date: now,
+        questionsAnswered,
+        humanScore,
+        pointsEarned
+      });
+      console.log('[EvaTransmission] Session saved to history');
+    } else {
+      console.log('[EvaTransmission] Duplicate session detected, skipping save');
+      // Don't update points or scores for duplicate sessions
+    }
     
     // Save updated profile
     saveProfile(profile);
