@@ -320,25 +320,25 @@ export default function SessionHistory({ profile, onUpdateProfile }: SessionHist
       )}
 
       {sessions.length > 0 && (
-        <div className="mt-4 pt-4 border-t border-border">
+        <div className="mt-4 pt-4 border-t border-gray-200">
           <div className="grid grid-cols-3 gap-4 text-center text-sm">
             <div>
-              <div className="text-lg font-bold text-primary">
+              <div className="text-lg font-bold text-gray-900">
                 {Math.round(sessions.reduce((sum, s) => sum + s.humanScore, 0) / sessions.length)}
               </div>
-              <div className="text-muted-foreground">Avg Score</div>
+              <div className="text-gray-600">Avg Score</div>
             </div>
             <div>
-              <div className="text-lg font-bold text-green-500">
+              <div className="text-lg font-bold text-green-600">
                 {sessions.reduce((sum, s) => sum + s.pointsEarned, 0).toLocaleString()}
               </div>
-              <div className="text-muted-foreground">Total Points</div>
+              <div className="text-gray-600">Total Points</div>
             </div>
             <div>
-              <div className="text-lg font-bold text-blue-500">
+              <div className="text-lg font-bold text-blue-600">
                 {sessions.reduce((sum, s) => sum + s.questionsAnswered, 0)}
               </div>
-              <div className="text-muted-foreground">Questions</div>
+              <div className="text-gray-600">Questions</div>
             </div>
           </div>
         </div>

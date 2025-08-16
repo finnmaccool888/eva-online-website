@@ -141,12 +141,12 @@ export default function ScoreComparisonDisplay({
       </div>
 
       {/* Scoring Explanation */}
-      <div className="mt-3 p-2 bg-blue-50/50 rounded text-xs">
+      <div className="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200 text-xs">
         <div className="flex items-center gap-1 mb-1">
-          <Star className="w-3 h-3 text-blue-500" />
-          <span className="font-medium text-blue-700">Scoring Guide:</span>
+          <Star className="w-3 h-3 text-blue-600" />
+          <span className="font-medium text-gray-800">Scoring Guide:</span>
         </div>
-        <div className="text-blue-600 text-xs space-y-1">
+        <div className="text-gray-700 text-xs space-y-1">
           <div>• 9-10 avg: 500 pts (exceptional) • 7-8 avg: 400 pts (good)</div>
           <div>• 5-6 avg: 300 pts (decent) • 3-4 avg: 200 pts (minimal) • 1-2 avg: 100 pts (poor)</div>
         </div>
