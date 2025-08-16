@@ -8,7 +8,7 @@ import { track } from "@/lib/mirror/analytics";
 import { checkTraitUnlock, Trait } from "@/lib/mirror/traits-v2";
 import { getPlayfulReaction } from "@/lib/mirror/input-validation";
 import { loadProfile, saveProfile } from "@/lib/mirror/profile";
-import { saveSessionHistory, updateUserHumanScore, createOrUpdateUser } from "@/lib/supabase/services";
+import { saveSessionHistory, updateUserHumanScore, createOrUpdateUser, updateUserPoints } from "@/lib/supabase/services";
 import { getTwitterAuth } from "@/lib/mirror/auth";
 import ChipInput from "./chip-input";
 import PrimaryButton from "../primary-button";
@@ -449,13 +449,16 @@ export default function EvaTransmission() {
     try {
       const auth = getTwitterAuth();
       if (auth?.twitterHandle) {
-        const { user } = await createOrUpdateUser(auth.twitterHandle, auth.twitterName);
+        const { user } = await createOrUpdateUser(auth.twitterHandle, auth.twitterName, auth.isOG);
         if (user) {
           // Save session history
           await saveSessionHistory(user.id, questionsAnswered, humanScore, pointsEarned);
           
           // Update human score
           await updateUserHumanScore(user.id, humanScore, questionsAnswered);
+          
+          // Update points in Supabase
+          await updateUserPoints(user.id, pointsEarned);
         }
       }
     } catch (error) {

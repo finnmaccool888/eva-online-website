@@ -286,7 +286,7 @@ export async function updateUserHumanScore(
     // Get current profile
     const { data: profile } = await supabase
       .from('user_profiles')
-      .select('human_score, total_questions_answered')
+      .select('human_score, total_questions_answered, points')
       .eq('user_id', userId)
       .single();
 
@@ -309,5 +309,35 @@ export async function updateUserHumanScore(
 
   } catch (error) {
     console.error('Error updating human score:', error);
+  }
+}
+
+// Update user points after session completion
+export async function updateUserPoints(
+  userId: string,
+  pointsToAdd: number
+) {
+  try {
+    // Get current points
+    const { data: profile } = await supabase
+      .from('user_profiles')
+      .select('points')
+      .eq('user_id', userId)
+      .single();
+
+    if (!profile) return;
+
+    const newPoints = (profile.points || 0) + pointsToAdd;
+
+    // Update points
+    await supabase
+      .from('user_profiles')
+      .update({
+        points: newPoints
+      })
+      .eq('user_id', userId);
+
+  } catch (error) {
+    console.error('Error updating points:', error);
   }
 } 

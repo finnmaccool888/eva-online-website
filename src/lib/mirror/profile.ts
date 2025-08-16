@@ -43,7 +43,8 @@ export function calculatePoints(profile: UserProfile): number {
 
 // Calculate total points including session history
 export function calculateTotalPoints(profile: UserProfile): number {
-  let totalPoints = calculatePoints(profile);
+  // Start with base points (which includes OG bonus if applicable)
+  let totalPoints = profile.points || 0;
   
   // Add points from session history if available
   if (profile.sessionHistory && Array.isArray(profile.sessionHistory)) {
@@ -51,9 +52,6 @@ export function calculateTotalPoints(profile: UserProfile): number {
       return sum + (session.pointsEarned || 0);
     }, 0);
   }
-  
-  // Add points from the base points field
-  totalPoints += profile.points || 0;
   
   return totalPoints;
 }
