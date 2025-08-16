@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Sparkles } from "lucide-react";
+import { X, Sparkles, Star } from "lucide-react";
 import { OG_MESSAGE, OG_IMAGE_URL, OG_POINTS } from "@/lib/mirror/og-verification";
 
 interface OGPopupProps {
@@ -35,16 +35,20 @@ export default function OGPopup({ isOpen, onClose, username }: OGPopupProps) {
             onClick={onClose}
           >
             <div
-              className="relative max-w-lg w-full bg-gradient-to-br from-pink-100 to-pink-200 rounded-2xl border border-pink-300 shadow-2xl overflow-hidden"
+              className="relative max-w-lg w-full bg-gradient-to-br from-slate-900 to-blue-900 rounded-3xl border border-blue-600/30 shadow-2xl overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Close button */}
               <button
                 onClick={onClose}
-                className="absolute top-4 right-4 text-gray-600 hover:text-gray-800 transition-colors z-10"
+                className="absolute top-4 right-4 text-white/70 hover:text-white transition-colors z-10"
               >
                 <X className="h-6 w-6" />
               </button>
+              
+              {/* Decorative stars */}
+              <Star className="absolute top-6 left-6 w-12 h-12 text-blue-400/50" />
+              <Star className="absolute bottom-6 right-6 w-16 h-16 text-blue-300/30" />
               
               {/* Content */}
               <div className="relative p-6 sm:p-8">
@@ -60,7 +64,7 @@ export default function OGPopup({ isOpen, onClose, username }: OGPopupProps) {
                   }}
                   className="absolute top-4 left-4"
                 >
-                  <Sparkles className="h-8 w-8 text-pink-600" />
+                  <Sparkles className="h-8 w-8 text-blue-400" />
                 </motion.div>
                 <motion.div
                   animate={{
@@ -73,7 +77,7 @@ export default function OGPopup({ isOpen, onClose, username }: OGPopupProps) {
                   }}
                   className="absolute bottom-4 right-4"
                 >
-                  <Sparkles className="h-6 w-6 text-pink-500" />
+                  <Sparkles className="h-6 w-6 text-blue-300" />
                 </motion.div>
                 
                 <div className="text-center space-y-6">
@@ -87,7 +91,7 @@ export default function OGPopup({ isOpen, onClose, username }: OGPopupProps) {
                     <img
                       src={OG_IMAGE_URL}
                       alt="EVA OG Badge"
-                      className="w-48 h-48 mx-auto rounded-full border-4 border-pink-400 shadow-lg"
+                      className="w-48 h-48 mx-auto rounded-full border-4 border-blue-500/50 shadow-2xl ring-4 ring-blue-400/30 ring-offset-4 ring-offset-slate-900"
                     />
                     <motion.div
                       animate={{
@@ -97,7 +101,7 @@ export default function OGPopup({ isOpen, onClose, username }: OGPopupProps) {
                         duration: 2,
                         repeat: Infinity,
                       }}
-                      className="absolute inset-0 rounded-full border-4 border-pink-300/50"
+                      className="absolute inset-0 rounded-full border-4 border-blue-400/30"
                     />
                   </motion.div>
                   
@@ -107,7 +111,7 @@ export default function OGPopup({ isOpen, onClose, username }: OGPopupProps) {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.3 }}
-                      className="text-3xl font-bold text-gray-800"
+                      className="text-3xl font-bold text-white"
                     >
                       Welcome, {username}!
                     </motion.h2>
@@ -116,7 +120,7 @@ export default function OGPopup({ isOpen, onClose, username }: OGPopupProps) {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.4 }}
-                      className="text-xl text-pink-700"
+                      className="text-xl text-blue-200"
                     >
                       {OG_MESSAGE}
                     </motion.p>
@@ -127,10 +131,10 @@ export default function OGPopup({ isOpen, onClose, username }: OGPopupProps) {
                     initial={{ opacity: 0, scale: 0 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.5, type: "spring" }}
-                    className="bg-pink-300/30 rounded-lg p-4 border border-pink-400"
+                    className="bg-blue-600/20 rounded-2xl p-6 border border-blue-500/50 backdrop-blur-sm"
                   >
-                    <div className="text-pink-700 text-sm mb-1">OG BONUS AWARDED</div>
-                    <div className="text-4xl font-bold text-pink-800">
+                    <div className="text-blue-300 text-sm font-medium tracking-wider mb-2">OG BONUS AWARDED</div>
+                    <div className="text-5xl font-bold text-white">
                       +{OG_POINTS.toLocaleString()} Points
                     </div>
                   </motion.div>
@@ -141,7 +145,7 @@ export default function OGPopup({ isOpen, onClose, username }: OGPopupProps) {
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.6 }}
                     onClick={onClose}
-                    className="px-8 py-3 bg-gradient-to-r from-pink-500 to-pink-600 text-white font-medium rounded-lg hover:from-pink-600 hover:to-pink-700 transition-all transform hover:scale-105"
+                    className="px-8 py-4 bg-gradient-to-r from-red-500 to-red-600 text-white font-semibold rounded-xl hover:from-red-600 hover:to-red-700 transition-all transform hover:scale-105 shadow-lg"
                   >
                     Continue to EVA
                   </motion.button>
@@ -150,8 +154,8 @@ export default function OGPopup({ isOpen, onClose, username }: OGPopupProps) {
               
               {/* Background decoration */}
               <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                <div className="absolute -top-24 -right-24 w-96 h-96 bg-pink-400/30 rounded-full blur-3xl" />
-                <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-pink-300/30 rounded-full blur-3xl" />
+                <div className="absolute -top-24 -right-24 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl" />
+                <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl" />
               </div>
             </div>
           </motion.div>
