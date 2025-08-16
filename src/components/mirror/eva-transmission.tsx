@@ -156,6 +156,7 @@ export default function EvaTransmission() {
   }>>([]);
   const [unlockedTrait, setUnlockedTrait] = useState<Trait | null>(null);
   const [autoAdvanceTimer, setAutoAdvanceTimer] = useState<NodeJS.Timeout | null>(null);
+  const [redirectCountdown, setRedirectCountdown] = useState(10);
   
   // Load user's vibe from Soul Seed
   const soulSeed = loadSeed();
@@ -184,6 +185,25 @@ export default function EvaTransmission() {
       };
     }
   }, [stage, evaReaction]);
+
+  useEffect(() => {
+    // Auto-redirect to profile after completion
+    if (stage === "complete") {
+      let countdown = 10;
+      setRedirectCountdown(countdown);
+      
+      const interval = setInterval(() => {
+        countdown--;
+        setRedirectCountdown(countdown);
+        
+        if (countdown <= 0) {
+          window.location.href = '/profile';
+        }
+      }, 1000);
+      
+      return () => clearInterval(interval);
+    }
+  }, [stage]);
 
   async function handleSubmitAnswer() {
     if (!userInput.trim() || !currentQuestion) return;
@@ -872,6 +892,24 @@ export default function EvaTransmission() {
               >
                 Your consciousness profile has been updated. Return tomorrow to deepen our connection and explore new dimensions of your digital soul.
               </motion.p>
+
+              {/* Continue to Profile Button */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.8 }}
+                className="mt-6 text-center space-y-3"
+              >
+                <PrimaryButton
+                  onClick={() => window.location.href = '/profile'}
+                  className="mx-auto"
+                >
+                  View Your Profile
+                </PrimaryButton>
+                <p className="text-sm text-gray-500">
+                  Redirecting to your profile in {redirectCountdown}s...
+                </p>
+              </motion.div>
             </motion.div>
           );
         })()}
