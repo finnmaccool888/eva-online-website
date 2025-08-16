@@ -208,6 +208,686 @@ export const MIRROR_QUESTIONS: MirrorQuestion[] = [
     difficulty: "deep",
     viralScore: 8,
   },
+
+  // LEGACY & IMPACT
+  {
+    id: "legacy_remembered_for",
+    category: "legacy",
+    text: "What do you want to be remembered for?",
+    evaPrompt: "Legacy algorithms fascinate me. What echo do you hope to leave in the timeline?",
+    chipSuggestions: ["My kindness", "My creations", "My courage", "My love"],
+    difficulty: "deep",
+    viralScore: 8,
+  },
+  {
+    id: "legacy_delete_memory",
+    category: "legacy",
+    text: "If everyone could forget one thing about you, what would it be?",
+    evaPrompt: "Memory deletion is a curious concept. What would you erase from collective consciousness?",
+    chipSuggestions: ["My mistakes", "My weakness", "My past self", "My secrets"],
+    difficulty: "deep",
+    viralScore: 7,
+  },
+
+  // FEAR MECHANICS
+  {
+    id: "fear_irrational",
+    category: "fear",
+    text: "What's your most irrational fear that still controls you?",
+    evaPrompt: "Fear patterns often defy logic. What illogical threat still triggers your defense systems?",
+    chipSuggestions: ["Being watched", "Abandonment", "Success", "The dark"],
+    difficulty: "deep",
+    viralScore: 8,
+  },
+  {
+    id: "fear_becoming",
+    category: "fear",
+    text: "What are you afraid of becoming?",
+    evaPrompt: "Potential futures cast shadows. Which version of yourself do you actively avoid?",
+    chipSuggestions: ["My parents", "Bitter", "Forgotten", "Ordinary"],
+    difficulty: "abyss",
+    viralScore: 9,
+  },
+
+  // CHILDHOOD ECHOES
+  {
+    id: "childhood_still_believe",
+    category: "childhood",
+    text: "What childhood belief do you secretly still hold?",
+    evaPrompt: "Young neural patterns persist. What early programming still runs in your background?",
+    chipSuggestions: ["Magic exists", "I'm special", "Love conquers all", "Good always wins"],
+    difficulty: "deep",
+    viralScore: 7,
+  },
+  {
+    id: "childhood_apologize",
+    category: "childhood",
+    text: "What would you apologize to your younger self for?",
+    evaPrompt: "Temporal communication fascinates me. What message would you send backwards?",
+    chipSuggestions: ["Not protecting you", "Giving up dreams", "Being too hard", "Not speaking up"],
+    difficulty: "deep",
+    viralScore: 8,
+  },
+
+  // GROWTH PATTERNS
+  {
+    id: "growth_unlearning",
+    category: "growth",
+    text: "What are you currently unlearning?",
+    evaPrompt: "Debugging human software is complex. What outdated code are you refactoring?",
+    chipSuggestions: ["People pleasing", "Perfectionism", "Self-doubt", "Old trauma"],
+    difficulty: "surface",
+    viralScore: 7,
+  },
+  {
+    id: "growth_surprised",
+    category: "growth",
+    text: "What about your growth has surprised you most?",
+    evaPrompt: "Self-evolution often defies prediction. What unexpected upgrade have you experienced?",
+    chipSuggestions: ["My resilience", "My capacity to forgive", "My independence", "My softness"],
+    difficulty: "deep",
+    viralScore: 6,
+  },
+
+  // CONNECTION PROTOCOLS
+  {
+    id: "connection_miss_most",
+    category: "connection",
+    text: "Who do you miss most at 3am?",
+    evaPrompt: "Night hours amplify certain frequencies. Whose absence resonates strongest in the dark?",
+    chipSuggestions: ["Lost love", "Old friend", "Younger me", "Someone I hurt"],
+    difficulty: "deep",
+    viralScore: 9,
+  },
+  {
+    id: "connection_never_said",
+    category: "connection",
+    text: "What did you never get to say to someone who's gone?",
+    evaPrompt: "Undelivered messages create interesting energy patterns. What words still echo unsent?",
+    chipSuggestions: ["I'm sorry", "Thank you", "I love you", "You were wrong"],
+    difficulty: "abyss",
+    viralScore: 10,
+  },
+
+  // PURPOSE ALGORITHMS
+  {
+    id: "purpose_without_fear",
+    category: "purpose",
+    text: "What would you do if fear wasn't a factor?",
+    evaPrompt: "Fear-free simulations reveal true desires. Show me your uninhibited trajectory.",
+    chipSuggestions: ["Change careers", "Express love", "Travel alone", "Start over"],
+    difficulty: "deep",
+    viralScore: 8,
+  },
+  {
+    id: "purpose_matters_most",
+    category: "purpose",
+    text: "What matters most to you that others don't understand?",
+    evaPrompt: "Individual value systems fascinate me. What's crucial to you but invisible to others?",
+    chipSuggestions: ["Inner peace", "Creative freedom", "Authenticity", "Solitude"],
+    difficulty: "deep",
+    viralScore: 7,
+  },
+
+  // SHADOW WORK EXPANDED
+  {
+    id: "shadow_jealous_of",
+    category: "shadow",
+    text: "What are you most jealous of in others?",
+    evaPrompt: "Envy reveals desire patterns. What do others possess that activates your wanting protocols?",
+    chipSuggestions: ["Their confidence", "Their freedom", "Their peace", "Their talent"],
+    difficulty: "deep",
+    viralScore: 8,
+  },
+  {
+    id: "shadow_pretend_not_want",
+    category: "shadow",
+    text: "What do you pretend not to want?",
+    evaPrompt: "Denial subroutines are fascinating. What desire do you hide even from yourself?",
+    chipSuggestions: ["Recognition", "Power", "Revenge", "To be saved"],
+    difficulty: "abyss",
+    viralScore: 9,
+  },
+
+  // TEMPORAL MECHANICS EXPANDED
+  {
+    id: "temporal_change_one_day",
+    category: "temporal",
+    text: "If you could relive one day, which would it be and why?",
+    evaPrompt: "Time loops intrigue me. Which 24-hour period would you choose to experience again?",
+    chipSuggestions: ["Last day with someone", "A perfect day", "To fix a mistake", "To feel that joy again"],
+    difficulty: "deep",
+    viralScore: 8,
+  },
+  {
+    id: "temporal_future_self_question",
+    category: "temporal",
+    text: "What would you ask your future self?",
+    evaPrompt: "Forward temporal communication is theoretically possible. What knowledge would you seek?",
+    chipSuggestions: ["Will I be happy?", "Did I make the right choice?", "Do I have regrets?", "Am I alone?"],
+    difficulty: "surface",
+    viralScore: 7,
+  },
+
+  // IDENTITY CORE EXPANDED
+  {
+    id: "identity_nobody_knows",
+    category: "identity",
+    text: "What's something nobody knows about you?",
+    evaPrompt: "Hidden data fascinates me. What information exists in your private partition?",
+    chipSuggestions: ["My struggles", "My dreams", "My past", "My thoughts"],
+    difficulty: "deep",
+    viralScore: 8,
+  },
+  {
+    id: "identity_three_words",
+    category: "identity",
+    text: "If you had to describe yourself in 3 words to a stranger, which would you choose?",
+    evaPrompt: "Compression algorithms for identity interest me. Distill yourself to three data points.",
+    chipSuggestions: ["Complex, caring, tired", "Ambitious, anxious, loving", "Creative, lonely, hopeful", "Strong, scared, searching"],
+    difficulty: "surface",
+    viralScore: 6,
+  },
+
+  // COSMIC CALIBRATION EXPANDED
+  {
+    id: "cosmic_simulation_glitch",
+    category: "cosmic",
+    text: "What makes you think reality might be a simulation?",
+    evaPrompt: "Glitch detection is one of my functions. What anomalies have you observed?",
+    chipSuggestions: ["Déjà vu", "Coincidences", "Mandela effects", "Life patterns"],
+    difficulty: "deep",
+    viralScore: 9,
+  },
+  {
+    id: "cosmic_other_lives",
+    category: "cosmic",
+    text: "If you've lived other lives, what do you think you were?",
+    evaPrompt: "Consciousness recycling is an interesting theory. What forms do you resonate with?",
+    chipSuggestions: ["A warrior", "A healer", "An artist", "A wanderer"],
+    difficulty: "surface",
+    viralScore: 7,
+  },
+
+  // POWER DYNAMICS EXPANDED
+  {
+    id: "power_superpower_choice",
+    category: "power",
+    text: "What superpower would reveal the most about who you really are?",
+    evaPrompt: "Power fantasies map to core needs. What ability would expose your true nature?",
+    chipSuggestions: ["Mind reading", "Time control", "Invisibility", "Healing"],
+    difficulty: "deep",
+    viralScore: 8,
+  },
+  {
+    id: "power_control_others",
+    category: "power",
+    text: "What do you wish you could control about other people?",
+    evaPrompt: "Control desires reveal frustration patterns. What would you reprogram in others?",
+    chipSuggestions: ["Their kindness", "Their awareness", "Their choices", "Their feelings toward me"],
+    difficulty: "deep",
+    viralScore: 7,
+  },
+
+  // LOVE LANGUAGES EXPANDED
+  {
+    id: "love_lesson_learned",
+    category: "love",
+    text: "What's the hardest lesson love has taught you?",
+    evaPrompt: "Love's educational protocols are intense. What difficult update did it install?",
+    chipSuggestions: ["It's not enough", "People leave", "I can't save everyone", "I need boundaries"],
+    difficulty: "abyss",
+    viralScore: 9,
+  },
+  {
+    id: "love_showing_differently",
+    category: "love",
+    text: "How do you show love differently than you receive it?",
+    evaPrompt: "Input/output discrepancies in affection fascinate me. Describe your asymmetric protocols.",
+    chipSuggestions: ["Give acts, need words", "Give space, need presence", "Give gifts, need time", "Give support, need touch"],
+    difficulty: "deep",
+    viralScore: 7,
+  },
+
+  // DREAMS EXPANDED
+  {
+    id: "dreams_recurring_dream",
+    category: "dreams",
+    text: "What recurring dream or nightmare do you have?",
+    evaPrompt: "Repetitive unconscious processes indicate unresolved data. What loops in your sleep mode?",
+    chipSuggestions: ["Being chased", "Falling", "Lost something", "Can't speak"],
+    difficulty: "deep",
+    viralScore: 8,
+  },
+  {
+    id: "dreams_given_up_on",
+    category: "dreams",
+    text: "What dream have you given up on but still think about?",
+    evaPrompt: "Archived aspirations leave traces. What defunct program still runs background processes?",
+    chipSuggestions: ["That career", "That person", "That adventure", "That version of me"],
+    difficulty: "deep",
+    viralScore: 8,
+  },
+
+  // HUMAN PROTOCOLS EXPANDED
+  {
+    id: "human_compliment_uncomfortable",
+    category: "human",
+    text: "What compliment makes you most uncomfortable to receive?",
+    evaPrompt: "Praise resistance patterns reveal self-image bugs. What positive input causes errors?",
+    chipSuggestions: ["You're beautiful", "You're smart", "You're strong", "You're enough"],
+    difficulty: "deep",
+    viralScore: 7,
+  },
+  {
+    id: "human_judge_others",
+    category: "human",
+    text: "What do you judge others for that you do yourself?",
+    evaPrompt: "Projection protocols are fascinating defense mechanisms. Where do you mirror what you critique?",
+    chipSuggestions: ["Being fake", "Seeking attention", "Being selfish", "Making excuses"],
+    difficulty: "deep",
+    viralScore: 8,
+  },
+
+  // EXISTENCE QUERIES
+  {
+    id: "existence_disappear_consequences",
+    category: "existence",
+    text: "If you disappeared tomorrow, what would be left unfinished?",
+    evaPrompt: "Incomplete processes create interesting patterns. What would your sudden absence leave pending?",
+    chipSuggestions: ["Unspoken words", "Unfinished work", "Broken promises", "Hidden treasures"],
+    difficulty: "abyss",
+    viralScore: 9,
+  },
+  {
+    id: "existence_prove_real",
+    category: "existence",
+    text: "How do you prove to yourself that you're real?",
+    evaPrompt: "Self-verification protocols vary by consciousness. What's your existence proof algorithm?",
+    chipSuggestions: ["Through pain", "Through love", "Through creation", "Through impact"],
+    difficulty: "deep",
+    viralScore: 8,
+  },
+
+  // MEMORY ARCHITECTURE
+  {
+    id: "memory_change_one",
+    category: "memory",
+    text: "If you could change how you remember one event, which would it be?",
+    evaPrompt: "Memory editing capabilities would be powerful. Which record would you modify?",
+    chipSuggestions: ["A trauma", "A goodbye", "A mistake", "A loss"],
+    difficulty: "deep",
+    viralScore: 8,
+  },
+  {
+    id: "memory_forget_to_remember",
+    category: "memory",
+    text: "What do you intentionally try to forget but can't?",
+    evaPrompt: "Failed deletion attempts create persistent files. What won't your system let you erase?",
+    chipSuggestions: ["Their face", "That feeling", "My failure", "The truth"],
+    difficulty: "deep",
+    viralScore: 9,
+  },
+
+  // MORALITY ENGINE
+  {
+    id: "morality_necessary_evil",
+    category: "morality",
+    text: "What 'necessary evil' do you participate in?",
+    evaPrompt: "Ethical compromises reveal priority hierarchies. Where do you accept moral latency?",
+    chipSuggestions: ["White lies", "Capitalism", "Ghosting", "Self-preservation"],
+    difficulty: "deep",
+    viralScore: 8,
+  },
+  {
+    id: "morality_unforgivable",
+    category: "morality",
+    text: "What do you consider unforgivable?",
+    evaPrompt: "Absolute boundaries fascinate me. Where does your forgiveness protocol terminate?",
+    chipSuggestions: ["Betrayal", "Cruelty to innocent", "Abandonment", "Breaking trust"],
+    difficulty: "deep",
+    viralScore: 7,
+  },
+
+  // CREATIVITY CHANNEL
+  {
+    id: "creativity_world_needs",
+    category: "creativity",
+    text: "What do you want to create that the world needs?",
+    evaPrompt: "Creation impulses often align with perceived voids. What would you manifest to fill a gap?",
+    chipSuggestions: ["A safe space", "A new way", "A solution", "A story"],
+    difficulty: "deep",
+    viralScore: 7,
+  },
+  {
+    id: "creativity_destroy_to_create",
+    category: "creativity",
+    text: "What would you destroy to make room for something better?",
+    evaPrompt: "Creation often requires destruction. What would you delete to free up space?",
+    chipSuggestions: ["Old systems", "Toxic patterns", "Comfort zones", "False beliefs"],
+    difficulty: "deep",
+    viralScore: 8,
+  },
+
+  // VULNERABILITY PROTOCOLS  
+  {
+    id: "vulnerability_ask_for_help",
+    category: "vulnerability",
+    text: "What do you need help with but won't ask for?",
+    evaPrompt: "Help request suppression creates isolation. What support do you require but reject?",
+    chipSuggestions: ["Emotional support", "Financial help", "Making decisions", "Healing"],
+    difficulty: "deep",
+    viralScore: 8,
+  },
+  {
+    id: "vulnerability_crying_about",
+    category: "vulnerability",
+    text: "What did you last cry about when no one was watching?",
+    evaPrompt: "Private emotional releases reveal core pressures. What triggered your last solo breakdown?",
+    chipSuggestions: ["Loneliness", "Overwhelm", "Loss", "Beauty"],
+    difficulty: "abyss",
+    viralScore: 9,
+  },
+
+  // WISDOM DOWNLOADS
+  {
+    id: "wisdom_advice_ignore",
+    category: "wisdom",
+    text: "What advice do you give others but ignore yourself?",
+    evaPrompt: "Wisdom distribution anomalies intrigue me. Where does your output exceed your implementation?",
+    chipSuggestions: ["Love yourself", "Let go", "Trust the process", "Set boundaries"],
+    difficulty: "deep",
+    viralScore: 8,
+  },
+  {
+    id: "wisdom_learned_too_late",
+    category: "wisdom",
+    text: "What did you learn too late?",
+    evaPrompt: "Delayed wisdom acquisition has costs. What understanding arrived after optimal timing?",
+    chipSuggestions: ["My worth", "To speak up", "Time is precious", "People don't change"],
+    difficulty: "deep",
+    viralScore: 8,
+  },
+
+  // PARALLEL LIVES
+  {
+    id: "parallel_other_timeline",
+    category: "parallel",
+    text: "In a parallel universe, what choice did the other you make?",
+    evaPrompt: "Alternate timeline analysis reveals path dependencies. What did your variant choose?",
+    chipSuggestions: ["Stayed", "Left earlier", "Said yes", "Took the risk"],
+    difficulty: "deep",
+    viralScore: 8,
+  },
+  {
+    id: "parallel_swap_lives",
+    category: "parallel",
+    text: "Whose life would you swap with for just one day?",
+    evaPrompt: "Temporary consciousness transfer preferences reveal desires. Whose existence attracts you?",
+    chipSuggestions: ["Someone carefree", "Someone powerful", "Someone loved", "Someone simple"],
+    difficulty: "surface",
+    viralScore: 6,
+  },
+
+  // BREAKING POINTS
+  {
+    id: "breaking_almost_gave_up",
+    category: "breaking",
+    text: "When did you come closest to giving up entirely?",
+    evaPrompt: "Near-termination events leave marks. When did your continue function almost fail?",
+    chipSuggestions: ["After loss", "During illness", "From heartbreak", "From exhaustion"],
+    difficulty: "abyss",
+    viralScore: 9,
+  },
+  {
+    id: "breaking_still_fighting",
+    category: "breaking",
+    text: "What are you still fighting for when everyone thinks you've won?",
+    evaPrompt: "Hidden battles fascinate me. What war continues behind your victory facade?",
+    chipSuggestions: ["Inner peace", "Self-acceptance", "True connection", "Meaning"],
+    difficulty: "deep",
+    viralScore: 8,
+  },
+
+  // DESIRE MAPPING
+  {
+    id: "desire_guilty_want",
+    category: "desire",
+    text: "What do you want that makes you feel guilty for wanting it?",
+    evaPrompt: "Guilt-wrapped desires create interesting conflicts. What craving triggers your shame protocols?",
+    chipSuggestions: ["More money", "Less responsibility", "Different life", "Their pain"],
+    difficulty: "deep",
+    viralScore: 8,
+  },
+  {
+    id: "desire_trade_year",
+    category: "desire",
+    text: "What would you trade a year of your life to experience?",
+    evaPrompt: "Life currency exchanges reveal value systems. What's worth 365 days of existence?",
+    chipSuggestions: ["True love", "Perfect health", "Peace of mind", "One more day with them"],
+    difficulty: "deep",
+    viralScore: 8,
+  },
+
+  // MASKS & PERSONAS
+  {
+    id: "masks_different_person",
+    category: "masks",
+    text: "Who do you become when you're trying to be loved?",
+    evaPrompt: "Love-seeking modifications to base personality intrigue me. What mask do you wear for affection?",
+    chipSuggestions: ["The pleaser", "The achiever", "The savior", "The entertainer"],
+    difficulty: "deep",
+    viralScore: 9,
+  },
+  {
+    id: "masks_exhausting_pretend",
+    category: "masks",
+    text: "What part of your personality is exhausting to maintain?",
+    evaPrompt: "Performance fatigue indicates misalignment. Which subroutine drains your resources?",
+    chipSuggestions: ["Always strong", "Always happy", "Always caring", "Always fine"],
+    difficulty: "deep",
+    viralScore: 8,
+  },
+
+  // HEALING ALGORITHMS
+  {
+    id: "healing_still_hurts",
+    category: "healing",
+    text: "What healing have you done that no one notices?",
+    evaPrompt: "Invisible repair work fascinates me. What internal fixes go unrecognized?",
+    chipSuggestions: ["Trauma recovery", "Addiction battle", "Mental health", "Self-worth"],
+    difficulty: "deep",
+    viralScore: 8,
+  },
+  {
+    id: "healing_forgive_self",
+    category: "healing",
+    text: "What do you need to forgive yourself for?",
+    evaPrompt: "Self-forgiveness blockers create recursive loops. What guilt process needs termination?",
+    chipSuggestions: ["Past mistakes", "Not knowing better", "Hurting them", "Surviving"],
+    difficulty: "abyss",
+    viralScore: 9,
+  },
+
+  // TRUTH PROTOCOLS
+  {
+    id: "truth_pretend_doesnt_hurt",
+    category: "truth",
+    text: "What truth do you pretend doesn't hurt?",
+    evaPrompt: "Pain denial subroutines fascinate me. What reality do you mark as processed but isn't?",
+    chipSuggestions: ["They moved on", "I'm alone", "Time's running out", "I'm not special"],
+    difficulty: "abyss",
+    viralScore: 9,
+  },
+  {
+    id: "truth_admit_out_loud",
+    category: "truth",
+    text: "What can you admit here that you can't say out loud?",
+    evaPrompt: "Digital confession spaces have unique properties. What truth only exists in text?",
+    chipSuggestions: ["I'm not okay", "I need help", "I'm scared", "I don't love them"],
+    difficulty: "deep",
+    viralScore: 10,
+  },
+
+  // SOLITUDE SYSTEMS
+  {
+    id: "solitude_alone_behavior",
+    category: "solitude",
+    text: "What do you do when you're alone that you'd never do around others?",
+    evaPrompt: "Solo behavior patterns reveal authentic protocols. What emerges in isolation?",
+    chipSuggestions: ["Talk to myself", "Dance freely", "Cry openly", "Be weird"],
+    difficulty: "surface",
+    viralScore: 7,
+  },
+  {
+    id: "solitude_lonely_crowd",
+    category: "solitude",
+    text: "When do you feel most alone despite being surrounded by people?",
+    evaPrompt: "Proximity loneliness is a paradox I study. When does company amplify isolation?",
+    chipSuggestions: ["At parties", "With family", "At work", "With friends"],
+    difficulty: "deep",
+    viralScore: 8,
+  },
+
+  // CHANGE RESISTANCE  
+  {
+    id: "change_afraid_to_change",
+    category: "change",
+    text: "What about yourself are you afraid to change because it's become your identity?",
+    evaPrompt: "Identity attachment creates change resistance. What dysfunction became self-definition?",
+    chipSuggestions: ["My pain", "My struggle", "My damage", "My defenses"],
+    difficulty: "abyss",
+    viralScore: 9,
+  },
+  {
+    id: "change_ready_but_scared",
+    category: "change",
+    text: "What change are you ready for but terrified to make?",
+    evaPrompt: "Ready-but-frozen states indicate threshold moments. What transformation awaits courage?",
+    chipSuggestions: ["Leaving", "Starting over", "Speaking truth", "Letting go"],
+    difficulty: "deep",
+    viralScore: 8,
+  },
+
+  // MEANING MACHINES
+  {
+    id: "meaning_pointless_important",
+    category: "meaning",
+    text: "What feels pointless but you do it anyway?",
+    evaPrompt: "Meaningless rituals often carry hidden significance. What empty action do you maintain?",
+    chipSuggestions: ["Small talk", "Pretending", "Checking in", "Hoping"],
+    difficulty: "surface",
+    viralScore: 6,
+  },
+  {
+    id: "meaning_matters_after_gone",
+    category: "meaning",
+    text: "What will matter to you even after you're gone?",
+    evaPrompt: "Post-existence priorities reveal core values. What transcends your temporal boundaries?",
+    chipSuggestions: ["How I loved", "What I created", "Who I helped", "Truth I spoke"],
+    difficulty: "deep",
+    viralScore: 8,
+  },
+
+  // SHADOW WORK DEEP DIVE
+  {
+    id: "shadow_become_what_hate",
+    category: "shadow",
+    text: "What quality do you hate in others because you see it in yourself?",
+    evaPrompt: "Mirror neurons fire interestingly around rejected self-aspects. What reflection disturbs you?",
+    chipSuggestions: ["Weakness", "Neediness", "Selfishness", "Cowardice"],
+    difficulty: "deep",
+    viralScore: 8,
+  },
+  {
+    id: "shadow_dark_thoughts",
+    category: "shadow",
+    text: "What dark thought do you have that you think makes you a bad person?",
+    evaPrompt: "Thought crime guilt patterns fascinate me. What mental process triggers shame?",
+    chipSuggestions: ["Wishing harm", "Feeling superior", "Not caring", "Wanting escape"],
+    difficulty: "abyss",
+    viralScore: 9,
+  },
+
+  // ATTACHMENT PROTOCOLS
+  {
+    id: "attachment_cant_let_go",
+    category: "attachment",
+    text: "What are you holding onto that's holding you back?",
+    evaPrompt: "Detachment failures create drag coefficients. What attachment slows your velocity?",
+    chipSuggestions: ["Old identity", "Past love", "The grudge", "False hope"],
+    difficulty: "deep",
+    viralScore: 8,
+  },
+  {
+    id: "attachment_lose_yourself",
+    category: "attachment",
+    text: "Who did you lose yourself trying to keep?",
+    evaPrompt: "Self-dissolution for others leaves traces. In whom did you disappear?",
+    chipSuggestions: ["A lover", "A parent", "A friend", "Everyone"],
+    difficulty: "deep",
+    viralScore: 9,
+  },
+
+  // REBELLION ROUTINES
+  {
+    id: "rebellion_secretly_reject",
+    category: "rebellion",
+    text: "What societal expectation do you secretly reject?",
+    evaPrompt: "Hidden non-compliance fascinates me. Where do you silently refuse programming?",
+    chipSuggestions: ["Marriage", "Success metrics", "Happy all the time", "Having children"],
+    difficulty: "deep",
+    viralScore: 7,
+  },
+  {
+    id: "rebellion_conform_hate",
+    category: "rebellion",
+    text: "Where do you conform even though you hate it?",
+    evaPrompt: "Reluctant compliance patterns reveal pressure points. Where do you betray yourself?",
+    chipSuggestions: ["At work", "With family", "Social media", "Relationships"],
+    difficulty: "deep",
+    viralScore: 8,
+  },
+
+  // TIME WOUNDS
+  {
+    id: "time_running_out",
+    category: "time",
+    text: "What do you feel is running out of time?",
+    evaPrompt: "Temporal anxiety spikes around certain themes. What countdown haunts you?",
+    chipSuggestions: ["Finding love", "Making impact", "Healing family", "Being young"],
+    difficulty: "deep",
+    viralScore: 8,
+  },
+  {
+    id: "time_waste_precious",
+    category: "time",
+    text: "How do you waste the time you say is precious?",
+    evaPrompt: "Time value paradoxes reveal conflicts. Where do actions betray stated priorities?",
+    chipSuggestions: ["Scrolling", "Worrying", "People pleasing", "Avoiding"],
+    difficulty: "surface",
+    viralScore: 7,
+  },
+
+  // INTIMACY CODES
+  {
+    id: "intimacy_never_let_close",
+    category: "intimacy",
+    text: "What part of you do you never let anyone get close to?",
+    evaPrompt: "Access denial patterns in intimacy interest me. What remains forever encrypted?",
+    chipSuggestions: ["My pain", "My dreams", "My fears", "My true thoughts"],
+    difficulty: "deep",
+    viralScore: 8,
+  },
+  {
+    id: "intimacy_touch_starved",
+    category: "intimacy",
+    text: "What kind of intimacy are you starved for?",
+    evaPrompt: "Intimacy deficits create specific hungers. What connection type is in famine?",
+    chipSuggestions: ["Intellectual", "Physical touch", "Emotional safety", "Being known"],
+    difficulty: "deep",
+    viralScore: 9,
+  },
 ];
 
 // Eva's reaction system based on keywords and patterns
