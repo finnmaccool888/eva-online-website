@@ -156,6 +156,7 @@ export default function EvaTransmission() {
   }>>([]);
   const [unlockedTrait, setUnlockedTrait] = useState<Trait | null>(null);
   const [autoAdvanceTimer, setAutoAdvanceTimer] = useState<NodeJS.Timeout | null>(null);
+  const [reactionCountdown, setReactionCountdown] = useState(8);
   const [redirectCountdown, setRedirectCountdown] = useState(10);
   
   // Load user's vibe from Soul Seed
@@ -175,13 +176,23 @@ export default function EvaTransmission() {
   useEffect(() => {
     // Auto-advance after Eva's reaction
     if (stage === "reaction" && !evaReaction?.followUp) {
-      const timer = setTimeout(() => {
-        handleContinue();
-      }, 5000);
-      setAutoAdvanceTimer(timer);
+      let countdown = 8;
+      setReactionCountdown(countdown);
+      
+      // Update countdown every second
+      const countdownInterval = setInterval(() => {
+        countdown--;
+        setReactionCountdown(countdown);
+        
+        if (countdown <= 0) {
+          handleContinue();
+        }
+      }, 1000);
+      
+      setAutoAdvanceTimer(countdownInterval);
       
       return () => {
-        if (timer) clearTimeout(timer);
+        if (countdownInterval) clearInterval(countdownInterval);
       };
     }
   }, [stage, evaReaction]);
@@ -380,7 +391,7 @@ export default function EvaTransmission() {
 
   function handleContinue() {
     if (autoAdvanceTimer) {
-      clearTimeout(autoAdvanceTimer);
+      clearInterval(autoAdvanceTimer); // Changed from clearTimeout to clearInterval
       setAutoAdvanceTimer(null);
     }
 
@@ -754,13 +765,12 @@ export default function EvaTransmission() {
             </div>
 
             <div className="flex justify-end items-center gap-4">
-              {!autoAdvanceTimer ? (
-                <PrimaryButton onClick={handleContinue}>
-                  Continue
-                </PrimaryButton>
-              ) : (
+              <PrimaryButton onClick={handleContinue}>
+                Continue
+              </PrimaryButton>
+              {autoAdvanceTimer && (
                 <div className="text-sm text-gray-600">
-                  Continuing in <span className="font-mono">5</span>s...
+                  Auto-continuing in <span className="font-mono">{reactionCountdown}</span>s...
                 </div>
               )}
             </div>
