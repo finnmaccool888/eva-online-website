@@ -194,22 +194,13 @@ export async function reAnalyzeSession(
   };
 }
 
-// Improved point calculation with clear logic
+// Point calculation matching the UI formula
 function calculateQuestionPoints(quality: number, sincerity: number): number {
-  const avgScore = (quality + sincerity) / 2;
-  
-  // Transparent point calculation:
-  // 9-10: 500 points (exceptional)
-  // 7-8: 400 points (good)
-  // 5-6: 300 points (decent)
-  // 3-4: 200 points (minimal)
-  // 1-2: 100 points (poor)
-  
-  if (avgScore >= 9) return 500;
-  if (avgScore >= 7) return 400;
-  if (avgScore >= 5) return 300;
-  if (avgScore >= 3) return 200;
-  return 100;
+  // Use the same formula shown in the scoring explanation UI
+  // Points = (Quality + Sincerity) × 25
+  // This gives a max of 500 points per question (10 + 10) × 25 = 500
+  // With 5 questions per session, max session points = 2,500
+  return (quality + sincerity) * 25;
 }
 
 // Update profile with recalculated session data

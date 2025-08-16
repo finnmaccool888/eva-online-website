@@ -119,6 +119,23 @@ export default function SessionHistory({ profile, onUpdateProfile }: SessionHist
         // Save to local storage
         saveProfile(updatedProfile);
         
+        // Sync to database
+        try {
+          const { getTwitterAuth } = await import('@/lib/mirror/auth');
+          const auth = getTwitterAuth();
+          if (auth?.twitterHandle) {
+            const { syncCompleteProfile } = await import('@/lib/supabase/sync-profile');
+            const syncResult = await syncCompleteProfile();
+            if (syncResult.success) {
+              console.log('[SessionHistory] Profile synced to database after edit');
+            } else {
+              console.error('[SessionHistory] Failed to sync profile:', syncResult.error);
+            }
+          }
+        } catch (error) {
+          console.error('[SessionHistory] Error syncing to database:', error);
+        }
+        
         // Update parent component
         onUpdateProfile(updatedProfile);
       }
