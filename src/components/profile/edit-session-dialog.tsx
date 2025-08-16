@@ -123,7 +123,7 @@ export default function EditSessionDialog({
         >
           <h2 className="text-lg font-semibold mb-4 text-gray-900">No Session Data</h2>
           <p className="text-gray-600 mb-4">
-            This session doesn&apos;t have detailed question and answer data available for editing.
+            This session was completed before we started saving question data. Only new sessions will have editable questions.
           </p>
           <button
             onClick={onClose}

@@ -445,12 +445,18 @@ export default function EvaTransmission() {
       // Don't add session points to profile.points - they're tracked in sessionHistory
       // profile.points should only contain base points + OG bonus
       
-      // Add session to history
+      // Add session to history with actual question data
       profile.sessionHistory.push({
         date: now,
         questionsAnswered,
         humanScore,
-        pointsEarned
+        pointsEarned,
+        sessionData: sessionData.map(item => ({
+          questionId: item.question.id,
+          questionText: item.question.text,
+          answer: item.answer,
+          // We can add quality/sincerity scores later if needed
+        }))
       });
       console.log('[EvaTransmission] Session saved to history');
     } else {

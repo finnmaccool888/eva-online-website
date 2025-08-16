@@ -55,28 +55,12 @@ export default function SessionHistory({ profile, onUpdateProfile }: SessionHist
     const session = sessions[sessionIndex];
     console.log('[SessionHistory] Edit session clicked:', session);
     
-    // If session doesn't have sessionData, create mock data for testing
+    // If session doesn't have sessionData, it's an old session before we started saving questions
     if (!session.sessionData || session.sessionData.length === 0) {
-      console.log('[SessionHistory] No session data found, creating mock data for testing');
+      console.log('[SessionHistory] No session data found - this is an old session before question data was saved');
       
-      // Create mock session data for testing
-      const mockSessionData = [
-        {
-          questionId: "q1",
-          questionText: "What drives your daily motivation?",
-          answer: "Mock answer - replace with your actual response",
-          editedAt: Date.now()
-        },
-        {
-          questionId: "q2", 
-          questionText: "How do you define success?",
-          answer: "Mock answer - replace with your actual response",
-          editedAt: Date.now()
-        }
-      ];
-      
-      // Temporarily add mock data to the session
-      session.sessionData = mockSessionData;
+      // Don't create mock data - just show an error message
+      // The edit dialog will handle this gracefully
     }
     
     if (session.sessionData && session.sessionData.length > 0) {
