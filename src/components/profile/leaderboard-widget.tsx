@@ -105,9 +105,12 @@ export default function LeaderboardWidget({ currentUser }: LeaderboardWidgetProp
   if (loading) {
     return (
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <div className="flex items-center gap-2 mb-4">
-          <TrendingUp className="w-5 h-5 text-gray-900" />
-          <h2 className="text-xl font-semibold text-gray-900">Leaderboard</h2>
+        <div className="mb-4">
+          <div className="flex items-center gap-2">
+            <TrendingUp className="w-5 h-5 text-gray-900" />
+            <h2 className="text-xl font-semibold text-gray-900">Leaderboard</h2>
+          </div>
+          <p className="text-sm text-gray-500 mt-1 ml-7">Coming soon</p>
         </div>
         <div className="space-y-3">
           {[1, 2, 3, 4, 5].map((i) => (
@@ -129,9 +132,12 @@ export default function LeaderboardWidget({ currentUser }: LeaderboardWidgetProp
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-      <div className="flex items-center gap-2 mb-4">
-        <TrendingUp className="w-5 h-5 text-gray-900" />
-        <h2 className="text-xl font-semibold text-gray-900">Global Leaderboard</h2>
+      <div className="mb-4">
+        <div className="flex items-center gap-2">
+          <TrendingUp className="w-5 h-5 text-gray-900" />
+          <h2 className="text-xl font-semibold text-gray-900">Global Leaderboard</h2>
+        </div>
+        <p className="text-sm text-gray-500 mt-1 ml-7">Coming soon</p>
       </div>
 
       {error && (
