@@ -73,6 +73,10 @@ export default function ProfileDashboard({ auth }: ProfileDashboardProps) {
           
           // Also sync to localStorage for compatibility
           saveProfile(userProfile);
+          
+          // Sync the correct calculated points to Supabase
+          const { syncCompleteProfile } = await import('@/lib/supabase/sync-profile');
+          await syncCompleteProfile();
         } else {
           // No profile data yet - use default profile
           const defaultProfile: UserProfile = {

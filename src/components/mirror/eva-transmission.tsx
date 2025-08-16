@@ -442,8 +442,8 @@ export default function EvaTransmission() {
         profile.totalQuestionsAnswered = questionsAnswered;
       }
       
-      // Add points
-      profile.points += pointsEarned;
+      // Don't add session points to profile.points - they're tracked in sessionHistory
+      // profile.points should only contain base points + OG bonus
       
       // Add session to history
       profile.sessionHistory.push({
@@ -473,8 +473,10 @@ export default function EvaTransmission() {
           // Update human score
           await updateUserHumanScore(user.id, humanScore, questionsAnswered);
           
-          // Update points in Supabase
-          await updateUserPoints(user.id, pointsEarned);
+          // Sync complete profile instead of just updating points
+          const { syncCompleteProfile } = await import('@/lib/supabase/sync-profile');
+          await syncCompleteProfile();
+          console.log('[EvaTransmission] Profile synced to Supabase');
         }
       }
     } catch (error) {
