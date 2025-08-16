@@ -13,7 +13,7 @@ export function useTwitterAuth() {
     
     console.log('[useTwitterAuth] Checking authentication...');
     
-    // First check localStorage
+    // First check localStorage (with proper namespaced key)
     const localAuth = getTwitterAuth();
     if (localAuth) {
       console.log('[useTwitterAuth] Found auth in localStorage');
@@ -21,6 +21,24 @@ export function useTwitterAuth() {
       setLoading(false);
       setChecked(true);
       return;
+    }
+    
+    // Also check for non-namespaced key in case it exists
+    try {
+      const nonNamespacedAuth = localStorage.getItem('twitter_auth');
+      if (nonNamespacedAuth) {
+        const authData = JSON.parse(nonNamespacedAuth);
+        console.log('[useTwitterAuth] Found non-namespaced auth, migrating...');
+        setTwitterAuth(authData); // This will save it with proper namespace
+        setAuth(authData);
+        setLoading(false);
+        setChecked(true);
+        // Clean up old key
+        localStorage.removeItem('twitter_auth');
+        return;
+      }
+    } catch (error) {
+      console.error('[useTwitterAuth] Failed to check non-namespaced auth:', error);
     }
     
     // Check URL parameters (backup method)

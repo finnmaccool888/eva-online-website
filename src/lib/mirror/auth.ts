@@ -59,6 +59,10 @@ export async function logout(): Promise<void> {
   // Also try to clear non-namespaced versions in case they exist
   localStorage.removeItem('twitter_auth');
   
+  // Clear any session storage flags
+  sessionStorage.removeItem('mirrorAuthRedirecting');
+  sessionStorage.removeItem('mirrorPasswordVerified');
+  
   // Clear any client-side cookies
   document.cookie = 'twitter_auth_client=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
   

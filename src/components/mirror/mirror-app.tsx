@@ -23,8 +23,8 @@ export default function MirrorApp() {
   const [ogPopupShown, setOgPopupShown] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
   const [passwordVerified, setPasswordVerified] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
   const { auth, loading } = useTwitterAuth();
-  const redirectingRef = useRef(false);
   
   const state = {
     authLoading: loading,
@@ -74,37 +74,53 @@ export default function MirrorApp() {
   }, []);
   
   useEffect(() => {
-    console.log('[MirrorApp] Effect running, loading:', loading, 'auth:', !!auth, 'redirecting:', redirectingRef.current);
+    console.log('[MirrorApp] Effect running, loading:', loading, 'auth:', !!auth, 'isRedirecting:', isRedirecting);
     
     // Still loading auth
     if (loading) {
+      console.log('[MirrorApp] Still loading auth, waiting...');
       return;
     }
     
-    // No auth and not already redirecting
-    if (!auth && !redirectingRef.current) {
-      // Check if we're coming back from an error
-      const urlParams = new URLSearchParams(window.location.search);
-      const hasError = urlParams.get('error');
+    // Check if we're already in the process of redirecting (stored in sessionStorage)
+    const redirectInProgress = sessionStorage.getItem('mirrorAuthRedirecting') === 'true';
+    if (redirectInProgress || isRedirecting) {
+      console.log('[MirrorApp] Already redirecting, preventing duplicate redirect');
+      return;
+    }
+    
+    // No auth - redirect to Twitter OAuth
+    if (!auth && !authError) {
+      console.log('[MirrorApp] No auth found, redirecting to Twitter OAuth');
+      setIsRedirecting(true);
+      sessionStorage.setItem('mirrorAuthRedirecting', 'true');
       
-      if (hasError) {
-        console.log('[MirrorApp] Auth error detected, not redirecting');
-        return;
-      }
-      
-      console.log('[MirrorApp] No auth, redirecting to Twitter');
-      redirectingRef.current = true;
-      
-      // Small delay to ensure any pending auth checks complete
+      // Small delay to prevent immediate redirect on initial load
       setTimeout(() => {
+        // Clear the redirect flag after a reasonable timeout
+        setTimeout(() => {
+          sessionStorage.removeItem('mirrorAuthRedirecting');
+        }, 5000);
         window.location.href = '/api/auth/twitter';
-      }, 100);
+      }, 500); // Increased delay to ensure proper state management
       return;
     }
     
-    // Have auth, initialize app if not already done
-    if (auth && !isInitialized) {
+    // Have auth but password not verified - DON'T redirect, just show password gate
+    if (auth && !passwordVerified) {
+      console.log('[MirrorApp] Auth found but password not verified, showing password gate');
+      // Clear any redirect flags since we have auth
+      sessionStorage.removeItem('mirrorAuthRedirecting');
+      // Don't trigger any redirects here, just let the password gate show
+      setIsInitialized(true);
+      return;
+    }
+    
+    // Have auth and password verified, initialize app if not already done
+    if (auth && passwordVerified && !isInitialized) {
       console.log('[MirrorApp] Initializing app with auth:', auth);
+      // Clear any redirect flags since we successfully have auth
+      sessionStorage.removeItem('mirrorAuthRedirecting');
       track("daily_opened");
       
       const profile = loadProfile();
@@ -150,20 +166,18 @@ export default function MirrorApp() {
         }
       }
       
-      // Check if user is OG and hasn't seen the popup yet
-      if (auth.ogPointsAwarded && !ogPopupShown) {
-        setShowOGPopup(true);
-        setOgPopupShown(true);
-        // Save that we've shown the OG popup
-        localStorage.setItem('ogPopupShown', 'true');
-      }
-      
-      // Show wizard if user hasn't filled personal info yet
-      setShowWizard(!hasPersonalInfo);
-      setOnboarded(hasOnboarded);
+      setOnboarded(hasOnboarded || false);
       setIsInitialized(true);
+      
+      // Show OG popup if user is OG and hasn't seen it
+      if (auth.isOG && !ogPopupShown) {
+        console.log('[MirrorApp] Showing OG popup');
+        setShowOGPopup(true);
+        localStorage.setItem('ogPopupShown', 'true');
+        setOgPopupShown(true);
+      }
     }
-  }, [loading, auth, isInitialized]);
+  }, [loading, auth, isInitialized, ogPopupShown, passwordVerified, authError, isRedirecting]);
   
   function handleWizardComplete() {
     setShowWizard(false);
@@ -210,8 +224,8 @@ export default function MirrorApp() {
   
   // Show error if no auth after loading
   if (!loading && !auth) {
-    const urlParams = new URLSearchParams(window.location.search);
-    const error = urlParams.get('error');
+    // Use authError state or check URL params
+    const error = authError || new URLSearchParams(window.location.search).get('error');
     
     if (error) {
       // Clear the error from URL
@@ -249,10 +263,21 @@ export default function MirrorApp() {
       );
     }
     
+    // Show redirecting message if we're in the process of redirecting
+    if (isRedirecting) {
+      return (
+        <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
+          <div className="text-center">
+            <p className="text-sm sm:text-base text-muted-foreground">Redirecting to Twitter for authentication...</p>
+          </div>
+        </div>
+      );
+    }
+    
     return (
       <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
         <div className="text-center">
-          <p className="text-sm sm:text-base text-muted-foreground">Redirecting to Twitter...</p>
+          <p className="text-sm sm:text-base text-muted-foreground">Loading...</p>
         </div>
       </div>
     );
