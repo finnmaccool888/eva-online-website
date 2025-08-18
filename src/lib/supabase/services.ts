@@ -245,28 +245,8 @@ export async function loadUserData(twitterHandle: string) {
   }
 } 
 
-// Save session history
-export async function saveSessionHistory(
-  userId: string,
-  questionsAnswered: number,
-  humanScore: number,
-  pointsEarned: number
-) {
-  try {
-    const { error } = await supabase
-      .from('session_history')
-      .insert({
-        user_id: userId,
-        questions_answered: questionsAnswered,
-        human_score: humanScore,
-        points_earned: pointsEarned
-      });
-
-    if (error) throw error;
-  } catch (error) {
-    console.error('Error saving session history:', error);
-  }
-}
+// Deprecated: Use createSession from session-services.ts instead
+// This function only saves minimal data and loses important session details
 
 // Update user human score
 export async function updateUserHumanScore(

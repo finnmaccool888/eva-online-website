@@ -8,7 +8,8 @@ import { track } from "@/lib/mirror/analytics";
 import { checkTraitUnlock, Trait } from "@/lib/mirror/traits-v2";
 import { getPlayfulReaction } from "@/lib/mirror/input-validation";
 import { loadProfile, saveProfile } from "@/lib/mirror/profile";
-import { saveSessionHistory, updateUserHumanScore, createOrUpdateUser, updateUserPoints } from "@/lib/supabase/services";
+import { updateUserHumanScore, createOrUpdateUser, updateUserPoints } from "@/lib/supabase/services";
+import { createSession } from "@/lib/supabase/session-services";
 import { getTwitterAuth } from "@/lib/mirror/auth";
 import ChipInput from "./chip-input";
 import PrimaryButton from "../primary-button";
@@ -157,6 +158,7 @@ export default function EvaTransmission({ onComplete }: EvaTransmissionProps = {
     question: MirrorQuestion;
     answer: string;
     reaction: EvaReaction | null;
+    pointsAwarded: number;
   }>>([]);
   const [unlockedTrait, setUnlockedTrait] = useState<Trait | null>(null);
   const [redirectCountdown, setRedirectCountdown] = useState(10);
@@ -346,6 +348,7 @@ export default function EvaTransmission({ onComplete }: EvaTransmissionProps = {
           question: currentQuestion,
           answer: userInput,
           reaction: dynamicReaction,
+          pointsAwarded: analysis.pointsAwarded || 250, // Use actual points from API, fallback to middle-ground
         }]);
       }
 
@@ -396,7 +399,8 @@ export default function EvaTransmission({ onComplete }: EvaTransmissionProps = {
     // Calculate and save human score to profile
     const { score: humanScore, breakdown } = calculateHumanScore(sessionData);
     const questionsAnswered = sessionData.length;
-    const pointsEarned = questionsAnswered * 500;
+    // Calculate actual points earned from session data
+    const pointsEarned = sessionData.reduce((total, item) => total + item.pointsAwarded, 0);
     
     // Load and update profile
     const profile = loadProfile();
@@ -456,16 +460,63 @@ export default function EvaTransmission({ onComplete }: EvaTransmissionProps = {
     // Save to Supabase if authenticated
     try {
       const auth = getTwitterAuth();
-      if (auth?.twitterHandle) {
+      if (auth?.twitterHandle && !isDuplicate) {
         const { user } = await createOrUpdateUser(auth.twitterHandle, auth.twitterName, auth.isOG);
         if (user) {
-          // Save session history
-          await saveSessionHistory(user.id, questionsAnswered, humanScore, pointsEarned);
+          // Calculate session duration (rough estimate - 30 seconds per question + thinking time)
+          const sessionDuration = questionsAnswered * 45;
           
-          // Update human score
+          // Build comprehensive session data
+          const comprehensiveSessionData = {
+            userId: user.id,
+            sessionDate: new Date(),
+            isComplete: true,
+            questionsAnswered,
+            humanScore,
+            pointsEarned,
+            streakDay: 0, // TODO: Calculate actual streak
+            sessionDurationSeconds: sessionDuration,
+            questions: sessionData.map((item, index) => ({
+              questionOrder: index + 1,
+              questionId: item.question.id,
+              questionText: item.question.text,
+              userAnswer: item.answer,
+              answerSubmittedAt: new Date(now - (questionsAnswered - index) * 45000), // Estimate timestamps
+              answerEditedAt: undefined,
+              characterCount: item.answer.trim().length,
+              wordCount: item.answer.trim().split(/\s+/).length,
+              evaResponseText: item.reaction?.response || undefined,
+              evaResponseMood: item.reaction?.mood || undefined,
+              evaResponseReceivedAt: item.reaction ? new Date(now - (questionsAnswered - index) * 45000 + 2000) : undefined,
+              // Calculate individual question scores (using same formula as points calculation)
+              baseScore: 250, // Base score per question
+              lengthBonus: Math.min(item.answer.length * 2, 100), // Up to 100 bonus for length
+              detailBonus: item.answer.split(/\s+/).length > 20 ? 50 : 0, // Bonus for detailed answers
+              personalBonus: 0, // TODO: Calculate based on personal pronouns/examples
+              engagementBonus: item.reaction?.unlock ? 100 : 0, // Bonus for unlocking traits
+              totalQuestionScore: item.pointsAwarded // Use actual points earned per question
+            })),
+            analytics: {
+              chipOnlyAnswers: breakdown.chipOnlyAnswers,
+              thoughtfulAnswers: breakdown.thoughtfulAnswers,
+              averageAnswerLength: breakdown.averageLength,
+              detailLevel: breakdown.detailLevel,
+              feedbackPoints: breakdown.feedback
+            }
+          };
+          
+          // Save comprehensive session data
+          const sessionId = await createSession(comprehensiveSessionData);
+          if (sessionId) {
+            console.log('[EvaTransmission] Created comprehensive session:', sessionId);
+          } else {
+            console.error('[EvaTransmission] Failed to create session');
+          }
+          
+          // Update human score (this updates the average)
           await updateUserHumanScore(user.id, humanScore, questionsAnswered);
           
-          // Sync complete profile instead of just updating points
+          // Sync complete profile to ensure consistency
           const { syncCompleteProfile } = await import('@/lib/supabase/sync-profile');
           await syncCompleteProfile();
           console.log('[EvaTransmission] Profile synced to Supabase');
@@ -756,8 +807,9 @@ export default function EvaTransmission({ onComplete }: EvaTransmissionProps = {
         {stage === "complete" && (() => {
           const { score: humanScore, breakdown } = calculateHumanScore(sessionData);
           const questionsAnswered = sessionData.length;
-          const pointsPerQuestion = 500;
-          const totalPoints = questionsAnswered * pointsPerQuestion;
+          // Calculate actual total points from session
+          const totalPoints = sessionData.reduce((total, item) => total + item.pointsAwarded, 0);
+          const avgPointsPerQuestion = questionsAnswered > 0 ? Math.round(totalPoints / questionsAnswered) : 0;
           
           // Calculate grade based on human score
           const getGrade = (score: number) => {

@@ -25,6 +25,7 @@ export interface AnalysisResponse {
   evaResponse: string;
   trustImpact: number; // negative for bad responses
   shouldTerminate?: boolean; // for extremely offensive content
+  pointsAwarded?: number; // Points calculated from quality and sincerity
 }
 
 // Eva's personality by vibe
@@ -66,6 +67,7 @@ Provide a JSON response with:
 5. evaResponse: Your response in character (${vibe} style). Be mildly snarky (level 5/10) if they're testing you or being offensive.${alias ? ` Address them as ${alias} when it feels natural.` : ''}
 6. trustImpact: 0 for good responses, -2 for low quality, -5 for gibberish/spam, -10 for offensive
 7. shouldTerminate: true only for extremely offensive repeated behavior
+8. pointsAwarded: DO NOT include this field - it will be calculated separately
 
 Remember:
 - Stay in character as Eva with ${vibe} personality
@@ -110,6 +112,18 @@ ${alias ? `- Use "${alias}" naturally in your response, but don't overuse it` : 
       }
     }
 
+    // Calculate points based on quality and sincerity
+    // Formula: (Quality + Sincerity) × 25
+    // For spam/gibberish/offensive, award minimal points
+    if (analysis.category === "spam" || analysis.category === "gibberish" || analysis.category === "offensive") {
+      analysis.pointsAwarded = 50; // Minimum points for invalid responses
+    } else {
+      // Calculate points: (quality + sincerity) × 25
+      // This gives a range of 50-500 points per question
+      const rawPoints = (analysis.quality + analysis.sincerity) * 25;
+      analysis.pointsAwarded = Math.min(500, Math.max(50, rawPoints));
+    }
+
     return NextResponse.json(analysis);
 
   } catch (error) {
@@ -123,7 +137,8 @@ ${alias ? `- Use "${alias}" naturally in your response, but don't overuse it` : 
       flags: [],
       evaResponse: "My circuits are experiencing temporal interference. Your response has been noted.",
       trustImpact: 0,
-      shouldTerminate: false
+      shouldTerminate: false,
+      pointsAwarded: 250 // Default middle-ground points for fallback
     } as AnalysisResponse);
   }
 } 

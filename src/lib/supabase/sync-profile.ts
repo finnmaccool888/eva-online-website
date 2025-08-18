@@ -58,7 +58,7 @@ export async function syncCompleteProfile() {
       }
     });
 
-    // Update Supabase with complete profile data
+    // Update Supabase with profile data (excluding session history which is stored in dedicated tables)
     const { error: updateError } = await supabase
       .from('user_profiles')
       .upsert({
@@ -66,7 +66,7 @@ export async function syncCompleteProfile() {
         points: calculatedTotalPoints, // Use calculated total, not base points
         human_score: localProfile.humanScore || 0,
         total_questions_answered: localProfile.totalQuestionsAnswered || 0,
-        session_history: localProfile.sessionHistory || [],
+        // Removed session_history - sessions are stored in dedicated tables via createSession
         personal_info: localProfile.personalInfo || {},
         social_profiles: localProfile.socialProfiles || [],
         is_og_rewarded: localProfile.ogPointsAwarded || user.is_og || false,

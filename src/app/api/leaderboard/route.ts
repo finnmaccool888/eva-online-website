@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    // Fetch all users with their profiles from Supabase
+    // Fetch all users with their profiles and session points from Supabase
     const { data: users, error } = await supabase
       .from('users')
       .select(`
@@ -24,11 +24,10 @@ export async function GET(request: NextRequest) {
         twitter_handle,
         twitter_name,
         is_og,
-        user_profiles (
+        user_profiles!inner (
           points,
           human_score,
           total_questions_answered,
-          session_history,
           is_og_rewarded
         )
       `)
@@ -41,6 +40,25 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ leaderboard: [] });
     }
 
+    // Get all user IDs to fetch their session points
+    const userIds = users?.map(user => user.id) || [];
+    
+    // Fetch session points for all users in one query
+    const { data: sessionPoints } = await supabase
+      .from('sessions')
+      .select('user_id, points_earned')
+      .in('user_id', userIds)
+      .eq('is_complete', true);
+    
+    // Create a map of user_id to total session points
+    const sessionPointsMap: Record<string, number> = {};
+    sessionPoints?.forEach(session => {
+      if (!sessionPointsMap[session.user_id]) {
+        sessionPointsMap[session.user_id] = 0;
+      }
+      sessionPointsMap[session.user_id] += session.points_earned || 0;
+    });
+
     // Transform data into leaderboard format
     const leaderboard = users?.map((user, index) => {
       // Handle both single profile and array of profiles
@@ -48,13 +66,10 @@ export async function GET(request: NextRequest) {
         ? user.user_profiles[0] 
         : user.user_profiles;
       
-      // Calculate total points including session history
-      let totalPoints = profile?.points || 0;
-      if (profile?.session_history && Array.isArray(profile.session_history)) {
-        totalPoints += profile.session_history.reduce((sum: number, session: any) => {
-          return sum + (session.pointsEarned || 0);
-        }, 0);
-      }
+      // Calculate total points: base points + session points
+      const basePoints = profile?.points || 0;
+      const sessionTotal = sessionPointsMap[user.id] || 0;
+      const totalPoints = basePoints + sessionTotal;
 
       return {
         rank: index + 1,
