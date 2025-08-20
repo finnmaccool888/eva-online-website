@@ -5,10 +5,13 @@ import { motion } from "framer-motion";
 import { UserProfile } from "@/lib/mirror/types";
 import { loadProfile, saveProfile } from "@/lib/mirror/profile";
 import { loadUserData, createOrUpdateUser } from "@/lib/supabase/services";
+import { usePointsSync } from "@/lib/hooks/usePointsSync";
 import ProfileHeader from "./profile-header";
 import StatsCards from "./stats-cards";
 import LeaderboardWidget from "./leaderboard-widget";
 import SessionHistory from "./session-history";
+import { RefreshCw } from "lucide-react";
+import { Button } from "../ui/button";
 import Navbar from "@/components/navbar";
 
 interface ProfileDashboardProps {
@@ -24,6 +27,19 @@ interface ProfileDashboardProps {
 export default function ProfileDashboard({ auth }: ProfileDashboardProps) {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const { points, refreshPoints, isRefreshing } = usePointsSync();
+
+  // Update profile when points change
+  useEffect(() => {
+    if (points !== null && profile) {
+      const updatedProfile = {
+        ...profile,
+        points
+      };
+      setProfile(updatedProfile);
+      saveProfile(updatedProfile);
+    }
+  }, [points]);
 
   useEffect(() => {
     const loadUserProfile = async () => {
@@ -55,7 +71,7 @@ export default function ProfileDashboard({ auth }: ProfileDashboardProps) {
             twitterVerified: true,
             personalInfo: supabaseProfile.personal_info || {},
             socialProfiles: supabaseProfile.social_profiles || [],
-            points: supabaseProfile.points || 0,
+            points: (points ?? supabaseProfile.points) || 0, // Use real-time points if available
             trustScore: supabaseProfile.trust_score || 50,
             createdAt: new Date(supabaseProfile.created_at).getTime(),
             updatedAt: new Date(supabaseProfile.updated_at).getTime(),
@@ -119,11 +135,7 @@ export default function ProfileDashboard({ auth }: ProfileDashboardProps) {
     };
 
     loadUserProfile();
-    
-    // Refresh profile data every 30 seconds
-    const interval = setInterval(loadUserProfile, 30000);
-    return () => clearInterval(interval);
-  }, [auth.twitterHandle, auth.twitterId, auth.twitterName, auth.isOG]);
+  }, [auth.twitterHandle, auth.twitterId, auth.twitterName, auth.isOG, points]);
 
   if (loading) {
     return (
@@ -175,7 +187,19 @@ export default function ProfileDashboard({ auth }: ProfileDashboardProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <ProfileHeader auth={auth} profile={profile} />
+          <div className="flex items-center justify-between">
+            <ProfileHeader auth={auth} profile={profile} />
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={refreshPoints}
+              disabled={isRefreshing}
+              className="flex items-center gap-2"
+            >
+              <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+              {isRefreshing ? 'Refreshing...' : 'Refresh Points'}
+            </Button>
+          </div>
         </motion.div>
 
         <motion.div
