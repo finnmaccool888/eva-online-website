@@ -62,6 +62,18 @@ export default function Navbar({ inverse }: { inverse?: boolean }) {
           </Button>
         </Link>
         <Link
+          href="https://app.mintify.com/crypto?buytoken=eva"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Button
+            variant="ghost"
+            className={inverse ? "text-[#48333D] hover:text-[#48333D]/60" : ""}
+          >
+            TRADE ON MINTIFY
+          </Button>
+        </Link>
+        <Link
           href="https://eva-online.gitbook.io/eva-agent-online"
           target="_blank"
           rel="noopener noreferrer"

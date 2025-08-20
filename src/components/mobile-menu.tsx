@@ -78,6 +78,20 @@ export function MobileMenu({
             </Button>
           </Link>
           <Link
+            href="https://app.mintify.com/crypto?buytoken=eva"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full"
+          >
+            <Button
+              variant="ghost"
+              inverse={inverse}
+              className="w-full justify-start"
+            >
+              TRADE ON MINTIFY
+            </Button>
+          </Link>
+          <Link
             href="https://eva-online.gitbook.io/eva-agent-online"
             target="_blank"
             rel="noopener noreferrer"
