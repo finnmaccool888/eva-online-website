@@ -170,10 +170,14 @@ class UnifiedStorageManager {
       }
 
       // Ensure OG bonus is correct
-      await supabase.rpc('enforce_og_bonus', {
+      const { error: ogError } = await supabase.rpc('enforce_og_bonus', {
         p_user_id: user.id,
         p_is_og: user.is_og
       });
+      
+      if (ogError) {
+        console.warn('[UnifiedStorage] Failed to enforce OG bonus:', ogError);
+      }
 
       // Get the updated profile with recalculated points
       const { data: updatedData } = await supabase
@@ -421,6 +425,18 @@ class UnifiedStorageManager {
           ? new Date(profile.soul_seed_created_at).getTime() 
           : undefined
       };
+
+      // Check if this user needs point migration (for existing users)
+      if (profile.base_points === null || profile.base_points === undefined) {
+        console.log('[UnifiedStorage] User needs point migration, triggering recalculation...');
+        const { error } = await supabase.rpc('recalculate_user_points', {
+          p_user_id: data.id
+        });
+        if (!error) {
+          // Reload the profile to get updated points
+          return this.loadFromSupabase(twitterHandle);
+        }
+      }
 
       return {
         success: true,
