@@ -8,7 +8,7 @@ import { loadUserData, createOrUpdateUser } from "@/lib/supabase/services";
 import { usePointsSync } from "@/lib/hooks/usePointsSync";
 import ProfileHeader from "./profile-header";
 import StatsCards from "./stats-cards";
-import LeaderboardWidget from "./leaderboard-widget";
+
 import SessionHistory from "./session-history";
 import PointsBreakdown from "./points-breakdown";
 import { Button } from "../ui/button";
@@ -193,23 +193,13 @@ export default function ProfileDashboard({ auth }: ProfileDashboardProps) {
           </motion.div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <LeaderboardWidget currentUser={auth} />
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
-            <SessionHistory profile={profile} onUpdateProfile={setProfile} />
-          </motion.div>
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          <SessionHistory profile={profile} onUpdateProfile={setProfile} />
+        </motion.div>
       </div>
     </div>
   );
