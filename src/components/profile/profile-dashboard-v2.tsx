@@ -101,7 +101,7 @@ export default function ProfileDashboardV2({ auth }: ProfileDashboardProps) {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-rose-50 to-purple-50">
       <div className="container max-w-4xl mx-auto px-4 py-8 space-y-6">
         {/* Profile Header */}
         <ProfileHeader

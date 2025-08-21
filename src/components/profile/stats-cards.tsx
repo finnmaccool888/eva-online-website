@@ -35,41 +35,45 @@ export default function StatsCards({ profile }: StatsCardsProps) {
       title: "Total Points",
       value: actualPoints.toLocaleString(),
       icon: Star,
-      color: "text-blue-500",
-      bgColor: "bg-white",
+      color: "text-blue-700",
+      bgColor: "bg-gradient-to-br from-blue-50 to-blue-100/50",
+      borderColor: "border-blue-100/50",
     },
     {
       title: "Human Score",
       value: `${averageScore}/100`,
       icon: Target,
-      color: "text-green-500",
-      bgColor: "bg-white",
+      color: "text-emerald-700",
+      bgColor: "bg-gradient-to-br from-emerald-50 to-emerald-100/50",
+      borderColor: "border-emerald-100/50",
     },
     {
       title: "Sessions",
       value: totalSessions.toString(),
       icon: TrendingUp,
-      color: "text-slate-600",
-      bgColor: "bg-white",
+      color: "text-purple-700",
+      bgColor: "bg-gradient-to-br from-purple-50 to-purple-100/50",
+      borderColor: "border-purple-100/50",
     },
     {
       title: "Questions",
       value: totalQuestions.toString(),
       icon: Calendar,
-      color: "text-orange-500",
-      bgColor: "bg-white",
+      color: "text-amber-700",
+      bgColor: "bg-gradient-to-br from-amber-50 to-amber-100/50",
+      borderColor: "border-amber-100/50",
     },
   ];
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
       {stats.map((stat, index) => (
-        <div key={index} className={`${stat.bgColor} rounded-xl shadow-sm border border-gray-200 p-6`}>
+        <div key={index} className={`${stat.bgColor} rounded-xl shadow-lg border ${stat.borderColor} p-6 backdrop-blur-sm`}>
           <div className="flex items-center gap-3">
             <stat.icon className={`w-5 h-5 ${stat.color}`} />
             <div>
-              <div className="text-2xl font-bold text-gray-900">{stat.value}</div>
-              <div className="text-sm text-gray-600">{stat.title}</div>
+              <div className={`text-2xl font-bold ${stat.color}`}>{stat.value}</div>
+              <div className={`text-sm font-medium ${stat.color.replace('700', '600/80')}`}>{stat.title}</div>
             </div>
           </div>
         </div>

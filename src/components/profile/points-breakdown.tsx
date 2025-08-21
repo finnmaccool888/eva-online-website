@@ -31,7 +31,7 @@ export default function PointsBreakdown({ profile }: PointsBreakdownProps) {
   const totalPoints = calculateTotalPoints(profile);
 
   return (
-    <Card className="p-6 space-y-4">
+    <Card className="p-6 space-y-4 bg-white/80 backdrop-blur-sm border-white/20 shadow-lg">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold">Points Breakdown</h3>
         <div className="flex items-center text-sm text-gray-500">

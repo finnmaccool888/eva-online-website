@@ -33,7 +33,7 @@ export default function ProfileHeader({ auth, profile }: ProfileHeaderProps) {
   const actualPoints = calculateTotalPoints(profile);
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+    <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-white/20 p-6">
       {/* Logout Button */}
       <div className="flex justify-end mb-4">
         <button
@@ -59,7 +59,7 @@ export default function ProfileHeader({ auth, profile }: ProfileHeaderProps) {
               className="w-20 h-20 rounded-full border-2 border-slate-300/60"
             />
             {auth.isOG && (
-              <div className="absolute -top-1 -right-1 bg-blue-500 rounded-full p-1">
+              <div className="absolute -top-1 -right-1 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full p-1 shadow-lg">
                 <Crown className="w-4 h-4 text-white" />
               </div>
             )}
@@ -69,9 +69,9 @@ export default function ProfileHeader({ auth, profile }: ProfileHeaderProps) {
             <h1 className="text-2xl font-bold">{auth.twitterName}</h1>
             <p className="text-gray-600">@{auth.twitterHandle}</p>
             {auth.isOG && (
-              <div className="flex items-center gap-1 mt-1">
-                            <Star className="w-4 h-4 text-blue-500" />
-            <span className="text-sm text-blue-500 font-medium">OG Member</span>
+              <div className="flex items-center gap-1 mt-1 px-2 py-1 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-full border border-blue-200/50">
+                <Star className="w-4 h-4 text-blue-600" />
+                <span className="text-sm text-blue-700 font-semibold">OG Member</span>
               </div>
             )}
           </div>
@@ -79,26 +79,26 @@ export default function ProfileHeader({ auth, profile }: ProfileHeaderProps) {
 
         {/* Key Stats */}
         <div className="flex-1 grid grid-cols-2 md:grid-cols-4 gap-4 ml-0 md:ml-8">
-          <div className="text-center p-3 bg-pink-50 rounded-lg">
-            <div className="text-2xl font-bold text-gray-900">{actualPoints.toLocaleString()}</div>
-            <div className="text-sm text-gray-600">Total Points</div>
+          <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-xl border border-blue-100/50 shadow-sm">
+            <div className="text-2xl font-bold text-blue-700">{actualPoints.toLocaleString()}</div>
+            <div className="text-sm text-blue-600/80 font-medium">Total Points</div>
           </div>
           
-          <div className="text-center p-3 bg-green-50 rounded-lg">
-            <div className="text-2xl font-bold text-green-600">{profile.humanScore || 0}</div>
-            <div className="text-sm text-gray-600">Human Score</div>
+          <div className="text-center p-4 bg-gradient-to-br from-emerald-50 to-emerald-100/50 rounded-xl border border-emerald-100/50 shadow-sm">
+            <div className="text-2xl font-bold text-emerald-700">{profile.humanScore || 0}</div>
+            <div className="text-sm text-emerald-600/80 font-medium">Human Score</div>
           </div>
           
-          <div className="text-center p-3 bg-blue-50 rounded-lg">
-            <div className="text-2xl font-bold text-blue-600">{profile.totalQuestionsAnswered || 0}</div>
-            <div className="text-sm text-gray-600">Questions</div>
+          <div className="text-center p-4 bg-gradient-to-br from-indigo-50 to-indigo-100/50 rounded-xl border border-indigo-100/50 shadow-sm">
+            <div className="text-2xl font-bold text-indigo-700">{profile.totalQuestionsAnswered || 0}</div>
+            <div className="text-sm text-indigo-600/80 font-medium">Questions</div>
           </div>
           
-          <div className="text-center p-3 bg-orange-50 rounded-lg">
-            <div className="text-2xl font-bold text-orange-600">
+          <div className="text-center p-4 bg-gradient-to-br from-amber-50 to-amber-100/50 rounded-xl border border-amber-100/50 shadow-sm">
+            <div className="text-2xl font-bold text-amber-700">
               {profile.sessionHistory?.length || 0}
             </div>
-            <div className="text-sm text-gray-600">Sessions</div>
+            <div className="text-sm text-amber-600/80 font-medium">Sessions</div>
           </div>
         </div>
       </div>
@@ -106,7 +106,7 @@ export default function ProfileHeader({ auth, profile }: ProfileHeaderProps) {
       {/* Status Messages - Only show intentional, permanent badges */}
       <div className="mt-4 flex flex-wrap gap-2">
         {profile.sessionHistory && profile.sessionHistory.length === 1 && (
-          <div className="flex items-center gap-1 px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm">
+          <div className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-100 to-green-100 text-emerald-700 rounded-full text-sm font-semibold border border-emerald-200/50 shadow-sm">
             <Award className="w-4 h-4" />
             First Session Complete!
           </div>
