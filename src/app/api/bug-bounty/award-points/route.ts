@@ -3,7 +3,7 @@ import { supabase } from '@/lib/supabase/client';
 import { getTwitterAuth } from '@/lib/mirror/auth';
 
 // Admin Twitter handles who can award points
-const ADMIN_HANDLES = ['evaonlinexyz', 'admin1', 'admin2']; // Update with actual admin handles
+const ADMIN_HANDLES = ['evaonlinexyz', 'starlordyftw', '0n1force']; // Admin handles who can award points
 
 export async function POST(request: NextRequest) {
   try {
