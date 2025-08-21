@@ -1,7 +1,7 @@
 'use client';
 
-import MirrorApp from "@/components/mirror/mirror-app";
+import MirrorAppV2 from "@/components/mirror/mirror-app-v2";
 
 export default function MirrorPage() {
-  return <MirrorApp />;
+  return <MirrorAppV2 />;
 } 

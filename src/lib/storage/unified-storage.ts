@@ -12,7 +12,7 @@
  */
 
 import { supabase } from '@/lib/supabase/client';
-import { UserProfile } from '@/lib/mirror/types';
+import { UserProfile, SessionHistoryItem } from '@/lib/mirror/types';
 import { POINTS, calculateBasePoints } from '@/lib/constants/points';
 import { getTwitterAuth } from '@/lib/mirror/auth';
 import { readJson, writeJson, StorageKeys } from '@/lib/mirror/storage';

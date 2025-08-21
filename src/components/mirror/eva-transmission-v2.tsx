@@ -282,6 +282,7 @@ export default function EvaTransmissionV2({ onComplete }: EvaTransmissionProps =
           
           const comprehensiveSessionData = {
             userId: user.id,
+            sessionDate: new Date(),
             isComplete: true,
             questionsAnswered,
             humanScore,

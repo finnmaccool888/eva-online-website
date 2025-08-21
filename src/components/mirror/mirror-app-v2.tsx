@@ -10,7 +10,7 @@ import OnboardingV2 from "./onboarding-v2";
 import PasswordGate from "./password-gate";
 import EvaTransmissionV2 from "./eva-transmission-v2";
 import AuthStatus from "./auth-status";
-import PointsDisplay from "./points-display";
+import PointsDisplayV2 from "./points-display-v2";
 import OGPopup from "./og-popup";
 import SessionLimitReached from "./session-limit-reached";
 import { Card } from "@/components/ui/card";
@@ -231,7 +231,7 @@ export default function MirrorAppV2() {
         </div>
         
         <AuthStatus />
-        <PointsDisplay />
+        <PointsDisplayV2 />
         
         {showWizard ? (
           <OnboardingWizardV2 onComplete={handleWizardComplete} />
