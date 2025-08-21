@@ -199,26 +199,35 @@ class UnifiedStorageManager {
         profile.personalInfo?.bio || ''
       ].filter(f => f && f.trim().length > 0).length;
 
-      const { data: pointsResult, error: pointsError } = await supabase
-        .rpc('update_profile_completion_points', {
-          p_user_id: user.id,
-          p_has_twitter: profile.twitterVerified || true,
-          p_personal_fields_count: personalFieldsCount,
-          p_social_profiles_count: profile.socialProfiles?.length || 0
-        });
+      // Try to update profile completion points (may not exist in all environments)
+      try {
+        const { data: pointsResult, error: pointsError } = await supabase
+          .rpc('update_profile_completion_points', {
+            p_user_id: user.id,
+            p_has_twitter: profile.twitterVerified || true,
+            p_personal_fields_count: personalFieldsCount,
+            p_social_profiles_count: profile.socialProfiles?.length || 0
+          });
 
-      if (pointsError) {
-        console.error('[UnifiedStorage] Error updating profile points:', pointsError);
+        if (pointsError) {
+          console.warn('[UnifiedStorage] Profile points RPC not available:', pointsError.message);
+        }
+      } catch (rpcError) {
+        console.warn('[UnifiedStorage] Profile points RPC failed, continuing without it');
       }
 
-      // Ensure OG bonus is correct
-      const { error: ogError } = await supabase.rpc('enforce_og_bonus', {
-        p_user_id: user.id,
-        p_is_og: user.is_og
-      });
-      
-      if (ogError) {
-        console.warn('[UnifiedStorage] Failed to enforce OG bonus:', ogError);
+      // Try to ensure OG bonus is correct (may not exist in all environments)
+      try {
+        const { error: ogError } = await supabase.rpc('enforce_og_bonus', {
+          p_user_id: user.id,
+          p_is_og: user.is_og
+        });
+        
+        if (ogError) {
+          console.warn('[UnifiedStorage] OG bonus RPC not available:', ogError.message);
+        }
+      } catch (rpcError) {
+        console.warn('[UnifiedStorage] OG bonus RPC failed, continuing without it');
       }
 
       // Get the updated profile with recalculated points

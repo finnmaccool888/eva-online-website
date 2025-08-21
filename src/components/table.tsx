@@ -14,7 +14,12 @@ import { useEffect, useState } from "react";
 import SeasonTwoBanner from "./season-two-banner";
 
 export default function TableDemo() {
-  const { data, isLoading, isError, error } = useLeaderboard();
+  // Temporarily disable leaderboard data fetching
+  // const { data, isLoading, isError, error } = useLeaderboard();
+  const isLoading = false;
+  const isError = false;
+  const error = null;
+  const data: LeaderboardEntry[] = [];
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>(
     []
   );
@@ -74,7 +79,7 @@ export default function TableDemo() {
   }
 
   if (isError) {
-    return <div className="p-4 text-red-500">Error: {error?.message}</div>;
+    return <div className="p-4 text-red-500">Error loading leaderboard</div>;
   }
 
   return (
@@ -225,8 +230,9 @@ export default function TableDemo() {
             )
           ) : (
             <TableRow>
-              <TableCell colSpan={3} className="text-center">
-                No data available
+              <TableCell colSpan={4} className="text-center py-8">
+                <div className="text-lg font-semibold text-gray-700">Coming soon</div>
+                <div className="text-sm text-gray-500 mt-1">Leaderboard will be available in the future</div>
               </TableCell>
             </TableRow>
           )}
