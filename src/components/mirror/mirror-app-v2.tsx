@@ -37,12 +37,18 @@ export default function MirrorAppV2() {
   const [passwordVerified, setPasswordVerified] = useState(false);
   const [soulSeedOnboarded, setSoulSeedOnboarded] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   // Check password verification status
   useEffect(() => {
     const verified = sessionStorage.getItem('mirrorPasswordVerified') === 'true';
     setPasswordVerified(verified);
-  }, []);
+    
+    // Clear any redirect flags if we're authenticated
+    if (isAuthenticated) {
+      sessionStorage.removeItem('mirrorAuthRedirecting');
+    }
+  }, [isAuthenticated]);
 
   // Initialize once auth and profile are loaded
   useEffect(() => {
@@ -127,13 +133,65 @@ export default function MirrorAppV2() {
     window.location.href = '/profile';
   }
 
-  // Loading state
-  if (authLoading || profileLoading) {
+  // Loading state with timeout
+  if (authLoading || profileLoading || (!isInitialized && isAuthenticated)) {
+    // Add debug logging
+    console.log('[MirrorAppV2] Loading state:', {
+      authLoading,
+      profileLoading,
+      isInitialized,
+      isAuthenticated,
+      profile: !!profile
+    });
+    
     return (
       <div className="min-h-screen bg-pink-50 text-black flex items-center justify-center p-4">
         <div className="text-center">
           <p className="text-sm sm:text-base text-gray-600 animate-pulse">
-            Loading Eva's Mirror...
+            {authLoading ? "Checking authentication..." :
+             profileLoading ? "Loading profile..." :
+             "Initializing Eva's Mirror..."}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // No auth - redirect to Twitter OAuth
+  if (!isAuthenticated && !authError) {
+    // Check if we're already in the process of redirecting
+    const redirectInProgress = sessionStorage.getItem('mirrorAuthRedirecting') === 'true';
+    if (redirectInProgress || isRedirecting) {
+      console.log('[MirrorAppV2] Already redirecting, preventing duplicate redirect');
+      return (
+        <div className="min-h-screen bg-pink-50 text-black flex items-center justify-center p-4">
+          <div className="text-center">
+            <p className="text-sm sm:text-base text-gray-600 animate-pulse">
+              Redirecting to authentication...
+            </p>
+          </div>
+        </div>
+      );
+    }
+    
+    console.log('[MirrorAppV2] No auth found, redirecting to Twitter OAuth');
+    setIsRedirecting(true);
+    sessionStorage.setItem('mirrorAuthRedirecting', 'true');
+    
+    // Small delay to prevent immediate redirect on initial load
+    setTimeout(() => {
+      // Clear the redirect flag after a reasonable timeout
+      setTimeout(() => {
+        sessionStorage.removeItem('mirrorAuthRedirecting');
+      }, 5000);
+      window.location.href = '/api/auth/twitter';
+    }, 500);
+    
+    return (
+      <div className="min-h-screen bg-pink-50 text-black flex items-center justify-center p-4">
+        <div className="text-center">
+          <p className="text-sm sm:text-base text-gray-600 animate-pulse">
+            Redirecting to authentication...
           </p>
         </div>
       </div>
@@ -141,7 +199,7 @@ export default function MirrorAppV2() {
   }
 
   // Auth error state
-  if (authError || !isAuthenticated) {
+  if (authError) {
     const error = new URLSearchParams(window.location.search).get('error');
     const errorDetails = new URLSearchParams(window.location.search).get('error_description');
     
