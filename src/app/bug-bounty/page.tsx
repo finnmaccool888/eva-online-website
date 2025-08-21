@@ -176,13 +176,13 @@ export default function BugBountyPage() {
           <p className="text-gray-400 text-sm mb-8">
             Authenticated users earn points for verified bug reports:
             <br />
-            • Critical: 1000 points + $500
+            • Critical: 1000 points
             <br />
-            • High: 500 points + $250
+            • High: 500 points
             <br />
-            • Medium: 250 points + $100
+            • Medium: 250 points
             <br />
-            • Low: 100 points + $50
+            • Low: 100 points
           </p>
           <Button
             onClick={() => window.location.href = '/api/auth/twitter'}
@@ -211,23 +211,19 @@ export default function BugBountyPage() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-12">
           <Card className="p-4 bg-red-500/10 border-red-500/20">
             <h3 className="text-red-400 font-semibold mb-1">Critical</h3>
-            <p className="text-white text-2xl font-bold">$500+</p>
-            <p className="text-gray-300 text-sm">+1000 points</p>
+            <p className="text-white text-2xl font-bold">1000 points</p>
           </Card>
           <Card className="p-4 bg-orange-500/10 border-orange-500/20">
             <h3 className="text-orange-400 font-semibold mb-1">High</h3>
-            <p className="text-white text-2xl font-bold">$250+</p>
-            <p className="text-gray-300 text-sm">+500 points</p>
+            <p className="text-white text-2xl font-bold">500 points</p>
           </Card>
           <Card className="p-4 bg-yellow-500/10 border-yellow-500/20">
             <h3 className="text-yellow-400 font-semibold mb-1">Medium</h3>
-            <p className="text-white text-2xl font-bold">$100+</p>
-            <p className="text-gray-300 text-sm">+250 points</p>
+            <p className="text-white text-2xl font-bold">250 points</p>
           </Card>
           <Card className="p-4 bg-blue-500/10 border-blue-500/20">
             <h3 className="text-blue-400 font-semibold mb-1">Low</h3>
-            <p className="text-white text-2xl font-bold">$50+</p>
-            <p className="text-gray-300 text-sm">+100 points</p>
+            <p className="text-white text-2xl font-bold">100 points</p>
           </Card>
         </div>
 
