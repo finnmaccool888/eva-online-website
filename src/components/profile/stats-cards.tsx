@@ -10,6 +10,19 @@ interface StatsCardsProps {
 }
 
 export default function StatsCards({ profile }: StatsCardsProps) {
+  // Add null check
+  if (!profile) {
+    return (
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {[...Array(4)].map((_, i) => (
+          <div key={i} className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
+            <div className="text-center text-gray-500">Loading...</div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   const totalSessions = profile.sessionHistory?.length || 0;
   const averageScore = profile.humanScore || 0; // Use the calculated average from profile
   const totalQuestions = profile.totalQuestionsAnswered || 0; // Use total from profile

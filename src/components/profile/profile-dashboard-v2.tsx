@@ -111,19 +111,12 @@ export default function ProfileDashboardV2({ auth }: ProfileDashboardProps) {
 
         {/* Points Breakdown */}
         <PointsBreakdown
-          basePoints={1000}
-          ogBonus={isOG ? 10000 : 0}
-          sessionPoints={profile.sessionHistory?.reduce((sum, s) => sum + (s.pointsEarned || 0), 0) || 0}
-          profilePoints={calculateProfilePoints(profile)}
-          totalPoints={points}
+          profile={profile}
         />
 
         {/* Stats Cards */}
         <StatsCards
-          humanScore={profile.humanScore || 0}
-          totalQuestions={profile.totalQuestionsAnswered || 0}
-          currentStreak={profile.currentStreak || 0}
-          longestStreak={profile.longestStreak || 0}
+          profile={profile}
         />
 
         {/* Score Comparison */}

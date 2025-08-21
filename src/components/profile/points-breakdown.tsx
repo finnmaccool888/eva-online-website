@@ -9,6 +9,17 @@ interface PointsBreakdownProps {
 }
 
 export default function PointsBreakdown({ profile }: PointsBreakdownProps) {
+  // Add null check
+  if (!profile) {
+    return (
+      <Card className="p-6">
+        <div className="text-center text-gray-500">
+          Loading points breakdown...
+        </div>
+      </Card>
+    );
+  }
+
   // Calculate point components
   const basePoints = calculateBasePoints(profile.isOG || false);
   const profilePoints = calculatePoints(profile);
