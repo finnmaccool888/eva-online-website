@@ -105,9 +105,8 @@ export default function ProfileDashboardV2({ auth }: ProfileDashboardProps) {
       <div className="container max-w-4xl mx-auto px-4 py-8 space-y-6">
         {/* Profile Header */}
         <ProfileHeader
-          user={user}
-          onRefresh={refreshProfile}
-          isRefreshing={loading}
+          auth={auth}
+          profile={profile}
         />
 
         {/* Points Breakdown */}

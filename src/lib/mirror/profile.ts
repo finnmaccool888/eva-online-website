@@ -33,18 +33,24 @@ export function saveProfile(profile: UserProfile): void {
  * These points are added on top of base points and session points
  */
 export function calculatePoints(profile: UserProfile): number {
+  if (!profile) {
+    console.error('[CalculatePoints] Profile is null or undefined');
+    return 0;
+  }
+
   let additionalPoints = 0;
   
   // Twitter verification
   if (profile.twitterVerified) additionalPoints += POINTS_PER_SOCIAL;
   
   // Personal info completion
-  const personalFields = [profile.personalInfo.fullName, profile.personalInfo.location, profile.personalInfo.bio];
+  const personalInfo = profile.personalInfo || {};
+  const personalFields = [personalInfo.fullName, personalInfo.location, personalInfo.bio];
   const filledFields = personalFields.filter(f => f && f.trim().length > 0).length;
   additionalPoints += filledFields * POINTS_PER_PERSONAL_FIELD;
   
   // Social profiles
-  additionalPoints += profile.socialProfiles.length * POINTS_PER_SOCIAL;
+  additionalPoints += (profile.socialProfiles || []).length * POINTS_PER_SOCIAL;
   
   return additionalPoints;
 }
@@ -54,6 +60,12 @@ export function calculatePoints(profile: UserProfile): number {
  * Calculate total points including base, OG bonus, session points, and profile completion
  */
 export function calculateTotalPoints(profile: UserProfile): number {
+  // Add null check
+  if (!profile) {
+    console.error('[CalculateTotalPoints] Profile is null or undefined');
+    return 0;
+  }
+
   // Start with base points + OG bonus if applicable
   let totalPoints = calculateBasePoints(profile.isOG || false);
   
