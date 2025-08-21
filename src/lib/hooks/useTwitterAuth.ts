@@ -7,6 +7,7 @@ export function useTwitterAuth() {
   const [auth, setAuth] = useState<TwitterAuth | null>(null);
   const [loading, setLoading] = useState(true);
   const [checked, setChecked] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   
   const checkAuth = useCallback(async () => {
     if (checked) return;
@@ -75,9 +76,12 @@ export function useTwitterAuth() {
     }
     
     // Check for error parameters
-    const error = urlParams.get('error');
-    if (error) {
-      console.log('[useTwitterAuth] Auth error detected:', error);
+    const urlError = urlParams.get('error');
+    if (urlError) {
+      console.log('[useTwitterAuth] Auth error detected:', urlError);
+      const errorDetails = urlParams.get('error_description') || urlParams.get('details');
+      const fullError = errorDetails ? `${urlError}: ${errorDetails}` : urlError;
+      setError(fullError);
       setLoading(false);
       setChecked(true);
       return;
@@ -124,6 +128,7 @@ export function useTwitterAuth() {
       }
     } catch (error) {
       console.error('[useTwitterAuth] Auth check error:', error);
+      setError('Failed to check authentication status');
     }
     
     console.log('[useTwitterAuth] Auth check complete. Auth found:', !!auth);
@@ -150,5 +155,12 @@ export function useTwitterAuth() {
   
   console.log('[useTwitterAuth] Render - loading:', loading, 'auth:', !!auth);
   
-  return { auth, loading };
+  return { 
+    auth,
+    loading,
+    isAuthenticated: !!auth,
+    error,
+    twitterHandle: auth?.twitterHandle || null,
+    isOG: auth?.isOG || false
+  };
 } 
