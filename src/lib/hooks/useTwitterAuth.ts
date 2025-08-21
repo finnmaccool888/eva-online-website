@@ -56,7 +56,10 @@ export function useTwitterAuth() {
     if (authSuccess && encodedAuth) {
       try {
         console.log('[useTwitterAuth] Found auth data in URL');
-        const authData = JSON.parse(atob(encodedAuth));
+        // Use proper base64url decoding (convert base64url to base64 first)
+        const base64 = encodedAuth.replace(/-/g, '+').replace(/_/g, '/');
+        const authData = JSON.parse(atob(base64));
+        console.log('[useTwitterAuth] Decoded auth data:', authData);
         setTwitterAuth(authData);
         setAuth(authData);
         setLoading(false);

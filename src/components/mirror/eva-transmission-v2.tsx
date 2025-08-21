@@ -6,7 +6,7 @@ import { ChevronRight, Sparkles, Brain, Activity, Award } from "lucide-react";
 import PrimaryButton from "@/components/primary-button";
 import GlassCard from "@/components/glass-card";
 import { getDailyQuestions, MirrorQuestion } from "@/lib/mirror/questions";
-import { generateEvaResponse, EvaReaction, Mood } from "@/lib/mirror/echo";
+import { getEvaReaction, EvaReaction } from "@/lib/mirror/questions";
 import { loadSeed, feedSeed } from "@/lib/mirror/seed";
 import { track } from "@/lib/mirror/analytics";
 import { useUnifiedProfile } from "@/lib/hooks/useUnifiedProfile";
@@ -199,12 +199,11 @@ export default function EvaTransmissionV2({ onComplete }: EvaTransmissionProps =
     const pointsAwarded = basePoints + lengthBonus + detailBonus;
 
     // Generate Eva's response
-    const reaction = await generateEvaResponse(
-      currentQuestion,
+    const reaction = getEvaReaction(
       userInput,
+      currentQuestion.category,
       userVibe,
-      soulSeed,
-      sessionData.map(d => d.answer)
+      profile?.soulSeedOnboarding?.alias
     );
 
     // Store session data
