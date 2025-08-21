@@ -8,7 +8,7 @@ import { checkSessionLimit } from "@/lib/mirror/session-limits";
 import OnboardingWizardV2 from "./onboarding-wizard-v2";
 import OnboardingV2 from "./onboarding-v2";
 import PasswordGate from "./password-gate";
-import EvaTransmission from "./eva-transmission";
+import EvaTransmissionV2 from "./eva-transmission-v2";
 import AuthStatus from "./auth-status";
 import PointsDisplay from "./points-display";
 import OGPopup from "./og-popup";
@@ -243,7 +243,7 @@ export default function MirrorAppV2() {
             onClose={() => setShowSessionLimit(false)}
           />
         ) : (
-          <EvaTransmission />
+          <EvaTransmissionV2 />
         )}
       </div>
 

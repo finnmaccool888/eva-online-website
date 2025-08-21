@@ -123,15 +123,11 @@ class UnifiedStorageManager {
         throw new Error('User not found in database');
       }
 
-      // Calculate points with OG enforcement
-      const totalPoints = this.calculateTotalPoints(profile, user.is_og);
-
-      // Update Supabase
+      // Update profile data first
       const { error: updateError } = await supabase
         .from('user_profiles')
         .upsert({
           user_id: user.id,
-          points: totalPoints,
           human_score: profile.humanScore || 0,
           total_questions_answered: profile.totalQuestionsAnswered || 0,
           personal_info: profile.personalInfo || {},
@@ -154,10 +150,42 @@ class UnifiedStorageManager {
         throw updateError;
       }
 
-      // Update the profile with calculated points
+      // Update profile completion points atomically
+      const personalFieldsCount = [
+        profile.personalInfo?.fullName,
+        profile.personalInfo?.location,
+        profile.personalInfo?.bio
+      ].filter(f => f && f.trim().length > 0).length;
+
+      const { data: pointsResult, error: pointsError } = await supabase
+        .rpc('update_profile_completion_points', {
+          p_user_id: user.id,
+          p_has_twitter: profile.twitterVerified || true,
+          p_personal_fields_count: personalFieldsCount,
+          p_social_profiles_count: profile.socialProfiles?.length || 0
+        });
+
+      if (pointsError) {
+        console.error('[UnifiedStorage] Error updating profile points:', pointsError);
+      }
+
+      // Ensure OG bonus is correct
+      await supabase.rpc('enforce_og_bonus', {
+        p_user_id: user.id,
+        p_is_og: user.is_og
+      });
+
+      // Get the updated profile with recalculated points
+      const { data: updatedData } = await supabase
+        .from('user_profiles')
+        .select('points')
+        .eq('user_id', user.id)
+        .single();
+
+      // Update the profile with server-calculated points
       const updatedProfile = {
         ...profile,
-        points: totalPoints,
+        points: updatedData?.points || profile.points,
         isOG: user.is_og,
         ogPointsAwarded: user.is_og
       };
@@ -216,28 +244,79 @@ class UnifiedStorageManager {
       humanScore?: number;
     }
   ): Promise<StorageResult<UserProfile>> {
-    const profileResult = await this.loadProfile();
-    if (!profileResult.success || !profileResult.data) {
-      return profileResult;
+    const auth = getTwitterAuth();
+    if (!auth?.twitterHandle) {
+      return { 
+        success: false, 
+        error: 'No authentication found' 
+      };
     }
 
-    const profile = profileResult.data;
+    try {
+      // Get user ID
+      const { data: user } = await supabase
+        .from('users')
+        .select('id')
+        .eq('twitter_handle', auth.twitterHandle)
+        .single();
 
-    // Update session-related fields
-    if (sessionData.questionsAnswered) {
-      profile.totalQuestionsAnswered = (profile.totalQuestionsAnswered || 0) + sessionData.questionsAnswered;
+      if (!user) {
+        return { success: false, error: 'User not found' };
+      }
+
+      // Use atomic function to add session points
+      if (sessionData.pointsEarned) {
+        const { data, error } = await supabase.rpc('add_session_points', {
+          p_user_id: user.id,
+          p_points_to_add: sessionData.pointsEarned
+        });
+
+        if (error) {
+          console.error('[UnifiedStorage] Error adding session points:', error);
+          throw error;
+        }
+
+        console.log('[UnifiedStorage] Session points added:', {
+          oldTotal: data?.[0]?.old_total,
+          newTotal: data?.[0]?.new_total,
+          sessionPoints: data?.[0]?.session_points
+        });
+      }
+
+      // Update human score and questions answered
+      if (sessionData.questionsAnswered || sessionData.humanScore !== undefined) {
+        const profileResult = await this.loadProfile();
+        if (!profileResult.success || !profileResult.data) {
+          return profileResult;
+        }
+
+        const profile = profileResult.data;
+
+        if (sessionData.questionsAnswered) {
+          profile.totalQuestionsAnswered = (profile.totalQuestionsAnswered || 0) + sessionData.questionsAnswered;
+        }
+
+        if (sessionData.humanScore !== undefined && sessionData.questionsAnswered) {
+          // Calculate weighted average for human score
+          const currentTotal = (profile.humanScore || 0) * ((profile.totalQuestionsAnswered || sessionData.questionsAnswered) - sessionData.questionsAnswered);
+          const newTotal = currentTotal + (sessionData.humanScore * sessionData.questionsAnswered);
+          profile.humanScore = Math.round(newTotal / (profile.totalQuestionsAnswered || 1));
+        }
+
+        // Save updated profile (points will be recalculated server-side)
+        return this.saveProfile(profile);
+      }
+
+      // Reload profile to get updated data
+      return this.loadProfile();
+
+    } catch (error) {
+      console.error('[UnifiedStorage] Error updating session data:', error);
+      return {
+        success: false,
+        error: 'Failed to update session data'
+      };
     }
-
-    if (sessionData.humanScore !== undefined && sessionData.questionsAnswered) {
-      // Calculate weighted average for human score
-      const currentTotal = (profile.humanScore || 0) * ((profile.totalQuestionsAnswered || sessionData.questionsAnswered) - sessionData.questionsAnswered);
-      const newTotal = currentTotal + (sessionData.humanScore * sessionData.questionsAnswered);
-      profile.humanScore = Math.round(newTotal / (profile.totalQuestionsAnswered || 1));
-    }
-
-    // Note: Points are calculated server-side, not added directly
-
-    return this.saveProfile(profile);
   }
 
   /**
@@ -302,6 +381,21 @@ class UnifiedStorageManager {
         return { success: false, error: 'Profile not found' };
       }
 
+      // Load sessions from sessions table
+      const { data: sessions } = await supabase
+        .from('sessions')
+        .select('*')
+        .eq('user_id', data.id)
+        .eq('is_complete', true)
+        .order('created_at', { ascending: false });
+
+      const sessionHistory: SessionHistoryItem[] = sessions?.map(s => ({
+        date: new Date(s.created_at).getTime(),
+        questionsAnswered: s.questions_answered || 0,
+        humanScore: s.human_score || 0,
+        pointsEarned: s.points_earned || 0
+      })) || [];
+
       const userProfile: UserProfile = {
         twitterId: data.id,
         twitterHandle: data.twitter_handle,
@@ -314,7 +408,7 @@ class UnifiedStorageManager {
         updatedAt: new Date(profile.updated_at).getTime(),
         humanScore: profile.human_score || 0,
         totalQuestionsAnswered: profile.total_questions_answered || 0,
-        sessionHistory: [], // Loaded separately from session tables
+        sessionHistory,
         isOG: data.is_og,
         ogPointsAwarded: profile.is_og_rewarded || data.is_og,
         hasOnboarded: profile.has_onboarded || false,
