@@ -192,38 +192,87 @@ export default function EvaTransmissionV2({ onComplete }: EvaTransmissionProps =
       questionIndex: currentIndex,
     });
 
-    // Calculate points for this answer (basic calculation)
-    const basePoints = 250;
-    const lengthBonus = Math.min(userInput.length * 2, 100);
-    const detailBonus = userInput.split(/\s+/).length > 20 ? 50 : 0;
-    const pointsAwarded = basePoints + lengthBonus + detailBonus;
-
-    // Generate Eva's response
-    const reaction = getEvaReaction(
-      userInput,
-      currentQuestion.category,
-      userVibe,
-      profile?.soulSeedOnboarding?.alias
-    );
-
-    // Store session data
-    const newSessionData = [...sessionData, {
-      question: currentQuestion,
-      answer: userInput,
-      reaction,
-      pointsAwarded
-    }];
-    setSessionData(newSessionData);
-
-    // Update Eva reaction
-    setEvaReaction(reaction);
-
-    // Check for trait unlock
-    if (reaction.unlock) {
-      setUnlockedTrait(reaction.unlock);
-    }
-
     setStage("feedback");
+
+    try {
+      // Call OpenAI API for thoughtful analysis
+      const response = await fetch("/api/analyze-response", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userInput,
+          question: currentQuestion.text,
+          category: currentQuestion.category,
+          vibe: userVibe,
+          alias: profile?.soulSeedOnboarding?.alias || userAlias,
+          isOnboarding: false
+        }),
+      });
+
+      const analysis = await response.json() as import("@/app/api/analyze-response/route").AnalysisResponse;
+
+      // Create Eva's reaction from OpenAI response
+      const dynamicReaction: EvaReaction = {
+        triggers: [],
+        response: analysis.evaResponse,
+        rarity: analysis.quality >= 8 ? "epic" : analysis.quality >= 6 ? "rare" : "common",
+        mood: analysis.category === "offensive" ? "disappointed" : 
+              analysis.quality >= 8 ? "delighted" : 
+              analysis.quality >= 6 ? "curious" : "contemplative",
+      };
+
+      // Store session data with actual points from API
+      const newSessionData = [...sessionData, {
+        question: currentQuestion,
+        answer: userInput,
+        reaction: dynamicReaction,
+        pointsAwarded: analysis.pointsAwarded || 250
+      }];
+      setSessionData(newSessionData);
+
+      // Update Eva reaction
+      setEvaReaction(dynamicReaction);
+
+      // Check for trait unlock (if applicable)
+      const reaction = getEvaReaction(
+        userInput,
+        currentQuestion.category,
+        userVibe,
+        profile?.soulSeedOnboarding?.alias
+      );
+      if (reaction?.unlock) {
+        setUnlockedTrait(reaction.unlock);
+      }
+
+    } catch (error) {
+      console.error("Error analyzing response:", error);
+      
+      // Fallback to simple reaction
+      const reaction = getEvaReaction(
+        userInput,
+        currentQuestion.category,
+        userVibe,
+        profile?.soulSeedOnboarding?.alias
+      );
+
+      const fallbackReaction = reaction || {
+        triggers: [],
+        response: "My circuits are experiencing interference. Your response has been noted.",
+        rarity: "common" as const,
+        mood: "contemplative" as const,
+      };
+
+      // Store session data with fallback
+      const newSessionData = [...sessionData, {
+        question: currentQuestion,
+        answer: userInput,
+        reaction: fallbackReaction,
+        pointsAwarded: 250
+      }];
+      setSessionData(newSessionData);
+      
+      setEvaReaction(fallbackReaction);
+    }
   }
 
   function handleContinue() {
@@ -434,7 +483,7 @@ export default function EvaTransmissionV2({ onComplete }: EvaTransmissionProps =
           </motion.div>
         )}
 
-        {stage === "feedback" && evaReaction && (
+        {stage === "feedback" && (
           <motion.div
             key="feedback"
             initial={{ opacity: 0, scale: 0.95 }}
@@ -442,37 +491,50 @@ export default function EvaTransmissionV2({ onComplete }: EvaTransmissionProps =
             exit={{ opacity: 0, scale: 0.95 }}
           >
             <GlassCard className="p-8">
-              <div className="text-center mb-6">
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ type: "spring" }}
-                  className="text-5xl mb-4"
-                >
-                  {evaReaction.mood === "playful" && "😊"}
-                  {evaReaction.mood === "contemplative" && "🤔"}
-                  {evaReaction.mood === "curious" && "🧐"}
-                  {evaReaction.mood === "shocked" && "😮"}
-                  {evaReaction.mood === "wise" && "🦉"}
-                </motion.div>
-                <p className="text-lg italic text-muted-foreground">"{evaReaction.response}"</p>
-                <p className="text-sm text-muted-foreground mt-2">— Eva</p>
-              </div>
-              
-              {unlockedTrait && (
-                <RewardReveal
-                  type="trait"
-                  trait={unlockedTrait}
-                  message="New trait discovered!"
-                />
+              {evaReaction ? (
+                <>
+                  <div className="text-center mb-6">
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: "spring" }}
+                      className="text-5xl mb-4"
+                    >
+                      {evaReaction.mood === "playful" && "😊"}
+                      {evaReaction.mood === "contemplative" && "🤔"}
+                      {evaReaction.mood === "curious" && "🧐"}
+                      {evaReaction.mood === "shocked" && "😮"}
+                      {evaReaction.mood === "wise" && "🦉"}
+                      {evaReaction.mood === "delighted" && "🤩"}
+                      {evaReaction.mood === "disappointed" && "😞"}
+                    </motion.div>
+                    <p className="text-lg italic text-muted-foreground">"{evaReaction.response}"</p>
+                    <p className="text-sm text-muted-foreground mt-2">— Eva</p>
+                  </div>
+                  
+                  {unlockedTrait && (
+                    <RewardReveal
+                      type="trait"
+                      trait={unlockedTrait}
+                      message="New trait discovered!"
+                    />
+                  )}
+                  
+                  <div className="mt-8 text-center">
+                    <PrimaryButton onClick={handleContinue}>
+                      {isLastQuestion ? "Complete Session" : "Next Question"}
+                      <ChevronRight className="ml-2 h-4 w-4" />
+                    </PrimaryButton>
+                  </div>
+                </>
+              ) : (
+                <div className="text-center">
+                  <div className="animate-pulse">
+                    <div className="text-2xl mb-4">🤔</div>
+                    <p className="text-muted-foreground">Eva is processing your response...</p>
+                  </div>
+                </div>
               )}
-              
-              <div className="mt-8 text-center">
-                <PrimaryButton onClick={handleContinue}>
-                  {isLastQuestion ? "Complete Session" : "Next Question"}
-                  <ChevronRight className="ml-2 h-4 w-4" />
-                </PrimaryButton>
-              </div>
             </GlassCard>
           </motion.div>
         )}
