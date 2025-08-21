@@ -41,27 +41,76 @@ export async function createOrUpdateUser(twitterHandle: string, twitterName?: st
     // Create new user - check OG status from source of truth
     const { isOG: actuallyIsOG } = await enforceOGPoints(twitterHandle);
     
-    // Ensure twitter name is properly encoded for database storage
-    const cleanTwitterName = twitterName ? 
-      twitterName.normalize('NFKD').replace(/[\u0300-\u036f]/g, '').trim() || twitterHandle : 
-      twitterHandle;
+    // Aggressively clean twitter name to prevent encoding issues
+    let cleanTwitterName = twitterHandle; // Default fallback
+    
+    if (twitterName) {
+      try {
+        // Remove all non-ASCII characters and normalize
+        cleanTwitterName = twitterName
+          .normalize('NFKD')
+          .replace(/[\u0300-\u036f]/g, '') // Remove diacritical marks
+          .replace(/[^\x20-\x7E]/g, '') // Remove all non-printable ASCII
+          .trim();
+        
+        // If cleaning resulted in empty string, use handle
+        if (!cleanTwitterName || cleanTwitterName.length === 0) {
+          cleanTwitterName = twitterHandle;
+        }
+      } catch (e) {
+        console.warn('[CreateUser] Error cleaning twitter name, using handle:', e);
+        cleanTwitterName = twitterHandle;
+      }
+    }
     
     console.log('[CreateUser] Creating user:', { 
       twitterHandle, 
       originalName: twitterName, 
+      originalNameBytes: twitterName ? Array.from(twitterName).map(c => c.charCodeAt(0)) : null,
       cleanName: cleanTwitterName,
+      cleanNameBytes: Array.from(cleanTwitterName).map(c => c.charCodeAt(0)),
       isOG: actuallyIsOG 
     });
     
-    const { data: newUser, error } = await supabase
-      .from('users')
-      .insert({
-        twitter_handle: twitterHandle,
-        twitter_name: cleanTwitterName,
-        is_og: actuallyIsOG, // Use verified OG status
-      })
-      .select()
-      .single();
+    let newUser, error;
+    
+    // Try with cleaned name first
+    try {
+      const result = await supabase
+        .from('users')
+        .insert({
+          twitter_handle: twitterHandle,
+          twitter_name: cleanTwitterName,
+          is_og: actuallyIsOG, // Use verified OG status
+        })
+        .select()
+        .single();
+      
+      newUser = result.data;
+      error = result.error;
+    } catch (insertError: any) {
+      console.warn('[CreateUser] First attempt failed, trying with handle only:', insertError);
+      
+      // If that fails due to encoding, try with just the handle as name
+      try {
+        const fallbackResult = await supabase
+          .from('users')
+          .insert({
+            twitter_handle: twitterHandle,
+            twitter_name: twitterHandle, // Use handle as name
+            is_og: actuallyIsOG,
+          })
+          .select()
+          .single();
+        
+        newUser = fallbackResult.data;
+        error = fallbackResult.error;
+        console.log('[CreateUser] Fallback with handle succeeded');
+      } catch (fallbackError) {
+        console.error('[CreateUser] Both attempts failed:', fallbackError);
+        throw fallbackError;
+      }
+    }
 
     if (error) {
       console.error('[CreateUser] Database error:', {
