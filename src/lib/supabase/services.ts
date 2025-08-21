@@ -41,17 +41,38 @@ export async function createOrUpdateUser(twitterHandle: string, twitterName?: st
     // Create new user - check OG status from source of truth
     const { isOG: actuallyIsOG } = await enforceOGPoints(twitterHandle);
     
+    // Ensure twitter name is properly encoded for database storage
+    const cleanTwitterName = twitterName ? 
+      twitterName.normalize('NFKD').replace(/[\u0300-\u036f]/g, '').trim() || twitterHandle : 
+      twitterHandle;
+    
+    console.log('[CreateUser] Creating user:', { 
+      twitterHandle, 
+      originalName: twitterName, 
+      cleanName: cleanTwitterName,
+      isOG: actuallyIsOG 
+    });
+    
     const { data: newUser, error } = await supabase
       .from('users')
       .insert({
         twitter_handle: twitterHandle,
-        twitter_name: twitterName,
+        twitter_name: cleanTwitterName,
         is_og: actuallyIsOG, // Use verified OG status
       })
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+      console.error('[CreateUser] Database error:', {
+        error,
+        twitterHandle,
+        cleanTwitterName,
+        errorMessage: error.message,
+        errorCode: error.code
+      });
+      throw error;
+    }
 
     // Create profile with correct points
     await supabase.from('user_profiles').insert({
