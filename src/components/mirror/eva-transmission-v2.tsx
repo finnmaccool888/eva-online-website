@@ -411,19 +411,11 @@ export default function EvaTransmissionV2({ onComplete }: EvaTransmissionProps =
             <GlassCard className="p-8">
               <h3 className="text-xl font-semibold mb-6">{currentQuestion.text}</h3>
               
-              {currentQuestion.chipSuggestions && (
-                <ChipInput
-                  suggestions={currentQuestion.chipSuggestions}
-                  onChipClick={(chip) => setUserInput((prev) => prev + " " + chip)}
-                />
-              )}
-              
-              <textarea
+              <ChipInput
                 value={userInput}
-                onChange={(e) => setUserInput(e.target.value)}
+                onChange={setUserInput}
                 placeholder="Share your thoughts..."
-                className="w-full min-h-[150px] p-4 bg-secondary/50 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-primary"
-                autoFocus
+                chips={currentQuestion.chipSuggestions}
               />
               
               <div className="mt-6 flex justify-between items-center">
