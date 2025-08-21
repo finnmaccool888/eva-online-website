@@ -244,7 +244,7 @@ class UnifiedStorageManager {
 
       console.log('[UnifiedStorage] Profile saved successfully', {
         twitterHandle: auth.twitterHandle,
-        points: totalPoints,
+        points: updatedProfile.points,
         isOG: user.is_og
       });
 
