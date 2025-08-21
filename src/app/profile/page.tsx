@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useTwitterAuth } from "@/lib/hooks/useTwitterAuth";
-import ProfileDashboardV2 from "@/components/profile/profile-dashboard-v2";
+import ProfileDashboard from "@/components/profile/profile-dashboard";
 import { motion } from "framer-motion";
 
 export default function ProfilePage() {
@@ -88,7 +88,7 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-pink-50 text-gray-900">
-      <ProfileDashboardV2 auth={{
+      <ProfileDashboard auth={{
         twitterId: auth.twitterId,
         twitterHandle: auth.twitterHandle,
         twitterName: auth.twitterName || auth.twitterHandle,
