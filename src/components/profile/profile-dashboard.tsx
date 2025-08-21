@@ -11,7 +11,6 @@ import StatsCards from "./stats-cards";
 import LeaderboardWidget from "./leaderboard-widget";
 import SessionHistory from "./session-history";
 import PointsBreakdown from "./points-breakdown";
-import { RefreshCw } from "lucide-react";
 import { Button } from "../ui/button";
 import Navbar from "@/components/navbar";
 
@@ -173,19 +172,7 @@ export default function ProfileDashboard({ auth }: ProfileDashboardProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="flex items-center justify-between">
-            <ProfileHeader auth={auth} profile={profile} />
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={refreshPoints}
-              disabled={isRefreshing}
-              className="flex items-center gap-2"
-            >
-              <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
-              {isRefreshing ? 'Refreshing...' : 'Refresh Points'}
-            </Button>
-          </div>
+          <ProfileHeader auth={auth} profile={profile} />
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
