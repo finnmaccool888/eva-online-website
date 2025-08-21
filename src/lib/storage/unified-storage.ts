@@ -141,7 +141,13 @@ class UnifiedStorageManager {
           trust_score: profile.trustScore || 0,
           current_streak: profile.currentStreak || 0,
           longest_streak: profile.longestStreak || 0,
-          last_activity_date: profile.lastActivityDate || null
+          last_activity_date: profile.lastActivityDate || null,
+          has_soul_seed_onboarded: profile.hasSoulSeedOnboarded || false,
+          soul_seed_alias: profile.soulSeedAlias || null,
+          soul_seed_vibe: profile.soulSeedVibe || null,
+          soul_seed_created_at: profile.soulSeedCreatedAt 
+            ? new Date(profile.soulSeedCreatedAt).toISOString() 
+            : null
         });
 
       if (updateError) {
@@ -249,6 +255,27 @@ class UnifiedStorageManager {
     return this.saveProfile(profile);
   }
 
+  /**
+   * Mark soul seed onboarding as complete
+   */
+  async markSoulSeedOnboarded(
+    alias: string,
+    vibe: "ethereal" | "zen" | "cyber"
+  ): Promise<StorageResult<UserProfile>> {
+    const profileResult = await this.loadProfile();
+    if (!profileResult.success || !profileResult.data) {
+      return profileResult;
+    }
+
+    const profile = profileResult.data;
+    profile.hasSoulSeedOnboarded = true;
+    profile.soulSeedAlias = alias;
+    profile.soulSeedVibe = vibe;
+    profile.soulSeedCreatedAt = Date.now();
+
+    return this.saveProfile(profile);
+  }
+
   // Private methods
 
   private async loadFromSupabase(twitterHandle: string): Promise<StorageResult<UserProfile>> {
@@ -292,7 +319,13 @@ class UnifiedStorageManager {
         ogPointsAwarded: profile.is_og_rewarded || data.is_og,
         hasOnboarded: profile.has_onboarded || false,
         currentStreak: profile.current_streak || 0,
-        longestStreak: profile.longest_streak || 0
+        longestStreak: profile.longest_streak || 0,
+        hasSoulSeedOnboarded: profile.has_soul_seed_onboarded || false,
+        soulSeedAlias: profile.soul_seed_alias || undefined,
+        soulSeedVibe: profile.soul_seed_vibe || undefined,
+        soulSeedCreatedAt: profile.soul_seed_created_at 
+          ? new Date(profile.soul_seed_created_at).getTime() 
+          : undefined
       };
 
       return {
@@ -445,5 +478,13 @@ export async function syncProfile(): Promise<boolean> {
 
 export async function markUserOnboarded(): Promise<boolean> {
   const result = await unifiedStorage.markOnboarded();
+  return result.success;
+}
+
+export async function markSoulSeedOnboarded(
+  alias: string,
+  vibe: "ethereal" | "zen" | "cyber"
+): Promise<boolean> {
+  const result = await unifiedStorage.markSoulSeedOnboarded(alias, vibe);
   return result.success;
 }

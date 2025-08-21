@@ -14,9 +14,11 @@ export interface UseUnifiedProfileResult {
   isOG: boolean;
   points: number;
   hasOnboarded: boolean;
+  hasSoulSeedOnboarded: boolean;
   refreshProfile: () => Promise<void>;
   updateProfile: (updates: Partial<UserProfile>) => Promise<boolean>;
   markOnboarded: () => Promise<void>;
+  markSoulSeedOnboarded: (alias: string, vibe: "ethereal" | "zen" | "cyber") => Promise<void>;
   updateSessionData: (data: {
     questionsAnswered?: number;
     pointsEarned?: number;
@@ -156,6 +158,21 @@ export function useUnifiedProfile(): UseUnifiedProfileResult {
     }
   }, [isAuthenticated]);
 
+  // Mark soul seed as onboarded
+  const markSoulSeedOnboarded = useCallback(async (alias: string, vibe: "ethereal" | "zen" | "cyber") => {
+    if (!isAuthenticated) return;
+
+    try {
+      const result = await unifiedStorage.markSoulSeedOnboarded(alias, vibe);
+      if (!result.success) {
+        setError(result.error || 'Failed to update soul seed onboarding status');
+      }
+    } catch (err) {
+      console.error('[useUnifiedProfile] Soul seed onboarding error:', err);
+      setError('Failed to update soul seed onboarding status');
+    }
+  }, [isAuthenticated]);
+
   return {
     profile,
     loading,
@@ -163,9 +180,11 @@ export function useUnifiedProfile(): UseUnifiedProfileResult {
     isOG: profile?.isOG || false,
     points: profile?.points || 0,
     hasOnboarded: profile?.hasOnboarded || false,
+    hasSoulSeedOnboarded: profile?.hasSoulSeedOnboarded || false,
     refreshProfile,
     updateProfile,
     markOnboarded,
+    markSoulSeedOnboarded,
     updateSessionData
   };
 }

@@ -100,6 +100,11 @@ export type UserProfile = {
 	currentStreak?: number;
 	longestStreak?: number;
 	lastActivityDate?: string | null;
+	// Soul seed onboarding
+	hasSoulSeedOnboarded?: boolean;
+	soulSeedAlias?: string;
+	soulSeedVibe?: "ethereal" | "zen" | "cyber";
+	soulSeedCreatedAt?: number;
 };
 
 export type AnalyzedMemory = {

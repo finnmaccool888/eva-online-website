@@ -5,8 +5,8 @@ import { useTwitterAuth } from "@/lib/hooks/useTwitterAuth";
 import { useUnifiedProfile } from "@/lib/hooks/useUnifiedProfile";
 import { readJson, writeJson, StorageKeys } from "@/lib/mirror/storage";
 import { checkSessionLimit } from "@/lib/mirror/session-limits";
-import OnboardingWizard from "./onboarding-wizard";
-import Onboarding from "./onboarding";
+import OnboardingWizardV2 from "./onboarding-wizard-v2";
+import OnboardingV2 from "./onboarding-v2";
 import PasswordGate from "./password-gate";
 import EvaTransmission from "./eva-transmission";
 import AuthStatus from "./auth-status";
@@ -24,7 +24,9 @@ export default function MirrorAppV2() {
     profile, 
     loading: profileLoading, 
     hasOnboarded,
+    hasSoulSeedOnboarded,
     markOnboarded,
+    markSoulSeedOnboarded,
     updateProfile 
   } = useUnifiedProfile();
   
@@ -47,20 +49,24 @@ export default function MirrorAppV2() {
     if (!authLoading && !profileLoading && isAuthenticated && profile && !isInitialized) {
       console.log('[MirrorApp] Initializing with profile:', {
         hasOnboarded: profile.hasOnboarded,
+        hasSoulSeedOnboarded: profile.hasSoulSeedOnboarded,
         isOG: profile.isOG,
         points: profile.points
       });
 
-      // Check if user needs to complete profile wizard
-      const needsProfileWizard = !profile.personalInfo?.fullName || 
-                                profile.socialProfiles.length === 0;
-      
-      if (needsProfileWizard && !profile.hasOnboarded) {
+      // Check onboarding status
+      if (!profile.hasOnboarded) {
+        // User hasn't completed profile wizard
         setShowWizard(true);
+        setSoulSeedOnboarded(false);
+      } else if (!profile.hasSoulSeedOnboarded) {
+        // Profile complete but soul seed not done
+        setShowWizard(false);
+        setSoulSeedOnboarded(false);
       } else {
-        // Check soul seed onboarding
-        const soulSeedDone = readJson<boolean>(StorageKeys.onboarded, false);
-        setSoulSeedOnboarded(soulSeedDone);
+        // Both onboardings complete
+        setShowWizard(false);
+        setSoulSeedOnboarded(true);
       }
 
       // Show OG popup if applicable
@@ -75,7 +81,7 @@ export default function MirrorAppV2() {
 
   // Check session limits when ready to show Eva transmission
   useEffect(() => {
-    if (profile && hasOnboarded && soulSeedOnboarded && !showWizard && passwordVerified) {
+    if (profile && profile.hasOnboarded && profile.hasSoulSeedOnboarded && !showWizard && passwordVerified) {
       const limitStatus = checkSessionLimit(profile);
       setSessionLimitStatus(limitStatus);
       
@@ -83,29 +89,33 @@ export default function MirrorAppV2() {
         setShowSessionLimit(true);
       }
     }
-  }, [profile, hasOnboarded, soulSeedOnboarded, showWizard, passwordVerified]);
+  }, [profile, showWizard, passwordVerified]);
 
   // Handle wizard completion
-  async function handleWizardComplete(updatedProfile: any) {
+  async function handleWizardComplete() {
     console.log('[MirrorApp] Profile wizard completed');
     setShowWizard(false);
     
     // Mark as onboarded in unified storage
     await markOnboarded();
     
-    // Check if soul seed onboarding is done
-    const soulSeedDone = readJson<boolean>(StorageKeys.onboarded, false);
-    setSoulSeedOnboarded(soulSeedDone);
+    // Check if soul seed onboarding is done from profile
+    setSoulSeedOnboarded(profile?.hasSoulSeedOnboarded || false);
   }
 
   // Handle soul seed onboarding completion
-  async function handleSoulSeedOnboardingDone() {
-    console.log('[MirrorApp] Soul seed onboarding completed');
+  async function handleSoulSeedOnboardingDone(alias: string, vibe: "ethereal" | "zen" | "cyber") {
+    console.log('[MirrorApp] Soul seed onboarding completed', { alias, vibe });
+    
+    // Save to Supabase through unified storage
+    await markSoulSeedOnboarded(alias, vibe);
+    
+    // Also save to localStorage for backward compatibility
     writeJson(StorageKeys.onboarded, true);
     setSoulSeedOnboarded(true);
     
     // Track completion
-    track("onboarding_complete");
+    track("onboarding_complete", { vibe });
   }
 
   function handlePasswordSuccess() {
@@ -224,9 +234,9 @@ export default function MirrorAppV2() {
         <PointsDisplay />
         
         {showWizard ? (
-          <OnboardingWizard onComplete={handleWizardComplete} />
+          <OnboardingWizardV2 onComplete={handleWizardComplete} />
         ) : !soulSeedOnboarded ? (
-          <Onboarding onDone={handleSoulSeedOnboardingDone} />
+          <OnboardingV2 onDone={handleSoulSeedOnboardingDone} />
         ) : showSessionLimit ? (
           <SessionLimitReached 
             status={sessionLimitStatus}
