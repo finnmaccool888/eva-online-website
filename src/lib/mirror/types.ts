@@ -61,6 +61,22 @@ export type PersonalInfo = {
 	bio?: string;
 };
 
+export type SessionHistoryItem = {
+	date: number;
+	questionsAnswered: number;
+	humanScore: number;
+	pointsEarned: number;
+	sessionData?: Array<{
+		questionId: string;
+		questionText: string;
+		answer: string;
+		quality?: number;
+		sincerity?: number;
+		pointsAwarded?: number;
+		reasoning?: string;
+	}>;
+};
+
 export type UserProfile = {
 	twitterId?: string;
 	twitterHandle?: string;
@@ -74,24 +90,16 @@ export type UserProfile = {
 	// New fields for human scoring
 	humanScore?: number; // Average human score (0-100)
 	totalQuestionsAnswered?: number;
-	sessionHistory?: Array<{
-		date: number;
-		questionsAnswered: number;
-		humanScore: number;
-		pointsEarned: number;
-		sessionData?: Array<{
-			questionId: string;
-			questionText: string;
-			answer: string;
-			quality?: number;
-			sincerity?: number;
-			pointsAwarded?: number;
-			reasoning?: string;
-		}>;
-	}>;
+	sessionHistory?: SessionHistoryItem[];
 	// OG status fields
 	isOG?: boolean;
 	ogPointsAwarded?: boolean;
+	// Onboarding status
+	hasOnboarded?: boolean;
+	// Streak tracking
+	currentStreak?: number;
+	longestStreak?: number;
+	lastActivityDate?: string | null;
 };
 
 export type AnalyzedMemory = {
