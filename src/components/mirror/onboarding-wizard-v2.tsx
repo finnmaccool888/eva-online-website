@@ -37,13 +37,35 @@ export default function OnboardingWizardV2({ onComplete }: OnboardingWizardProps
     bio: profile?.personalInfo?.bio || "",
     socials: {} as Record<SocialPlatform, string>,
   });
+
+  // Update form data when profile loads
+  React.useEffect(() => {
+    if (profile?.personalInfo) {
+      console.log('[OnboardingWizardV2] Updating form data from profile:', profile.personalInfo);
+      setFormData(prev => ({
+        ...prev,
+        fullName: profile.personalInfo?.fullName || prev.fullName,
+        location: profile.personalInfo?.location || prev.location,
+        bio: profile.personalInfo?.bio || prev.bio,
+      }));
+    }
+  }, [profile]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const stepIndex = ["personal", "socials", "questions"].indexOf(step);
   const progressPct = Math.round(((stepIndex + 1) / 3) * 100);
 
   async function handlePersonalStep() {
-    if (!profile) return;
+    console.log('[OnboardingWizardV2] handlePersonalStep called', {
+      profile: !!profile,
+      formData,
+      isSubmitting
+    });
+    
+    if (!profile) {
+      console.error('[OnboardingWizardV2] No profile available');
+      return;
+    }
     
     setIsSubmitting(true);
     try {
@@ -52,6 +74,8 @@ export default function OnboardingWizardV2({ onComplete }: OnboardingWizardProps
         location: formData.location,
         bio: formData.bio,
       };
+
+      console.log('[OnboardingWizardV2] Updating profile with:', personalInfo);
 
       // Update profile with new personal info
       const success = await updateProfile({
@@ -62,10 +86,16 @@ export default function OnboardingWizardV2({ onComplete }: OnboardingWizardProps
         })
       });
 
+      console.log('[OnboardingWizardV2] Update result:', success);
+
       if (success) {
         track("onboarding_personal_completed");
         setStep("socials");
+      } else {
+        console.error('[OnboardingWizardV2] Failed to update profile');
       }
+    } catch (error) {
+      console.error('[OnboardingWizardV2] Error in handlePersonalStep:', error);
     } finally {
       setIsSubmitting(false);
     }
@@ -116,6 +146,15 @@ export default function OnboardingWizardV2({ onComplete }: OnboardingWizardProps
       setIsSubmitting(false);
     }
   }
+
+  // Debug logging
+  console.log('[OnboardingWizardV2] Render state:', {
+    profile: !!profile,
+    step,
+    formData,
+    isSubmitting,
+    buttonDisabled: !formData.fullName || isSubmitting
+  });
 
   if (!profile) {
     return <div>Loading profile...</div>;
@@ -193,7 +232,14 @@ export default function OnboardingWizardV2({ onComplete }: OnboardingWizardProps
 
             <div className="flex justify-end mt-6">
               <PrimaryButton 
-                onClick={handlePersonalStep}
+                onClick={() => {
+                  console.log('[OnboardingWizardV2] Continue button clicked', {
+                    fullName: formData.fullName,
+                    disabled: !formData.fullName || isSubmitting,
+                    isSubmitting
+                  });
+                  handlePersonalStep();
+                }}
                 disabled={!formData.fullName || isSubmitting}
               >
                 {isSubmitting ? "Saving..." : "Continue"}
