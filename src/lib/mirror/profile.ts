@@ -7,6 +7,8 @@ const POINTS_PER_PERSONAL_FIELD = 333; // ~1000 points for all personal info
 
 export function createEmptyProfile(isOG: boolean = false): UserProfile {
   return {
+    twitterId: undefined,
+    twitterHandle: undefined,
     twitterVerified: false,
     personalInfo: {},
     socialProfiles: [],
@@ -15,7 +17,10 @@ export function createEmptyProfile(isOG: boolean = false): UserProfile {
     createdAt: Date.now(),
     updatedAt: Date.now(),
     isOG,
-    ogPointsAwarded: isOG
+    ogPointsAwarded: isOG,
+    sessionHistory: [],
+    hasOnboarded: false,
+    hasSoulSeedOnboarded: false
   };
 }
 
