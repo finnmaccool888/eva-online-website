@@ -14,6 +14,9 @@ ORDER BY column_name;
 
 -- If columns exist, check for inconsistencies
 DO $$
+DECLARE
+    user_rec RECORD;
+    summary_rec RECORD;
 BEGIN
     IF EXISTS (
         SELECT 1 FROM information_schema.columns 
@@ -25,7 +28,7 @@ BEGIN
         RAISE NOTICE '=== Points Inconsistency Report ===';
         
         -- Show users where points don't match calculated total
-        FOR r IN 
+        FOR user_rec IN 
             SELECT 
                 u.twitter_handle,
                 up.points as current_points,
@@ -41,22 +44,22 @@ BEGIN
             LIMIT 10
         LOOP
             RAISE NOTICE 'User: %, Current: %, Calculated: %, Diff: %', 
-                r.twitter_handle, r.current_points, r.calculated_total, r.difference;
+                user_rec.twitter_handle, user_rec.current_points, user_rec.calculated_total, user_rec.difference;
             RAISE NOTICE '  Components: base=%, og=%, profile=%, session=%',
-                r.base_points, r.og_bonus_points, r.profile_completion_points, r.session_points;
+                user_rec.base_points, user_rec.og_bonus_points, user_rec.profile_completion_points, user_rec.session_points;
         END LOOP;
         
         -- Show summary
         SELECT 
             COUNT(*) as total_inconsistent,
             SUM(ABS(points - (base_points + og_bonus_points + profile_completion_points + session_points))) as total_diff
-        INTO r
+        INTO summary_rec
         FROM user_profiles
         WHERE points != (base_points + og_bonus_points + profile_completion_points + session_points);
         
         RAISE NOTICE '';
-        RAISE NOTICE 'Total inconsistent users: %', r.total_inconsistent;
-        RAISE NOTICE 'Total points difference: %', r.total_diff;
+        RAISE NOTICE 'Total inconsistent users: %', summary_rec.total_inconsistent;
+        RAISE NOTICE 'Total points difference: %', summary_rec.total_diff;
     ELSE
         RAISE NOTICE 'Point component columns do not exist yet - safe to run migration';
     END IF;
