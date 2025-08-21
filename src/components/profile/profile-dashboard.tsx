@@ -3,13 +3,14 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { UserProfile } from "@/lib/mirror/types";
-import { loadProfile, saveProfile } from "@/lib/mirror/profile";
+import { loadProfile, saveProfile, createEmptyProfile } from "@/lib/mirror/profile";
 import { loadUserData, createOrUpdateUser } from "@/lib/supabase/services";
 import { usePointsSync } from "@/lib/hooks/usePointsSync";
 import ProfileHeader from "./profile-header";
 import StatsCards from "./stats-cards";
 import LeaderboardWidget from "./leaderboard-widget";
 import SessionHistory from "./session-history";
+import PointsBreakdown from "./points-breakdown";
 import { RefreshCw } from "lucide-react";
 import { Button } from "../ui/button";
 import Navbar from "@/components/navbar";
@@ -98,23 +99,8 @@ export default function ProfileDashboard({ auth }: ProfileDashboardProps) {
           const { syncCompleteProfile } = await import('@/lib/supabase/sync-profile');
           await syncCompleteProfile();
         } else {
-          // No profile data yet - use default profile
-          const defaultProfile: UserProfile = {
-            twitterId: auth.twitterId,
-            twitterHandle: auth.twitterHandle,
-            twitterVerified: true,
-            personalInfo: {},
-            socialProfiles: [],
-            points: auth.isOG ? 10000 : 0,
-            trustScore: 50,
-            createdAt: Date.now(),
-            updatedAt: Date.now(),
-            humanScore: 0,
-            totalQuestionsAnswered: 0,
-            sessionHistory: [],
-            isOG: auth.isOG,
-            ogPointsAwarded: auth.isOG
-          };
+          // No profile data yet - use default profile with proper point calculation
+          const defaultProfile = createEmptyProfile(auth.isOG);
           
           console.log('[ProfileDashboard] Using default profile for new user');
           setProfile(defaultProfile);
@@ -202,13 +188,23 @@ export default function ProfileDashboard({ auth }: ProfileDashboardProps) {
           </div>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-        >
-          <StatsCards profile={profile} />
-        </motion.div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
+            <StatsCards profile={profile} />
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.15 }}
+          >
+            <PointsBreakdown profile={profile} />
+          </motion.div>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <motion.div

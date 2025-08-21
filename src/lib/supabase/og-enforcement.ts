@@ -1,8 +1,6 @@
 import { supabase } from './client';
 import { isOG } from '@/lib/mirror/og-verification';
-
-const OG_BONUS_POINTS = 10000;
-const BASE_POINTS = 1000;
+import { POINTS, calculateBasePoints, calculateMinimumPoints } from '@/lib/constants/points';
 
 /**
  * Enforces OG points for a user. This is the single source of truth for OG point enforcement.
@@ -60,7 +58,7 @@ export async function enforceOGPoints(twitterHandle: string): Promise<{
         // Create profile with OG points
         await supabase.from('user_profiles').insert({
           user_id: user.id,
-          points: BASE_POINTS + OG_BONUS_POINTS,
+          points: calculateBasePoints(true), // true for OG user
           is_og_rewarded: true,
         });
         pointsFixed = true;
@@ -74,7 +72,7 @@ export async function enforceOGPoints(twitterHandle: string): Promise<{
         }
 
         // Check if user has the minimum expected points (base + OG bonus + sessions)
-        const minimumExpectedPoints = BASE_POINTS + OG_BONUS_POINTS + sessionPoints;
+        const minimumExpectedPoints = calculateBasePoints(true) + sessionPoints;
         
         if (profile.points < minimumExpectedPoints || !profile.is_og_rewarded) {
           updates.points = minimumExpectedPoints;

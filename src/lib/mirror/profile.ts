@@ -1,17 +1,21 @@
 import { UserProfile, SocialPlatform } from "./types";
 import { readJson, writeJson, StorageKeys } from "./storage";
+import { POINTS, calculateBasePoints, calculateMinimumPoints } from '@/lib/constants/points';
 
 const POINTS_PER_SOCIAL = 1000;
+const POINTS_PER_PERSONAL_FIELD = 333; // ~1000 points for all personal info
 
-export function createEmptyProfile(): UserProfile {
+export function createEmptyProfile(isOG: boolean = false): UserProfile {
   return {
     twitterVerified: false,
     personalInfo: {},
     socialProfiles: [],
-    points: 0,
+    points: calculateBasePoints(isOG), // Start with base points + OG bonus if applicable
     trustScore: 0,
     createdAt: Date.now(),
     updatedAt: Date.now(),
+    isOG,
+    ogPointsAwarded: isOG
   };
 }
 
@@ -24,45 +28,84 @@ export function saveProfile(profile: UserProfile): void {
   writeJson(StorageKeys.userProfile, profile);
 }
 
+/**
+ * Calculate additional points from profile completion
+ * These points are added on top of base points and session points
+ */
 export function calculatePoints(profile: UserProfile): number {
-  let points = 0;
+  let additionalPoints = 0;
   
   // Twitter verification
-  if (profile.twitterVerified) points += POINTS_PER_SOCIAL;
+  if (profile.twitterVerified) additionalPoints += POINTS_PER_SOCIAL;
   
   // Personal info completion
   const personalFields = [profile.personalInfo.fullName, profile.personalInfo.location, profile.personalInfo.bio];
   const filledFields = personalFields.filter(f => f && f.trim().length > 0).length;
-  points += filledFields * 333; // ~1000 points total for all personal info
+  additionalPoints += filledFields * POINTS_PER_PERSONAL_FIELD;
   
   // Social profiles
-  points += profile.socialProfiles.length * POINTS_PER_SOCIAL;
+  additionalPoints += profile.socialProfiles.length * POINTS_PER_SOCIAL;
   
-  return points;
+  return additionalPoints;
 }
 
 // Calculate total points including session history
+/**
+ * Calculate total points including base, OG bonus, session points, and profile completion
+ */
 export function calculateTotalPoints(profile: UserProfile): number {
-  // Start with base points (which includes OG bonus if applicable)
-  let totalPoints = profile.points || 0;
+  // Start with base points + OG bonus if applicable
+  let totalPoints = calculateBasePoints(profile.isOG || false);
   
-  // Add points from session history if available
+  // Add session points
   if (profile.sessionHistory && Array.isArray(profile.sessionHistory)) {
     totalPoints += profile.sessionHistory.reduce((sum, session) => {
       return sum + (session.pointsEarned || 0);
     }, 0);
   }
+
+  // Add points from profile completion
+  totalPoints += calculatePoints(profile);
+
+  // Log point calculation for debugging
+  console.log('[CalculateTotalPoints]', {
+    twitterHandle: profile.twitterHandle,
+    isOG: profile.isOG,
+    basePoints: calculateBasePoints(profile.isOG || false),
+    sessionPoints: profile.sessionHistory?.reduce((sum, s) => sum + (s.pointsEarned || 0), 0) || 0,
+    profilePoints: calculatePoints(profile),
+    totalPoints
+  });
   
   return totalPoints;
 }
 
 // Update profile points based on session history and recalculate totals
+/**
+ * Update profile points and ensure minimum requirements are met
+ */
 export function updateProfilePoints(profile: UserProfile): UserProfile {
   const updated = { ...profile };
   
-  // Recalculate points and trust score
-  updated.points = calculateTotalPoints(updated);
+  // Recalculate total points
+  const newPoints = calculateTotalPoints(updated);
+  
+  // Ensure minimum points requirement is met
+  const minimumPoints = calculateMinimumPoints(updated.isOG || false);
+  updated.points = Math.max(newPoints, minimumPoints);
+  
+  // Update trust score
   updated.trustScore = calculateTrustScore(updated);
+  
+  // Log point update for debugging
+  console.log('[UpdateProfilePoints]', {
+    twitterHandle: updated.twitterHandle,
+    isOG: updated.isOG,
+    oldPoints: profile.points,
+    calculatedPoints: newPoints,
+    minimumRequired: minimumPoints,
+    finalPoints: updated.points
+  });
   
   return updated;
 }

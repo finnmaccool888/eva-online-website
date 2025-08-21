@@ -1,6 +1,7 @@
 import { supabase, handleSupabaseError } from './client';
 import type { UserProfile, SoulSeed, AnalyzedMemory } from '@/lib/mirror/types';
 import { enforceOGPoints } from './og-enforcement';
+import { POINTS, calculateBasePoints } from '@/lib/constants/points';
 
 // User operations
 export async function createOrUpdateUser(twitterHandle: string, twitterName?: string, isOG: boolean = false) {
@@ -14,6 +15,21 @@ export async function createOrUpdateUser(twitterHandle: string, twitterName?: st
     if (existingUser) {
       // Always enforce OG points for existing users
       const enforcement = await enforceOGPoints(twitterHandle);
+      
+      // If points were fixed, reload the user to get updated points
+      if (enforcement.pointsFixed) {
+        const { data: updatedUser } = await supabase
+          .from('users')
+          .select('*, user_profiles(*)')
+          .eq('twitter_handle', twitterHandle)
+          .single();
+          
+        return {
+          user: updatedUser,
+          isNew: false,
+          ogPointsAwarded: true
+        };
+      }
       
       return { 
         user: existingUser, 
@@ -40,8 +56,10 @@ export async function createOrUpdateUser(twitterHandle: string, twitterName?: st
     // Create profile with correct points
     await supabase.from('user_profiles').insert({
       user_id: newUser.id,
-      points: actuallyIsOG ? 11000 : 1000, // Base + OG bonus if applicable
+      points: calculateBasePoints(actuallyIsOG), // Properly calculate base + OG points
       is_og_rewarded: actuallyIsOG,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
     });
 
     return { user: newUser, isNew: true, ogPointsAwarded: actuallyIsOG };
@@ -189,21 +207,26 @@ export async function trackEvent(userId: string | null, eventName: string, prope
 // Load user data
 export async function loadUserData(twitterHandle: string) {
   try {
-    // Get user
+    // First enforce OG points to ensure they're correct
+    const enforcement = await enforceOGPoints(twitterHandle);
+    console.log(`[LoadUserData] OG enforcement for ${twitterHandle}:`, enforcement);
+
+    // Get user with complete profile
     const { data: user, error: userError } = await supabase
       .from('users')
-      .select('*')
+      .select('*, user_profiles(*)')
       .eq('twitter_handle', twitterHandle)
       .single();
 
-    if (userError || !user) return null;
+    if (userError || !user) {
+      console.error(`[LoadUserData] User not found: ${twitterHandle}`);
+      return null;
+    }
 
-    // Get profile
-    const { data: profile } = await supabase
-      .from('user_profiles')
-      .select('*')
-      .eq('user_id', user.id)
-      .single();
+    // Get profile - should already be included in user.user_profiles
+    const profile = Array.isArray(user.user_profiles) 
+      ? user.user_profiles[0] 
+      : user.user_profiles;
 
     // Get soul seed
     const { data: soulSeed } = await supabase
@@ -290,22 +313,49 @@ export async function updateUserPoints(
   pointsToAdd: number
 ) {
   try {
-    // Get current points
-    const { data: profile } = await supabase
-      .from('user_profiles')
-      .select('points')
-      .eq('user_id', userId)
+    // Get current profile and user
+    const { data: user } = await supabase
+      .from('users')
+      .select('*, user_profiles(*)')
+      .eq('id', userId)
       .single();
 
-    if (!profile) return;
+    if (!user) {
+      console.error('[UpdatePoints] User not found:', userId);
+      return;
+    }
 
-    const newPoints = (profile.points || 0) + pointsToAdd;
+    const profile = Array.isArray(user.user_profiles) 
+      ? user.user_profiles[0] 
+      : user.user_profiles;
+
+    if (!profile) {
+      console.error('[UpdatePoints] Profile not found for user:', userId);
+      return;
+    }
+
+    // Calculate new points ensuring we maintain base + OG bonus
+    const basePoints = calculateBasePoints(user.is_og);
+    const currentSessionPoints = (profile.points || 0) - basePoints;
+    const newSessionPoints = Math.max(0, currentSessionPoints + pointsToAdd);
+    const newTotalPoints = basePoints + newSessionPoints;
+
+    console.log('[UpdatePoints] Calculation:', {
+      userId,
+      isOG: user.is_og,
+      basePoints,
+      currentSessionPoints,
+      pointsToAdd,
+      newSessionPoints,
+      newTotalPoints
+    });
 
     // Update points
     await supabase
       .from('user_profiles')
       .update({
-        points: newPoints
+        points: newTotalPoints,
+        updated_at: new Date().toISOString()
       })
       .eq('user_id', userId);
 
