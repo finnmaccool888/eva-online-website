@@ -35,8 +35,18 @@ export default function ProfileDashboardV2({ auth }: ProfileDashboardProps) {
 
   // Log profile state for debugging
   useEffect(() => {
+    console.log('[ProfileDashboard] State:', {
+      loading,
+      hasProfile: !!profile,
+      error,
+      auth: {
+        twitterHandle: auth.twitterHandle,
+        isOG: auth.isOG
+      }
+    });
+    
     if (profile) {
-      console.log('[ProfileDashboard] Profile state:', {
+      console.log('[ProfileDashboard] Profile loaded:', {
         points: profile.points,
         isOG: profile.isOG,
         hasOnboarded: profile.hasOnboarded,
@@ -44,14 +54,19 @@ export default function ProfileDashboardV2({ auth }: ProfileDashboardProps) {
         humanScore: profile.humanScore
       });
     }
-  }, [profile]);
+  }, [profile, loading, error, auth]);
 
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="flex items-center gap-2 text-muted-foreground">
-          <Loader2 className="h-5 w-5 animate-spin" />
-          <span>Loading profile...</span>
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="h-8 w-8 animate-spin text-pink-600" />
+          <div className="text-center">
+            <p className="text-muted-foreground">Loading profile...</p>
+            <p className="text-xs text-muted-foreground mt-1">
+              Fetching your data from Eva's servers
+            </p>
+          </div>
         </div>
       </div>
     );

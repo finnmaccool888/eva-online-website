@@ -27,14 +27,18 @@ export interface UseUnifiedProfileResult {
 }
 
 export function useUnifiedProfile(): UseUnifiedProfileResult {
-  const { isAuthenticated, twitterHandle } = useTwitterAuth();
+  const { auth, loading: authLoading } = useTwitterAuth();
+  const isAuthenticated = !!auth;
+  const twitterHandle = auth?.twitterHandle || null;
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   // Load profile on mount and auth change
   const loadProfile = useCallback(async () => {
     if (!isAuthenticated || !twitterHandle) {
+      console.log('[useUnifiedProfile] Not authenticated, skipping load');
       setProfile(null);
       setLoading(false);
       return;
@@ -43,8 +47,18 @@ export function useUnifiedProfile(): UseUnifiedProfileResult {
     setLoading(true);
     setError(null);
 
+    // Add timeout to prevent infinite loading
+    const timeoutId = setTimeout(() => {
+      console.error('[useUnifiedProfile] Load timeout after 10 seconds');
+      setError('Profile loading timed out. Please refresh the page.');
+      setLoading(false);
+    }, 10000); // 10 second timeout
+
     try {
+      console.log('[useUnifiedProfile] Loading profile for:', twitterHandle);
       const result = await unifiedStorage.loadProfile();
+      
+      clearTimeout(timeoutId);
       
       if (result.success && result.data) {
         setProfile(result.data);
@@ -56,8 +70,10 @@ export function useUnifiedProfile(): UseUnifiedProfileResult {
         });
       } else {
         setError(result.error || 'Failed to load profile');
+        console.error('[useUnifiedProfile] Load failed:', result.error);
       }
     } catch (err) {
+      clearTimeout(timeoutId);
       console.error('[useUnifiedProfile] Load error:', err);
       setError('Failed to load profile');
     } finally {
@@ -65,9 +81,18 @@ export function useUnifiedProfile(): UseUnifiedProfileResult {
     }
   }, [isAuthenticated, twitterHandle]);
 
+  // Initialize loading state based on auth
+  useEffect(() => {
+    if (!authLoading && !isAuthenticated && !isInitialized) {
+      console.log('[useUnifiedProfile] Not authenticated on mount');
+      setLoading(false);
+      setIsInitialized(true);
+    }
+  }, [authLoading, isAuthenticated, isInitialized]);
+
   // Subscribe to profile changes
   useEffect(() => {
-    if (!isAuthenticated) return;
+    if (!isAuthenticated || authLoading) return;
 
     // Initial load
     loadProfile();
@@ -82,7 +107,7 @@ export function useUnifiedProfile(): UseUnifiedProfileResult {
     });
 
     return unsubscribe;
-  }, [isAuthenticated, loadProfile]);
+  }, [isAuthenticated, authLoading, loadProfile]);
 
   // Refresh profile from Supabase
   const refreshProfile = useCallback(async () => {
