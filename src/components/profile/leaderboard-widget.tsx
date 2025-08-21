@@ -51,36 +51,7 @@ export default function LeaderboardWidget({ currentUser }: LeaderboardWidgetProp
       } catch (err) {
         console.error('Error fetching leaderboard:', err);
         setError('Failed to load leaderboard');
-        // Mock data for development
-        setLeaderboard([
-          {
-            rank: 1,
-            twitterHandle: currentUser.twitterHandle,
-            twitterName: currentUser.twitterName,
-            profileImage: currentUser.profileImage,
-            points: 15000,
-            humanScore: 95,
-            isOG: currentUser.isOG
-          },
-          {
-            rank: 2,
-            twitterHandle: "user2",
-            twitterName: "User Two",
-            profileImage: "https://via.placeholder.com/40",
-            points: 12000,
-            humanScore: 88,
-            isOG: true
-          },
-          {
-            rank: 3,
-            twitterHandle: "user3",
-            twitterName: "User Three",
-            profileImage: "https://via.placeholder.com/40",
-            points: 9500,
-            humanScore: 82,
-            isOG: false
-          }
-        ]);
+        setLeaderboard([]);
       } finally {
         setLoading(false);
       }
@@ -141,13 +112,14 @@ export default function LeaderboardWidget({ currentUser }: LeaderboardWidgetProp
       </div>
 
       {error && (
-        <div className="text-sm text-yellow-500 mb-4 p-2 bg-yellow-500/10 rounded">
-          {error} (showing demo data)
+        <div className="text-sm text-gray-500 mb-4">
+          Unable to load leaderboard data
         </div>
       )}
 
-      <div className="space-y-2 max-h-80 overflow-y-auto">
-        {leaderboard.slice(0, 10).map((entry, index) => {
+      {leaderboard.length > 0 && (
+        <div className="space-y-2 max-h-80 overflow-y-auto">
+          {leaderboard.slice(0, 10).map((entry, index) => {
           const isCurrentUser = entry.twitterHandle === currentUser.twitterHandle;
           
           return (
@@ -199,7 +171,8 @@ export default function LeaderboardWidget({ currentUser }: LeaderboardWidgetProp
             </motion.div>
           );
         })}
-      </div>
+        </div>
+      )}
     </div>
   );
 } 
