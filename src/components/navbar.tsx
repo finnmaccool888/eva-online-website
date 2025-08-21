@@ -101,6 +101,14 @@ export default function Navbar({ inverse }: { inverse?: boolean }) {
             OG WALL
           </Button>
         </Link>
+        <Link href="/bug-bounty">
+          <Button
+            variant="ghost"
+            className={inverse ? "text-[#48333D] hover:text-[#48333D]/60" : ""}
+          >
+            BOUNTIES
+          </Button>
+        </Link>
         <Link
           href="https://x.com/evaonlinexyz"
           target="_blank"

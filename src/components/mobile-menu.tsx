@@ -132,6 +132,15 @@ export function MobileMenu({
               OG CLAIM
             </Button>
           </Link>
+          <Link href="/bug-bounty" className="w-full">
+            <Button
+              variant="ghost"
+              inverse={inverse}
+              className="w-full justify-start"
+            >
+              BOUNTIES
+            </Button>
+          </Link>
         </div>
         <SheetFooter className="flex-row flex items-center gap-4">
           <PrimaryButton inverse={inverse}>GO TO LAUNCH</PrimaryButton>

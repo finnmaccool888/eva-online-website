@@ -207,6 +207,10 @@ export default function AssetsPage() {
         <Link href="/privacy" className="text-sm text-[#48333D] hover:text-[#48333D]/70">
           Privacy Policy
         </Link>
+        {" | "}
+        <Link href="/bug-bounty" className="text-sm text-[#48333D] hover:text-[#48333D]/70">
+          Bug Bounty
+        </Link>
       </div>
     </div>
   );
