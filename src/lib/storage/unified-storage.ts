@@ -112,15 +112,32 @@ class UnifiedStorageManager {
     this.isSyncing = true;
 
     try {
-      // Get user ID from Supabase
-      const { data: user, error: userError } = await supabase
+      // Get user ID from Supabase, create if doesn't exist
+      let user;
+      const { data: existingUser, error: userError } = await supabase
         .from('users')
         .select('id, is_og')
         .eq('twitter_handle', auth.twitterHandle)
         .single();
 
-      if (userError || !user) {
-        throw new Error('User not found in database');
+      if (userError || !existingUser) {
+        console.log('[UnifiedStorage] User not found, creating new user:', auth.twitterHandle);
+        
+        // Import createOrUpdateUser dynamically to avoid circular imports
+        const { createOrUpdateUser } = await import('@/lib/supabase/services');
+        const { isOG } = await import('@/lib/mirror/og-verification');
+        
+        try {
+          const userIsOG = isOG(auth.twitterHandle);
+          const result = await createOrUpdateUser(auth.twitterHandle, auth.twitterName, userIsOG);
+          user = { id: result.user.id, is_og: userIsOG };
+          console.log('[UnifiedStorage] Created new user:', user);
+        } catch (createError) {
+          console.error('[UnifiedStorage] Failed to create user:', createError);
+          throw new Error('Failed to create user in database');
+        }
+      } else {
+        user = existingUser;
       }
 
       // Update profile data first
