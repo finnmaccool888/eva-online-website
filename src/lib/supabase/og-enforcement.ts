@@ -37,7 +37,7 @@ export async function enforceOGPoints(twitterHandle: string): Promise<{
     }
 
     const profile = Array.isArray(user.user_profiles) 
-      ? user.user_profiles[0] 
+      ? (user.user_profiles.length > 0 ? user.user_profiles[0] : null)
       : user.user_profiles;
 
     let pointsFixed = false;

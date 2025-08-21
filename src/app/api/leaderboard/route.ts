@@ -63,7 +63,7 @@ export async function GET(request: NextRequest) {
     const leaderboard = users?.map((user, index) => {
       // Handle both single profile and array of profiles
       const profile = Array.isArray(user.user_profiles) 
-        ? user.user_profiles[0] 
+        ? (user.user_profiles.length > 0 ? user.user_profiles[0] : null)
         : user.user_profiles;
       
       // Calculate total points: base points + session points

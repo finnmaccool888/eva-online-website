@@ -22,7 +22,7 @@ export function usePointsSync() {
       if (userError) throw userError;
 
       const profile = Array.isArray(user.user_profiles) 
-        ? user.user_profiles[0] 
+        ? (user.user_profiles.length > 0 ? user.user_profiles[0] : null)
         : user.user_profiles;
 
       if (profile) {

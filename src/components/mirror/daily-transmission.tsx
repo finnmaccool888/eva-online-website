@@ -11,14 +11,14 @@ import { track } from "@/lib/mirror/analytics";
 
 export default function DailyTransmission() {
   const prompts = useMemo(() => pickDaily(1), []);
-  const prompt = prompts[0];
+  const prompt = prompts.length > 0 ? prompts[0] : null;
   const [seed, setSeed] = useState(loadSeed());
   const [answer, setAnswer] = useState("");
   const [reward, setReward] = useState<import("@/lib/mirror/types").Artifact | null>(null);
   const [done, setDone] = useState(false);
 
   function submit() {
-    if (!answer.trim()) return;
+    if (!answer.trim() || !prompt) return;
     const { seed: updated } = feedSeed(seed, prompt.id, answer);
     setSeed(updated);
     setAnswer("");
@@ -28,6 +28,16 @@ export default function DailyTransmission() {
     track("prompt_answered", { promptId: prompt.id });
     track("streak_day", { streak: updated.streakCount });
     if (last) track("reward_revealed", { rarity: last.rarity });
+  }
+
+  if (!prompt) {
+    return (
+      <div className="flex flex-col gap-4">
+        <div className="rounded-lg border border-border p-4 bg-card text-card-foreground">
+          <div className="text-sm opacity-70">No prompts available</div>
+        </div>
+      </div>
+    );
   }
 
   return (

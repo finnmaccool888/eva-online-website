@@ -50,7 +50,11 @@ export function calculatePoints(profile: UserProfile): number {
   
   // Personal info completion
   const personalInfo = profile.personalInfo || {};
-  const personalFields = [personalInfo.fullName, personalInfo.location, personalInfo.bio];
+  const personalFields = [
+    personalInfo?.fullName || '', 
+    personalInfo?.location || '', 
+    personalInfo?.bio || ''
+  ];
   const filledFields = personalFields.filter(f => f && f.trim().length > 0).length;
   additionalPoints += filledFields * POINTS_PER_PERSONAL_FIELD;
   
@@ -134,7 +138,11 @@ export function calculateTrustScore(profile: UserProfile, trustPenalty: number =
   if (profile.twitterVerified) score += 20;
   
   // Personal info completeness (up to 30 points)
-  const personalFields = [profile.personalInfo.fullName, profile.personalInfo.location, profile.personalInfo.bio];
+  const personalFields = [
+    profile.personalInfo?.fullName || '',
+    profile.personalInfo?.location || '',
+    profile.personalInfo?.bio || ''
+  ];
   const filledFields = personalFields.filter(f => f && f.trim().length > 0).length;
   score += filledFields * 10;
   

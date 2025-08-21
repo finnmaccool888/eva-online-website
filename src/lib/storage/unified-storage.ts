@@ -194,9 +194,9 @@ class UnifiedStorageManager {
 
       // Update profile completion points atomically
       const personalFieldsCount = [
-        profile.personalInfo?.fullName,
-        profile.personalInfo?.location,
-        profile.personalInfo?.bio
+        profile.personalInfo?.fullName || '',
+        profile.personalInfo?.location || '',
+        profile.personalInfo?.bio || ''
       ].filter(f => f && f.trim().length > 0).length;
 
       const { data: pointsResult, error: pointsError } = await supabase
