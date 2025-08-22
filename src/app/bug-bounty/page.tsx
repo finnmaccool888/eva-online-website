@@ -177,7 +177,7 @@ export default function BugBountyPage() {
             Help us improve Eva by reporting bugs and issues you find.
           </p>
           <Button
-            onClick={() => window.location.href = '/api/auth/twitter'}
+            onClick={() => window.location.href = '/api/auth/twitter?returnTo=/bug-bounty'}
             className="bg-white text-black hover:bg-gray-100"
           >
             <Twitter className="w-4 h-4 mr-2" />

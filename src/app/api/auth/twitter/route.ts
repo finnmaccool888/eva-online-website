@@ -31,6 +31,15 @@ function generateCodeChallenge(verifier: string): string {
 
 export async function GET(req: NextRequest) {
   try {
+    // Get return URL from query parameter, default to /mirror
+    const returnTo = req.nextUrl.searchParams.get('returnTo') || '/mirror';
+    const baseUrl = `${req.nextUrl.protocol}//${req.nextUrl.host}`;
+    
+    // Validate return URL to prevent open redirect attacks
+    const allowedReturnPaths = ['/mirror', '/bug-bounty', '/profile', '/'];
+    const isValidReturnPath = allowedReturnPaths.some(path => returnTo.startsWith(path));
+    const finalReturnTo = isValidReturnPath ? returnTo : '/mirror';
+    
     // Check if credentials exist
     if (!CLIENT_ID || !CLIENT_SECRET) {
       console.error("Missing Twitter OAuth credentials", {
@@ -39,8 +48,7 @@ export async function GET(req: NextRequest) {
         clientIdLength: CLIENT_ID?.length || 0,
         nodeEnv: process.env.NODE_ENV
       });
-      const baseUrl = `${req.nextUrl.protocol}//${req.nextUrl.host}`;
-      return NextResponse.redirect(`${baseUrl}/mirror?error=config_error`);
+      return NextResponse.redirect(`${baseUrl}${finalReturnTo}?error=config_error`);
     }
 
     // Generate PKCE code verifier and state
@@ -115,10 +123,23 @@ export async function GET(req: NextRequest) {
       maxAge: 60 * 10, // 10 minutes
     });
     
+    // Store return URL for callback
+    response.cookies.set("auth_return_to", finalReturnTo, {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 10, // 10 minutes
+    });
+    
     return response;
   } catch (error) {
     console.error("Twitter OAuth error:", error);
     const baseUrl = `${req.nextUrl.protocol}//${req.nextUrl.host}`;
-    return NextResponse.redirect(`${baseUrl}/mirror?error=auth_failed`);
+    const returnTo = req.nextUrl.searchParams.get('returnTo') || '/mirror';
+    const allowedReturnPaths = ['/mirror', '/bug-bounty', '/profile', '/'];
+    const isValidReturnPath = allowedReturnPaths.some(path => returnTo.startsWith(path));
+    const finalReturnTo = isValidReturnPath ? returnTo : '/mirror';
+    return NextResponse.redirect(`${baseUrl}${finalReturnTo}?error=auth_failed`);
   }
 } 

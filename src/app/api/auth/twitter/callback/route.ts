@@ -32,6 +32,9 @@ export async function GET(req: NextRequest) {
     const baseUrl = `${req.nextUrl.protocol}//${req.nextUrl.host}`;
     const isProduction = process.env.NODE_ENV === "production";
     
+    // Get stored return URL, default to /mirror
+    const returnTo = req.cookies.get("auth_return_to")?.value || '/mirror';
+    
     const searchParams = req.nextUrl.searchParams;
     const code = searchParams.get("code");
     const state = searchParams.get("state");
@@ -45,11 +48,11 @@ export async function GET(req: NextRequest) {
         errorDescription,
         fullUrl: req.url
       });
-      return NextResponse.redirect(`${baseUrl}/mirror?error=${error}&details=${encodeURIComponent(errorDescription || "No description")}`);
+      return NextResponse.redirect(`${baseUrl}${returnTo}?error=${error}&details=${encodeURIComponent(errorDescription || "No description")}`);
     }
     
     if (!code || !state) {
-      return NextResponse.redirect(`${baseUrl}/mirror?error=missing_params`);
+      return NextResponse.redirect(`${baseUrl}${returnTo}?error=missing_params`);
     }
     
     // Verify state
@@ -72,7 +75,7 @@ export async function GET(req: NextRequest) {
       });
       
       // Clear the OAuth state cookies to prevent persistent errors
-      const response = NextResponse.redirect(`${baseUrl}/mirror?error=invalid_state`);
+      const response = NextResponse.redirect(`${baseUrl}${returnTo}?error=invalid_state`);
       response.cookies.set("twitter_state", "", {
         maxAge: 0,
         path: "/",
@@ -81,6 +84,13 @@ export async function GET(req: NextRequest) {
         sameSite: "lax"
       });
       response.cookies.set("code_verifier", "", {
+        maxAge: 0,
+        path: "/",
+        httpOnly: true,
+        secure: isProduction,
+        sameSite: "lax"
+      });
+      response.cookies.set("auth_return_to", "", {
         maxAge: 0,
         path: "/",
         httpOnly: true,
@@ -122,7 +132,7 @@ export async function GET(req: NextRequest) {
         redirectUri: REDIRECT_URI,
         nodeEnv: process.env.NODE_ENV
       });
-      return NextResponse.redirect(`${baseUrl}/mirror?error=token_failed&details=${encodeURIComponent(error.substring(0, 100))}`);
+      return NextResponse.redirect(`${baseUrl}${returnTo}?error=token_failed&details=${encodeURIComponent(error.substring(0, 100))}`);
     }
     
     const tokenData: TwitterTokenResponse = await tokenResponse.json();
@@ -136,7 +146,7 @@ export async function GET(req: NextRequest) {
     
     if (!userResponse.ok) {
       console.error("Failed to get user info");
-      return NextResponse.redirect(`${baseUrl}/mirror?error=user_fetch_failed`);
+      return NextResponse.redirect(`${baseUrl}${returnTo}?error=user_fetch_failed`);
     }
     
     const userData: TwitterUser = await userResponse.json();
@@ -188,8 +198,8 @@ export async function GET(req: NextRequest) {
     // Encode auth data for URL parameter as fallback
     const encodedAuth = Buffer.from(JSON.stringify(authCookieData)).toString('base64url');
     
-    // Redirect with encoded auth data
-    const response = NextResponse.redirect(`${baseUrl}/mirror?auth=success&data=${encodedAuth}`);
+    // Redirect with encoded auth data to the stored return URL
+    const response = NextResponse.redirect(`${baseUrl}${returnTo}?auth=success&data=${encodedAuth}`);
     
     console.log("Setting auth cookie:", authCookieData);
     
@@ -218,8 +228,9 @@ export async function GET(req: NextRequest) {
     // Clean up state cookies
     response.cookies.delete("twitter_state");
     response.cookies.delete("code_verifier");
+    response.cookies.delete("auth_return_to");
     
-    console.log("Auth callback success, redirecting to mirror with data");
+    console.log("Auth callback success, redirecting to return URL:", returnTo);
     
     return response;
     
@@ -227,6 +238,9 @@ export async function GET(req: NextRequest) {
     console.error("Twitter callback error:", error);
     // Get the base URL for error redirect
     const baseUrl = `${req.nextUrl.protocol}//${req.nextUrl.host}`;
+    
+    // Get stored return URL for error redirect, default to /mirror
+    const returnTo = req.cookies.get("auth_return_to")?.value || '/mirror';
     
     // Try to provide more specific error information
     let errorType = "callback_failed";
@@ -244,6 +258,6 @@ export async function GET(req: NextRequest) {
       errorType = "user_fetch_error";
     }
     
-    return NextResponse.redirect(`${baseUrl}/mirror?error=${errorType}&details=${encodeURIComponent(errorDetails)}`);
+    return NextResponse.redirect(`${baseUrl}${returnTo}?error=${errorType}&details=${encodeURIComponent(errorDetails)}`);
   }
 } 
