@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { AlertCircle, Upload, X, CheckCircle, Twitter } from "lucide-react";
-import { getTwitterAuth } from "@/lib/mirror/auth";
+import { useTwitterAuth } from "@/lib/hooks/useTwitterAuth";
 
 interface FilePreview {
   file: File;
@@ -41,12 +41,14 @@ export default function BugBountyPage() {
   const [expectedBehavior, setExpectedBehavior] = useState("");
   const [actualBehavior, setActualBehavior] = useState("");
   
-  const twitterAuth = getTwitterAuth();
+  const { auth: twitterAuth, loading: authLoading, isAuthenticated: authStatus } = useTwitterAuth();
 
   useEffect(() => {
     // Check authentication status
-    setIsAuthenticated(!!twitterAuth?.twitterHandle);
-  }, [twitterAuth]);
+    if (!authLoading) {
+      setIsAuthenticated(authStatus);
+    }
+  }, [authLoading, authStatus]);
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = Array.from(e.target.files || []);
@@ -157,6 +159,15 @@ export default function BugBountyPage() {
             Redirecting you to the home page...
           </p>
         </Card>
+      </div>
+    );
+  }
+
+  // Show loading while checking authentication
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="text-white">Checking authentication...</div>
       </div>
     );
   }
