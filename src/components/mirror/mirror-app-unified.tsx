@@ -20,13 +20,7 @@ import OGPopup from "./og-popup";
 import SessionLimitReached from "./session-limit-reached";
 
 // Profile components
-import ProfileHeader from "@/components/profile/profile-header";
-import StatsCards from "@/components/profile/stats-cards";
-import PointsBreakdown from "@/components/profile/points-breakdown";
-import SessionHistory from "@/components/profile/session-history";
-import LeaderboardWidget from "@/components/profile/leaderboard-widget";
-import ScoringExplanation from "@/components/profile/scoring-explanation";
-import ScoreComparison from "@/components/profile/score-comparison";
+import ProfileDashboardV2 from "@/components/profile/profile-dashboard-v2";
 
 // Shared components
 import MigrationNotice from "@/components/migration-notice";
@@ -147,7 +141,12 @@ export default function MirrorAppUnified() {
   const switchView = useCallback((view: ViewType) => {
     setActiveView(view);
     track(`navigation:${view}_view`);
-  }, []);
+    
+    // Refresh profile when switching to profile view to get latest points
+    if (view === 'profile') {
+      refreshProfile();
+    }
+  }, [refreshProfile]);
 
   // Auth redirect logic
   if (!passwordVerified) {
@@ -266,44 +265,28 @@ export default function MirrorAppUnified() {
                   onClose={() => setShowSessionLimit(false)}
                 />
               ) : (
-                <EvaTransmission />
+                <EvaTransmission onComplete={() => {
+                  // Refresh profile after completing session to update points
+                  setTimeout(() => {
+                    refreshProfile();
+                  }, 1000);
+                }} />
               )}
             </div>
           ) : (
-            <div className="bg-gradient-to-br from-pink-50 via-rose-50 to-purple-50 min-h-[calc(100vh-64px)]">
-              <div className="container max-w-4xl mx-auto px-4 py-8 space-y-6">
-                {profile && (
-                  <>
-                    <ProfileHeader
-                      auth={{
-                        twitterId: profile.twitterId,
-                        twitterHandle: profile.twitterHandle,
-                        twitterName: profile.twitterHandle,
-                        profileImage: "",
-                        isOG: profile.isOG || false,
-                      }}
-                      profile={profile}
-                    />
-                    
-                    <PointsBreakdown profile={profile} />
-                    <StatsCards profile={profile} />
-                    
-                    {profile.humanScore !== undefined && profile.humanScore > 0 && (
-                      <ScoreComparison humanScore={profile.humanScore} />
-                    )}
-                    
-                    {profile.sessionHistory && profile.sessionHistory.length > 0 && (
-                      <SessionHistory 
-                        sessions={profile.sessionHistory} 
-                        twitterHandle={profile.twitterHandle}
-                      />
-                    )}
-                    
-                    <LeaderboardWidget currentUser={profile.twitterHandle} />
-                    <ScoringExplanation />
-                  </>
-                )}
-              </div>
+            <div className="min-h-[calc(100vh-64px)]">
+              {/* Use the original ProfileDashboardV2 component */}
+              {profile && (
+                <ProfileDashboardV2 
+                  auth={{
+                    twitterId: profile.twitterId,
+                    twitterHandle: profile.twitterHandle,
+                    twitterName: profile.twitterHandle,
+                    profileImage: "",
+                    isOG: profile.isOG || false,
+                  }}
+                />
+              )}
             </div>
           )}
         </motion.div>
