@@ -264,9 +264,10 @@ class UnifiedStorageManager {
 
     } catch (error) {
       console.error('[UnifiedStorage] Error saving profile:', error);
+      const errorMsg = error?.message || 'Unknown error';
       return {
         success: false,
-        error: 'Failed to save profile'
+        error: `Failed to save profile: ${errorMsg}. Your changes may not have been saved. Please try again.`
       };
     } finally {
       this.isSyncing = false;
@@ -428,12 +429,21 @@ class UnifiedStorageManager {
         .single();
 
       if (error || !data) {
-        return { success: false, error: 'User not found' };
+        const errorMsg = error?.message || 'User not found';
+        console.error('[UnifiedStorage] Supabase error:', errorMsg);
+        return { 
+          success: false, 
+          error: `Failed to load profile: ${errorMsg}. Please check your internet connection and try again.` 
+        };
       }
 
       const profile = data.user_profiles?.[0] || data.user_profiles;
       if (!profile) {
-        return { success: false, error: 'Profile not found' };
+        console.error('[UnifiedStorage] Profile data missing for user:', twitterHandle);
+        return { 
+          success: false, 
+          error: 'Profile data not found. This may be a new account - please complete onboarding.' 
+        };
       }
 
       // Load sessions from sessions table
@@ -497,9 +507,10 @@ class UnifiedStorageManager {
 
     } catch (error) {
       console.error('[UnifiedStorage] Supabase load error:', error);
+      const errorMsg = error?.message || 'Unknown error';
       return {
         success: false,
-        error: 'Failed to load from Supabase'
+        error: `Failed to load profile from server: ${errorMsg}. Please refresh the page or try again later.`
       };
     }
   }
@@ -531,8 +542,7 @@ class UnifiedStorageManager {
       };
       localStorage.setItem(CACHE_KEY, JSON.stringify(data));
 
-      // Also update old localStorage for backward compatibility
-      writeJson(StorageKeys.userProfile, profile);
+      // Removed old localStorage write - using online-only storage
     } catch (error) {
       console.error('[UnifiedStorage] Cache update error:', error);
     }

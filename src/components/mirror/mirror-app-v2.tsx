@@ -8,15 +8,17 @@ import { checkSessionLimit } from "@/lib/mirror/session-limits";
 import OnboardingWizardV2 from "./onboarding-wizard-v2";
 import OnboardingV2 from "./onboarding-v2";
 import PasswordGate from "./password-gate";
-import EvaTransmission from "./eva-transmission";
+import EvaTransmission from "./eva-transmission-v2";
 import AuthStatus from "./auth-status";
 import PointsDisplayV2 from "./points-display-v2";
 import OGPopup from "./og-popup";
 import SessionLimitReached from "./session-limit-reached";
+import SessionResetDialog from "@/components/session-reset-dialog";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import PrimaryButton from "@/components/primary-button";
 import { track } from "@/lib/mirror/analytics";
+import { RefreshCw } from "lucide-react";
 
 export default function MirrorAppV2() {
   const { isAuthenticated, loading: authLoading, error: authError, twitterHandle, isOG } = useTwitterAuth();
@@ -38,6 +40,7 @@ export default function MirrorAppV2() {
   const [soulSeedOnboarded, setSoulSeedOnboarded] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
+  const [showResetDialog, setShowResetDialog] = useState(false);
 
   // Check password verification status
   useEffect(() => {
@@ -291,6 +294,20 @@ export default function MirrorAppV2() {
         <AuthStatus />
         <PointsDisplayV2 />
         
+        {/* Reset Session Button - Only show when in session */}
+        {soulSeedOnboarded && !showWizard && !showSessionLimit && (
+          <div className="fixed bottom-4 left-4 z-40">
+            <button
+              onClick={() => setShowResetDialog(true)}
+              className="bg-amber-600 text-white px-3 py-2 rounded-lg shadow-lg hover:bg-amber-700 transition-colors flex items-center gap-2 text-sm"
+              title="Start a fresh session"
+            >
+              <RefreshCw className="h-4 w-4" />
+              Reset Session
+            </button>
+          </div>
+        )}
+        
         {showWizard ? (
           <OnboardingWizardV2 onComplete={handleWizardComplete} />
         ) : !soulSeedOnboarded ? (
@@ -312,6 +329,16 @@ export default function MirrorAppV2() {
           onClose={() => setShowOGPopup(false)}
         />
       )}
+      
+      {/* Session Reset Dialog */}
+      <SessionResetDialog 
+        isOpen={showResetDialog}
+        onClose={() => setShowResetDialog(false)}
+        onReset={() => {
+          console.log('[MirrorApp] Session reset requested');
+          // The dialog handles the actual reset and redirect
+        }}
+      />
     </div>
   );
 }

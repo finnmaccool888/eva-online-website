@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useUnifiedProfile } from "@/lib/hooks/useUnifiedProfile";
 import ProfileHeader from "./profile-header";
 import StatsCards from "./stats-cards";
@@ -9,7 +9,9 @@ import SessionHistory from "./session-history";
 import LeaderboardWidget from "./leaderboard-widget";
 import ScoringExplanation from "./scoring-explanation";
 import ScoreComparison from "./score-comparison";
-import { Loader2 } from "lucide-react";
+import MigrationNotice from "@/components/migration-notice";
+import OGRecoveryDialog from "@/components/og-recovery-dialog";
+import { Loader2, Sparkles } from "lucide-react";
 
 interface ProfileDashboardProps {
   auth: {
@@ -32,6 +34,8 @@ export default function ProfileDashboardV2({ auth }: ProfileDashboardProps) {
     refreshProfile,
     updateProfile
   } = useUnifiedProfile();
+  
+  const [showRecoveryDialog, setShowRecoveryDialog] = useState(false);
 
   // Log profile state for debugging
   useEffect(() => {
@@ -102,6 +106,9 @@ export default function ProfileDashboardV2({ auth }: ProfileDashboardProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-rose-50 to-purple-50">
+      {/* Migration Notice */}
+      <MigrationNotice />
+      
       <div className="container max-w-4xl mx-auto px-4 py-8 space-y-6">
         {/* Profile Header */}
         <ProfileHeader
@@ -138,6 +145,23 @@ export default function ProfileDashboardV2({ auth }: ProfileDashboardProps) {
         {/* Scoring Explanation */}
         <ScoringExplanation />
       </div>
+      
+      {/* Recovery Button */}
+      <div className="fixed bottom-4 right-4 z-40">
+        <button
+          onClick={() => setShowRecoveryDialog(true)}
+          className="bg-pink-600 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-pink-700 transition-colors flex items-center gap-2"
+        >
+          <Sparkles className="h-4 w-4" />
+          Check Points & OG Status
+        </button>
+      </div>
+
+      {/* Recovery Dialog */}
+      <OGRecoveryDialog 
+        isOpen={showRecoveryDialog}
+        onClose={() => setShowRecoveryDialog(false)}
+      />
     </div>
   );
 }

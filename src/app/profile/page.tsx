@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useTwitterAuth } from "@/lib/hooks/useTwitterAuth";
-import ProfileDashboard from "@/components/profile/profile-dashboard";
+import ProfileDashboard from "@/components/profile/profile-dashboard-v2";
 import { motion } from "framer-motion";
 
 export default function ProfilePage() {
