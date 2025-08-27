@@ -1,7 +1,7 @@
 'use client';
 
-import MirrorAppUnified from "@/components/mirror/mirror-app-unified";
+import MaintenanceNotice from "@/components/maintenance-notice";
 
 export default function MirrorPage() {
-  return <MirrorAppUnified />;
+  return <MaintenanceNotice />;
 } 
