@@ -11,15 +11,15 @@ CREATE TABLE IF NOT EXISTS maintenance_feedback (
   CONSTRAINT twitter_handle_format CHECK (twitter_handle ~* '^@?[A-Za-z0-9_]+$')
 );
 
--- Create index for faster queries
-CREATE INDEX idx_maintenance_feedback_created_at ON maintenance_feedback(created_at DESC);
-CREATE INDEX idx_maintenance_feedback_email ON maintenance_feedback(email);
+-- Create indexes if they don't exist
+CREATE INDEX IF NOT EXISTS idx_maintenance_feedback_created_at ON maintenance_feedback(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_maintenance_feedback_email ON maintenance_feedback(email);
 
 -- Enable RLS
 ALTER TABLE maintenance_feedback ENABLE ROW LEVEL SECURITY;
 
 -- Only allow inserts (no reads/updates/deletes from client)
-CREATE POLICY "Anyone can submit feedback" ON maintenance_feedback
+CREATE POLICY IF NOT EXISTS "Anyone can submit feedback" ON maintenance_feedback
   FOR INSERT TO anon, authenticated
   WITH CHECK (true);
 
