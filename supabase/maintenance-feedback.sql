@@ -19,9 +19,18 @@ CREATE INDEX IF NOT EXISTS idx_maintenance_feedback_email ON maintenance_feedbac
 ALTER TABLE maintenance_feedback ENABLE ROW LEVEL SECURITY;
 
 -- Only allow inserts (no reads/updates/deletes from client)
-CREATE POLICY IF NOT EXISTS "Anyone can submit feedback" ON maintenance_feedback
-  FOR INSERT TO anon, authenticated
-  WITH CHECK (true);
+DO $$ 
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies 
+    WHERE tablename = 'maintenance_feedback' 
+    AND policyname = 'Anyone can submit feedback'
+  ) THEN
+    CREATE POLICY "Anyone can submit feedback" ON maintenance_feedback
+      FOR INSERT TO anon, authenticated
+      WITH CHECK (true);
+  END IF;
+END $$;
 
 -- Grant permissions
 GRANT INSERT ON maintenance_feedback TO anon, authenticated;
