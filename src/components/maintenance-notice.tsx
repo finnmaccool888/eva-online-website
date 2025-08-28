@@ -12,10 +12,12 @@ export default function MaintenanceNotice() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setError('');
     
     try {
       const response = await fetch('/api/maintenance-feedback', {
@@ -27,14 +29,18 @@ export default function MaintenanceNotice() {
       });
 
       if (response.ok) {
+        console.log('Feedback submitted successfully!');
         setSubmitted(true);
+        // Clear form data after successful submission
+        setFormData({ twitter: '', email: '', message: '' });
       } else {
-        console.error('Failed to submit feedback');
-        // You could show an error message here
+        const errorData = await response.json().catch(() => ({}));
+        console.error('API error:', errorData);
+        setError(errorData.error || 'Failed to submit feedback. Please try again.');
       }
     } catch (error) {
       console.error('Error submitting feedback:', error);
-      // You could show an error message here
+      setError('Network error. Please check your connection and try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -139,11 +145,27 @@ export default function MaintenanceNotice() {
                 className="text-center py-8"
               >
                 <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-3" />
-                <p className="text-lg font-medium text-gray-800">Thank you!</p>
-                <p className="text-sm text-gray-600 mt-1">We'll keep you updated on our progress.</p>
+                <p className="text-lg font-medium text-gray-800">Feedback Submitted Successfully!</p>
+                <p className="text-sm text-gray-600 mt-1">We've received your message and will keep you updated on our progress.</p>
+                <button
+                  onClick={() => setSubmitted(false)}
+                  className="mt-4 text-pink-600 hover:text-pink-700 text-sm font-medium underline"
+                >
+                  Submit Another Message
+                </button>
               </motion.div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <>
+                {error && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4"
+                  >
+                    <p className="text-red-700 text-sm">{error}</p>
+                  </motion.div>
+                )}
+                <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                   <label htmlFor="twitter" className="block text-sm font-medium text-gray-700 mb-1">
                     Twitter Handle <span className="text-red-500">*</span>
@@ -210,6 +232,7 @@ export default function MaintenanceNotice() {
                   )}
                 </button>
               </form>
+              </>
             )}
           </div>
 
