@@ -7,6 +7,7 @@ import TableDemo from "@/components/table";
 import { AnimatePresence } from "framer-motion";
 import { useLeaderboard } from "@/lib/hooks/useLeaderboard";
 import Loading from "../loading";
+import MindshareLeaderboard from "@/components/mindshare-leaderboard";
 
 export default function Leaderboard() {
   const { isLoading } = useLeaderboard();
@@ -14,9 +15,14 @@ export default function Leaderboard() {
     <div className="relative bg-top p-4 min-h-screen md:min-h-auto md:pb-[200px]">
       <Navbar inverse />
       <Info />
-      <div className="flex flex-col lg:flex-row gap-8 max-w-6xl mx-auto pt-16">
-        <Stats />
-        <TableDemo />
+      <div className="max-w-6xl mx-auto pt-16">
+        {/* <Stats /> */}
+        {/* <TableDemo /> */}
+        <MindshareLeaderboard
+          projectId="pharmachainai"
+          timeframes={["24H", "7D", "ALL"]}
+          backgroundImageUrl="/images/banners/pharmachainai.jpeg"
+        />
       </div>
       <div className="text-sm text-center mt-6 text-[#48333D]">
         COPYRIGHT © 2025 EVA ONLINE

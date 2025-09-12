@@ -12,12 +12,12 @@ export default function Info() {
         </p>
         <div className="text-sm flex items-center gap-2 uppercase mt-2">
           <div className="size-[8px] bg-[#C0C0C0]" />
-          powered by{" "}
+          powered by
           <a
             href="https://songjam.space/"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:underline transition-colors"
+            className="hover:underline transition-colors text-[#FF007A]"
           >
             songjam
           </a>
@@ -25,7 +25,7 @@ export default function Info() {
       </div>
       <div className="relative items-start w-full justify-start gap-4 p-4 lg:p-6">
         <Corners />
-        <p className="text-sm lg:text-base">
+        {/* <p className="text-sm lg:text-base">
           Tag or Quote Tweet{" "}
           <a
             href="https://twitter.com/evaonlinexyz"
@@ -38,6 +38,20 @@ export default function Info() {
           on X. No need to sign-up, as long as the tweet is published on X it is
           being tracked. Claim Eva points from Aug 1st, points are redeemable
           for $EVA.
+        </p> */}
+        <p className="text-sm lg:text-base">
+          Yappers are rewarded for discussing the Eva AI agent and $EVA token in
+          a Space, with more points awarded for more meaningful discussion. Then
+          tag{" "}
+          <a
+            href="https://twitter.com/lurkyreverb"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[#FF007A] font-bold hover:underline transition-colors"
+          >
+            @lurkyreverb
+          </a>{" "}
+          on X under the space in the comments.
         </p>
       </div>
     </div>
