@@ -50,6 +50,11 @@ export function MobileMenu({
               ABOUT
             </Button>
           </AboutDialog>
+          <Link href="/leaderboard">
+            <Button variant="ghost" inverse={inverse}>
+              LEADERBOARD
+            </Button>
+          </Link>
           <Link href="/mirror" className="w-full">
             <Button
               variant="ghost"
