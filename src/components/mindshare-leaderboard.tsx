@@ -192,7 +192,9 @@ export default function MindshareLeaderboard({
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = (await response.json()) as LeaderboardRow[];
-      return result.filter((r) => r.show);
+      return result
+        .filter((r) => r.show)
+        .sort((a, b) => b.totalPoints - a.totalPoints);
     },
     staleTime: 60 * 1000,
     placeholderData: keepPreviousData,
