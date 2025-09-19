@@ -174,7 +174,7 @@ export default function MindshareLeaderboard({
     // } else if (timeframe === "30D") {
     //   return `https://songjamspace-leaderboard.logesh-063.workers.dev/${projectId}_monthly`;
     // }
-    return `https://api.songjam.space/evaonlinexyz/inspace-yaps`;
+    return `https://songjamspace-leaderboard.logesh-063.workers.dev/evaonlinexyz_inspace`;
   };
 
   // Fetch leaderboard data by timeframe
@@ -192,9 +192,7 @@ export default function MindshareLeaderboard({
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = (await response.json()) as LeaderboardRow[];
-      return result
-        .filter((r) => r.show)
-        .sort((a, b) => b.totalPoints - a.totalPoints);
+      return result;
     },
     staleTime: 60 * 1000,
     placeholderData: keepPreviousData,
