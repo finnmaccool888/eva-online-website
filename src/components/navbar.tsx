@@ -37,14 +37,14 @@ export default function Navbar({ inverse }: { inverse?: boolean }) {
             ABOUT
           </Button>
         </AboutDialog>
-        <Link href="/leaderboard">
+        {/* <Link href="/leaderboard">
           <Button
             variant="ghost"
             className={inverse ? "text-[#48333D] hover:text-[#48333D]/60" : ""}
           >
             LEADERBOARD
           </Button>
-        </Link>
+        </Link> */}
         <Link href="/mirror">
           <Button
             variant="ghost"
